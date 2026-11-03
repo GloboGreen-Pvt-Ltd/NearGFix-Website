@@ -77,7 +77,7 @@ const log = (...args) => {
 };
 
 /**
- * Create a shop booking for real — the same two calls the GGFIX Partner app's
+ * Create a shop booking for real — the same two calls the NearGFix Partner app's
  * booking flow makes (CustomerDetailsScreen + ServiceBookingDevicesListScreen):
  *
  *   1. POST {TICKET_BASE}/customers   { name, phone, email?, address… }

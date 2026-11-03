@@ -7,7 +7,7 @@
  * front door it came through; `loginType` in the response is what tells the
  * two apart. src/app/management/(login)/page.js accepts SUPER_ADMIN /
  * MARKET_PERSON and rejects SHOP_OWNER / SHOP_LOGIN with "Shop accounts must
- * sign in through the GGfix mobile app." This is the mirror of that gate: it
+ * sign in through the NearGFix mobile app." This is the mirror of that gate: it
  * accepts SHOP_OWNER / SHOP_LOGIN and rejects staff/employee loginTypes, so
  * the two portals can never cross-admit each other's accounts.
  *

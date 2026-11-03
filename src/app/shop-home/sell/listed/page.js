@@ -29,8 +29,8 @@ export default function ListedPage() {
   return (
     <SellShell title="Listed" width="max-w-lg">
       <div className="flex flex-col items-center pt-4 text-center">
-        <span className="flex h-24 w-24 items-center justify-center rounded-full bg-[#EAF8EC]">
-          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#079455] text-white">
+        <span className="flex h-24 w-24 items-center justify-center rounded-full bg-[#E5F3F5]">
+          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#035C6C] text-white">
             <Check className="h-9 w-9" strokeWidth={3} aria-hidden="true" />
           </span>
         </span>
@@ -45,9 +45,9 @@ export default function ListedPage() {
         <div className="min-w-0 flex-1">
           <p className="line-clamp-2 text-[14.5px] font-extrabold text-[#111111]">{listed.title}</p>
           {ref ? <p className="text-[12.5px] text-[#666666]">Listing #{ref}</p> : null}
-          <p className="mt-1 text-[16px] font-extrabold text-[#067647]">₹{formatPrice(listed.price)}</p>
+          <p className="mt-1 text-[16px] font-extrabold text-[#024A57]">₹{formatPrice(listed.price)}</p>
         </div>
-        <span className="self-start rounded-full bg-[#EAF8EC] px-2 py-0.5 text-[10.5px] font-extrabold text-[#067647]">LIVE</span>
+        <span className="self-start rounded-full bg-[#E5F3F5] px-2 py-0.5 text-[10.5px] font-extrabold text-[#024A57]">LIVE</span>
       </div>
 
       <div className="flex gap-2.5">

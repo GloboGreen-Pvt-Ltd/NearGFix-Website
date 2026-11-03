@@ -198,7 +198,7 @@ export default function ShopOwnerListPage() {
                   </td>
                   <td className="px-4 py-3">
                     {r.emailVerified ? (
-                      <span className="inline-flex items-center rounded-full bg-emerald-500/15 text-emerald-300 px-2 py-0.5 text-[11px] font-medium">✓ Verified</span>
+                      <span className="inline-flex items-center rounded-full bg-brand-500/15 text-brand-300 px-2 py-0.5 text-[11px] font-medium">✓ Verified</span>
                     ) : (
                       <span className="inline-flex items-center rounded-full bg-amber-500/15 text-amber-300 px-2 py-0.5 text-[11px] font-medium">Pending</span>
                     )}
@@ -269,7 +269,7 @@ export default function ShopOwnerListPage() {
 }
 
 function ProfileProgress({ percent, done, total }) {
-  const color = percent >= 100 ? 'bg-emerald-500' : percent >= 60 ? 'bg-amber-500' : 'bg-red-500';
+  const color = percent >= 100 ? 'bg-brand-500' : percent >= 60 ? 'bg-amber-500' : 'bg-red-500';
   return (
     <div className="space-y-1">
       <div className="flex justify-between text-[11px]">
@@ -292,7 +292,7 @@ function ProfileProgress({ percent, done, total }) {
  */
 function StatusToggle({ active, canToggle, onToggle }) {
   const badge = (
-    <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${active ? 'bg-emerald-500/15 text-emerald-300' : 'bg-slate-500/15 text-slate-500'}`}>
+    <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${active ? 'bg-brand-500/15 text-brand-300' : 'bg-slate-500/15 text-slate-500'}`}>
       {active ? 'Active' : 'Inactive'}
     </span>
   );
@@ -312,7 +312,7 @@ function StatusToggle({ active, canToggle, onToggle }) {
       className="inline-flex items-center gap-2"
       aria-label={active ? 'Active — click to deactivate' : 'Inactive — click to activate'}
     >
-      <span className={`relative inline-block h-5 w-9 rounded-full transition ${active ? 'bg-emerald-500' : 'bg-admin-dark border border-admin-border'}`}>
+      <span className={`relative inline-block h-5 w-9 rounded-full transition ${active ? 'bg-brand-500' : 'bg-admin-dark border border-admin-border'}`}>
         <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition ${active ? 'left-[18px]' : 'left-0.5'}`} />
       </span>
       {badge}

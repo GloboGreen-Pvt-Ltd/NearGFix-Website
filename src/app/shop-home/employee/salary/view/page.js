@@ -22,8 +22,8 @@ import { cx } from '@/components/site/ui';
 import { MONTHS } from '@/components/shop-dashboard/MonthSwitcher';
 import { fetchTechnician, fetchTechnicianPayslips } from '@/lib/shopDashboard';
 
-const DARK = '#09AD2A';
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2';
+const DARK = '#035C6C';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
 const num = (v) => Number(String(v ?? '').replace(/[^\d.-]/g, '')) || 0;
 const money = (n) => `₹${Math.round(n).toLocaleString('en-IN')}`;
 const fmtDate = (v) => {
@@ -36,7 +36,7 @@ const payout = (p) => (p ? num(p.netSalary) + num(p.netWage) : 0);
 function Stat({ icon: Icon, value, label, sub }) {
   return (
     <div className="min-w-0 rounded-[20px] border border-[#ECECEC] bg-white p-4 shadow-[0_2px_10px_rgba(16,24,40,0.04)]">
-      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EAF8EC]" style={{ color: DARK }}>
+      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#E5F3F5]" style={{ color: DARK }}>
         <Icon className="h-6 w-6" aria-hidden="true" />
       </span>
       <p className="mt-3 break-words text-[22px] font-extrabold text-[#111111]">{value}</p>
@@ -98,7 +98,7 @@ export default function EmployeeSalaryPage() {
           type="button"
           onClick={() => router.back()}
           aria-label="Back"
-          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#EAF8EC] text-[#111111] transition hover:bg-[#DCF2E0]', FOCUS_RING)}
+          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#E5F3F5] text-[#111111] transition hover:bg-[#E5F3F5]', FOCUS_RING)}
         >
           <ArrowLeft className="h-5 w-5" aria-hidden="true" />
         </button>
@@ -110,7 +110,7 @@ export default function EmployeeSalaryPage() {
 
       <section className="flex flex-wrap items-center justify-between gap-3 rounded-[22px] border border-[#ECECEC] bg-white p-5 shadow-[0_4px_14px_rgba(16,24,40,0.06)]">
         <div className="flex items-center gap-4">
-          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#EAF8EC]" style={{ color: DARK }}>
+          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E5F3F5]" style={{ color: DARK }}>
             <CalendarDays className="h-7 w-7" aria-hidden="true" />
           </span>
           <div>
@@ -155,7 +155,7 @@ export default function EmployeeSalaryPage() {
                   aria-expanded={expanded}
                   className={cx('flex w-full items-center gap-3 px-4 py-4 text-left sm:gap-4', FOCUS_RING)}
                 >
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#EAF8EC] text-[16px] font-extrabold" style={{ color: DARK }}>
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#E5F3F5] text-[16px] font-extrabold" style={{ color: DARK }}>
                     {String(m).padStart(2, '0')}
                   </span>
                   <span className="min-w-0 flex-1">
@@ -168,7 +168,7 @@ export default function EmployeeSalaryPage() {
                     </span>
                   </span>
                   <span className="flex shrink-0 flex-col items-end gap-1.5">
-                    <span className={cx('rounded-full border px-3 py-0.5 text-[12.5px] font-bold', paid ? 'border-[#BFE5C8] bg-[#EAF8EC] text-[#067647]' : 'border-[#FCD34D] bg-[#FFFBEB] text-[#B45309]')}>
+                    <span className={cx('rounded-full border px-3 py-0.5 text-[12.5px] font-bold', paid ? 'border-[#C7E6EA] bg-[#E5F3F5] text-[#024A57]' : 'border-[#FCD34D] bg-[#FFFBEB] text-[#B45309]')}>
                       {paid ? 'Paid' : 'Unpaid'}
                     </span>
                     <span className="text-[16px] font-extrabold text-[#667085]">{money(amount)}</span>

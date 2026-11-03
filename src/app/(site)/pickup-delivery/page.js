@@ -35,7 +35,7 @@ import { pageMetadata } from '@/lib/seo';
 export const metadata = pageMetadata({
   title: 'Doorstep Pickup & Delivery for Device Repairs',
   description:
-    'Get your phone or laptop repaired without leaving home. Choose a pickup-enabled GGFIX shop within 20 km, pick a slot, approve the price and track it back.',
+    'Get your phone or laptop repaired without leaving home. Choose a pickup-enabled NearGFix shop within 20 km, pick a slot, approve the price and track it back.',
   path: '/pickup-delivery',
 });
 
@@ -76,7 +76,7 @@ const JOURNEY = [
 ];
 
 const BENEFITS = [
-  { icon: Home, title: 'No trip to the shop', text: 'Hand over your device at home or work — the shop comes to you.', chip: 'from-[#22C55E] to-[#079455]' },
+  { icon: Home, title: 'No trip to the shop', text: 'Hand over your device at home or work — the shop comes to you.', chip: 'from-[#035C6C] to-[#035C6C]' },
   { icon: CalendarClock, title: 'Your time slot', text: 'Choose the pickup slot that fits your day, not the shop’s.', chip: 'from-[#2ED3B7] to-[#0E9384]' },
   { icon: BadgeCheck, title: 'Approve the price first', text: 'The shop sends an estimate — no work starts until you approve it.', chip: 'from-[#5EA2FF] to-[#1570EF]' },
   { icon: BellRing, title: 'Live status updates', text: 'Follow every stage in My Orders, from pickup to delivery.', chip: 'from-[#FDB022] to-[#F79009]' },
@@ -129,7 +129,7 @@ export default function PickupDeliveryPage() {
   return (
     <>
       {/* 1 — Hero ----------------------------------------------------------- */}
-      <Section tone="soft" padding="tight" className="bg-gradient-to-b from-[#EAF8EC] to-white">
+      <Section tone="soft" padding="tight" className="bg-gradient-to-b from-[#E5F3F5] to-white">
         <div className="grid items-center gap-10 py-6 lg:grid-cols-2 lg:gap-14">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full bg-brand-soft px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-brand-700">
@@ -167,7 +167,7 @@ export default function PickupDeliveryPage() {
               <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-700">Your device’s journey</p>
               <ol className="mt-6 space-y-0">
                 {[
-                  { icon: Home, title: 'Picked up from your door', sub: 'At the slot you chose', tone: 'from-[#22C55E] to-[#079455]' },
+                  { icon: Home, title: 'Picked up from your door', sub: 'At the slot you chose', tone: 'from-[#035C6C] to-[#035C6C]' },
                   { icon: Wrench, title: 'Repaired at the shop', sub: 'After you approve the estimate', tone: 'from-[#5EA2FF] to-[#1570EF]' },
                   { icon: Truck, title: 'Out for delivery', sub: 'Tracked live in My Orders', tone: 'from-[#FDB022] to-[#F79009]' },
                   { icon: ClipboardCheck, title: 'Delivered back to you', sub: 'With receipt and invoice', tone: 'from-[#A48AFB] to-[#7F56D9]' },
@@ -196,7 +196,7 @@ export default function PickupDeliveryPage() {
         <SectionHeading
           eyebrow="How it works"
           title="Book a pickup in four steps"
-          subtitle="All from the GGFIX customer app — it takes a couple of minutes."
+          subtitle="All from the NearGFix customer app — it takes a couple of minutes."
         />
         <ol className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((step, i) => (
@@ -233,14 +233,14 @@ export default function PickupDeliveryPage() {
       </Section>
 
       {/* 4 — Benefits -------------------------------------------------------- */}
-      <Section tone="soft" className="bg-gradient-to-b from-[#EAF8EC] via-[#F3FBF4] to-white">
+      <Section tone="soft" className="bg-gradient-to-b from-[#E5F3F5] via-[#F3FBF4] to-white">
         <SectionHeading
           eyebrow="Why doorstep pickup"
           title="Repairs that fit around your day"
         />
         <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {BENEFITS.map((b) => (
-            <li key={b.title} className="group flex gap-4 rounded-3xl border border-[#D6EFDB] bg-white p-5 shadow-[0_6px_20px_rgba(9,173,42,0.06)] transition hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(9,173,42,0.14)]">
+            <li key={b.title} className="group flex gap-4 rounded-3xl border border-[#C7E6EA] bg-white p-5 shadow-[0_6px_20px_rgba(3,92,108,0.06)] transition hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(3,92,108,0.14)]">
               <span className={cx('flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br text-white shadow-md transition group-hover:scale-105', b.chip)}>
                 <b.icon className="h-6 w-6" aria-hidden="true" />
               </span>
@@ -274,7 +274,7 @@ export default function PickupDeliveryPage() {
               <span
                 className={cx(
                   'inline-block rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider',
-                  opt.highlight ? 'bg-white/15 text-[#C9F7D3]' : 'bg-brand-soft text-brand-700',
+                  opt.highlight ? 'bg-white/15 text-[#C7E6EA]' : 'bg-brand-soft text-brand-700',
                 )}
               >
                 {opt.tag}
@@ -332,8 +332,8 @@ export default function PickupDeliveryPage() {
           {/* Left — book it */}
           <div className="relative overflow-hidden bg-gradient-to-br from-brand-600 via-brand-700 to-brand-800 p-6 text-white sm:p-10">
             <Truck className="pointer-events-none absolute -bottom-8 -right-6 h-44 w-44 text-white/10" aria-hidden="true" />
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-[#C9F7D3]">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-[#9BF2AE]" aria-hidden="true" />
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-[#C7E6EA]">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-[#C7E6EA]" aria-hidden="true" />
               Ready when you are
             </span>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">

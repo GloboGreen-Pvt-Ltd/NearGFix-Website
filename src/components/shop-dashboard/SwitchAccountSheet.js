@@ -119,7 +119,7 @@ export default function SwitchAccountSheet({ open, shopOwner, onClose }) {
             type="button"
             onClick={onClose}
             disabled={Boolean(switchingId)}
-            className="absolute right-5 top-1/2 -translate-y-1/2 rounded-lg px-2 py-1 text-[15px] font-extrabold text-[#087A0A] transition hover:bg-[#F3F3F3] disabled:opacity-50"
+            className="absolute right-5 top-1/2 -translate-y-1/2 rounded-lg px-2 py-1 text-[15px] font-extrabold text-[#024A57] transition hover:bg-[#F3F3F3] disabled:opacity-50"
           >
             Done
           </button>
@@ -128,7 +128,7 @@ export default function SwitchAccountSheet({ open, shopOwner, onClose }) {
         <div className="overflow-y-auto px-5 pb-6 sm:px-6">
           {/* Current account */}
           <div className="flex items-center gap-3.5 border-b border-[#ECECEC] py-4">
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#087A0A] text-[17px] font-extrabold text-white">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#024A57] text-[17px] font-extrabold text-white">
               {avatarUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element -- user-supplied remote avatar.
                 <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
@@ -161,7 +161,7 @@ export default function SwitchAccountSheet({ open, shopOwner, onClose }) {
                       switchingId && !busy && !active && 'opacity-50',
                     )}
                   >
-                    <span className={cx('flex h-11 w-11 shrink-0 items-center justify-center rounded-xl', active ? 'bg-[#F3F3F3] text-[#087A0A]' : 'bg-[#F3F3F3] text-[#3F7F41]')}>
+                    <span className={cx('flex h-11 w-11 shrink-0 items-center justify-center rounded-xl', active ? 'bg-[#F3F3F3] text-[#024A57]' : 'bg-[#F3F3F3] text-[#3F7F41]')}>
                       <Store className="h-5 w-5" aria-hidden="true" />
                     </span>
                     <span className="min-w-0 flex-1">
@@ -169,9 +169,9 @@ export default function SwitchAccountSheet({ open, shopOwner, onClose }) {
                       {s.slug ? <span className="block truncate text-[12.5px] text-[#8FA08F]">{s.slug}</span> : null}
                     </span>
                     {busy ? (
-                      <Loader2 className="h-5 w-5 shrink-0 animate-spin text-[#087A0A]" aria-label="Switching" />
+                      <Loader2 className="h-5 w-5 shrink-0 animate-spin text-[#024A57]" aria-label="Switching" />
                     ) : active ? (
-                      <Check className="h-5 w-5 shrink-0 text-[#087A0A]" strokeWidth={3} aria-label="Current shop" />
+                      <Check className="h-5 w-5 shrink-0 text-[#024A57]" strokeWidth={3} aria-label="Current shop" />
                     ) : shopScoped ? null : (
                       <ChevronRight className="h-5 w-5 shrink-0 text-[#98A2B3]" aria-hidden="true" />
                     )}
@@ -187,10 +187,10 @@ export default function SwitchAccountSheet({ open, shopOwner, onClose }) {
                   onClick={onClose}
                   className="flex w-full items-center gap-3 rounded-xl px-1.5 py-3.5 transition hover:bg-[#F8F8F8]"
                 >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-dashed border-[#ECECEC] text-[#087A0A]">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-dashed border-[#ECECEC] text-[#024A57]">
                     <Plus className="h-5 w-5" aria-hidden="true" />
                   </span>
-                  <span className="min-w-0 flex-1 text-[15px] font-bold text-[#087A0A]">Add Shop</span>
+                  <span className="min-w-0 flex-1 text-[15px] font-bold text-[#024A57]">Add Shop</span>
                   <ChevronRight className="h-5 w-5 shrink-0 text-[#98A2B3]" aria-hidden="true" />
                 </Link>
               </li>

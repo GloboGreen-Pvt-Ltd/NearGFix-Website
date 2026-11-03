@@ -279,9 +279,9 @@ export default function LocationControl({ className, size = 'md' }) {
 
   /* -- shared classes ----------------------------------------------------- */
 
-  // ring-brand-700, not brand-500: #22C55E measures ~2.3:1 on white and fails
+  // ring-brand-700, not brand-500: #035C6C measures ~2.3:1 on white and fails
   // the 3:1 non-text contrast floor (WCAG 1.4.11) that a focus indicator has to
-  // clear. #15803D clears it on every light surface in the header.
+  // clear. #024A57 clears it on every light surface in the header.
   const focusRing =
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-700 focus-visible:ring-offset-2';
 

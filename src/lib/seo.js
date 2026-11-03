@@ -7,7 +7,7 @@
  * exported HTML file, which is exactly what crawlers read.
  *
  * Environment (all optional, all NEXT_PUBLIC_* so they are inlined at build):
- *   NEXT_PUBLIC_SITE_URL       canonical origin, default https://ggfix.in
+ *   NEXT_PUBLIC_SITE_URL       canonical origin, default https://neargfix.com
  *   NEXT_PUBLIC_ALLOW_INDEXING set to "false" on dev/preview deploys so they are
  *                              noindex + disallowed in robots.txt; production
  *                              leaves it unset and is indexable.
@@ -20,13 +20,13 @@
 
 import { BRAND } from '@/lib/siteContent';
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://ggfix.in').replace(/\/+$/, '');
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://neargfix.com').replace(/\/+$/, '');
 export const SITE_NAME = BRAND.name;
 export const LEGAL_NAME = 'Globogreen System & Technology Private Limited';
 export const INDEXING_ENABLED = process.env.NEXT_PUBLIC_ALLOW_INDEXING !== 'false';
 
 /** public/og-image.png, made by scripts/generate-og-image.mjs (1200x630). */
-export const DEFAULT_OG_IMAGE = { url: '/og-image.png', width: 1200, height: 630, alt: 'GGFIX — repair, buy and sell your devices' };
+export const DEFAULT_OG_IMAGE = { url: '/og-image.png', width: 1200, height: 630, alt: 'NearGFix — repair, buy and sell your devices' };
 
 /**
  * Site-relative path → the canonical form. next.config.js sets
@@ -56,7 +56,7 @@ export function assetUrl(src) {
  * object, so a partial one would drop og:site_name, og:image, etc.
  *
  *   title         page title WITHOUT the brand; the (site) layout's template
- *                 appends " | GGFIX". Pass absoluteTitle to opt out.
+ *                 appends " | NearGFix". Pass absoluteTitle to opt out.
  *   noindex       for private/thin pages (still followable unless follow:false)
  */
 export function pageMetadata({
@@ -157,7 +157,7 @@ export function breadcrumbSchema(items) {
 }
 
 /**
- * A repair service offered through GGFIX partner shops. No price, rating or
+ * A repair service offered through NearGFix partner shops. No price, rating or
  * address: those vary per shop and none are published by the platform.
  */
 export function serviceSchema({ name, description, path, serviceType, offers }) {

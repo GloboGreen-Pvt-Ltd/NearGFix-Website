@@ -7,17 +7,17 @@ import { DEFAULT_OG_IMAGE } from '@/lib/seo';
 // pageMetadata() (src/lib/seo.js); these are only the fallbacks.
 export const metadata = {
   title: {
-    default: 'Mobile Repair, Buy & Sell Devices Online | GGFIX',
-    template: '%s | GGFIX',
+    default: 'Mobile Repair, Buy & Sell Devices Online | NearGFix',
+    template: '%s | NearGFix',
   },
   description:
-    'GGFIX offers mobile, tablet, laptop, smartwatch and audio device repair services. Book repairs, buy devices or sell your used gadgets easily.',
+    'NearGFix offers mobile, tablet, laptop, smartwatch and audio device repair services. Book repairs, buy devices or sell your used gadgets easily.',
   applicationName: BRAND.name,
   authors: [{ name: BRAND.company, url: BRAND.websiteUrl }],
   openGraph: {
-    title: 'Mobile Repair, Buy & Sell Devices Online | GGFIX',
+    title: 'Mobile Repair, Buy & Sell Devices Online | NearGFix',
     description:
-      'GGFIX offers mobile, tablet, laptop, smartwatch and audio device repair services. Book repairs, buy devices or sell your used gadgets easily.',
+      'NearGFix offers mobile, tablet, laptop, smartwatch and audio device repair services. Book repairs, buy devices or sell your used gadgets easily.',
     siteName: BRAND.name,
     type: 'website',
     locale: 'en_IN',

@@ -372,7 +372,7 @@ function buildGuideSheet(XLSX, definition, columns, template) {
         ? 'Rows are matched by ID, then Category + Field.'
         : 'Rows are matched by ID, then Category + Flow + Question.';
   const rows = [
-    ['GGFIX - ' + definition.label + ' import / export format'],
+    ['NearGFix - ' + definition.label + ' import / export format'],
     [],
     ['Column', 'Required', 'What to put in it'],
     ...columns.map((column) => [column.header, column.required || '', column.help || '']),

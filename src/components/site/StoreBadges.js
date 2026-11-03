@@ -5,7 +5,7 @@ import { cx } from '@/components/site/ui';
 /* -------------------------------------------------------------------------- */
 /* App-store badges                                                            */
 /* -------------------------------------------------------------------------- */
-/* HONESTY: the GGFIX apps are NOT published yet (BRAND.appsStatus =            */
+/* HONESTY: the NearGFix apps are NOT published yet (BRAND.appsStatus =            */
 /* "Coming soon to Play Store & App Store"). So these badges must NOT link to a  */
 /* store listing that does not exist — that would be a dead link and a false     */
 /* "available now" claim. They link to /contact and are captioned "Coming        */

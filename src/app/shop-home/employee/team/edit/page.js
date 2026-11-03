@@ -42,9 +42,9 @@ import { uploadShopFile } from '@/lib/shopBooking';
 import { resolveMediaUrl } from '@/lib/deviceImage';
 import { notifyError, notifySuccess } from '@/lib/toast';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
 const INPUT =
-  'mt-1.5 w-full rounded-xl border border-[#E4E7EC] bg-white px-3.5 py-2.5 text-[14.5px] text-[#111111] placeholder:text-[#98A2B3] focus:border-[#09AD2A] focus:outline-none focus:ring-4 focus:ring-[#09AD2A]/10';
+  'mt-1.5 w-full rounded-xl border border-[#E4E7EC] bg-white px-3.5 py-2.5 text-[14.5px] text-[#111111] placeholder:text-[#98A2B3] focus:border-[#035C6C] focus:outline-none focus:ring-4 focus:ring-[#035C6C]/10';
 const ROLES = ['Technician', 'Staff', 'Pickup Person'];
 const SHIFTS = [
   { key: 'general', label: 'General Shift', in: '09:30', out: '18:30' },
@@ -65,7 +65,7 @@ function Card({ icon: Icon, title, children }) {
   return (
     <section className="min-w-0 rounded-[22px] border border-[#ECECEC] bg-white p-4 sm:p-5">
       <h2 className="mb-4 flex items-center gap-2.5 text-[16px] font-extrabold text-[#111111]">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EAF8EC] text-[#09AD2A]">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#E5F3F5] text-[#035C6C]">
           <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
         </span>
         {title}
@@ -91,7 +91,7 @@ function UploadBox({ label, url, uploading, onPick, onClear }) {
   return (
     <div className="relative">
       {src ? (
-        <div className="relative h-[92px] overflow-hidden rounded-2xl border border-[#BFE5C8] bg-[#F8F8F8]">
+        <div className="relative h-[92px] overflow-hidden rounded-2xl border border-[#C7E6EA] bg-[#F8F8F8]">
           {/* eslint-disable-next-line @next/next/no-img-element -- uploaded ID image from the media service. */}
           <img src={src} alt={label} className="h-full w-full object-contain" />
           <button type="button" onClick={onClear} aria-label={`Remove ${label}`} className="absolute right-1.5 top-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-[#B42318] shadow">
@@ -99,9 +99,9 @@ function UploadBox({ label, url, uploading, onPick, onClear }) {
           </button>
         </div>
       ) : (
-        <label className={cx('flex h-[92px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#5BBF73] bg-[#EAF8EC] text-center transition hover:bg-[#E3F4E7]', uploading && 'pointer-events-none opacity-70')}>
-          {uploading ? <Loader2 className="h-5 w-5 animate-spin text-[#09AD2A]" aria-hidden="true" /> : <UploadCloud className="h-5 w-5 text-[#09AD2A]" aria-hidden="true" />}
-          <span className="mt-1 text-[13.5px] font-bold text-[#09AD2A]">{uploading ? 'Uploading…' : label}</span>
+        <label className={cx('flex h-[92px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#5BBF73] bg-[#E5F3F5] text-center transition hover:bg-[#E3F4E7]', uploading && 'pointer-events-none opacity-70')}>
+          {uploading ? <Loader2 className="h-5 w-5 animate-spin text-[#035C6C]" aria-hidden="true" /> : <UploadCloud className="h-5 w-5 text-[#035C6C]" aria-hidden="true" />}
+          <span className="mt-1 text-[13.5px] font-bold text-[#035C6C]">{uploading ? 'Uploading…' : label}</span>
           <span className="text-[11px] text-[#667085]">JPG, PNG (Max {MAX_MB}MB)</span>
           <input type="file" accept="image/png,image/jpeg" className="sr-only" onChange={(e) => onPick(e.target.files?.[0])} />
         </label>
@@ -249,7 +249,7 @@ export default function EditEmployeePage() {
           type="button"
           onClick={() => router.back()}
           aria-label="Back"
-          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#EAF8EC] text-[#111111] transition hover:bg-[#DCF2E0]', FOCUS_RING)}
+          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#E5F3F5] text-[#111111] transition hover:bg-[#E5F3F5]', FOCUS_RING)}
         >
           <ArrowLeft className="h-5 w-5" aria-hidden="true" />
         </button>
@@ -277,7 +277,7 @@ export default function EditEmployeePage() {
                   <User className="h-10 w-10" fill="currentColor" aria-hidden="true" />
                 )}
               </span>
-              <span className="absolute -bottom-0.5 -right-0.5 flex h-8 w-8 items-center justify-center rounded-full border-[3px] border-white bg-[#09AD2A] text-white">
+              <span className="absolute -bottom-0.5 -right-0.5 flex h-8 w-8 items-center justify-center rounded-full border-[3px] border-white bg-[#035C6C] text-white">
                 {uploading.photoUrl ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Camera className="h-4 w-4" aria-hidden="true" />}
               </span>
               <input type="file" accept="image/png,image/jpeg" className="sr-only" onChange={(e) => upload('photoUrl', e.target.files?.[0])} />
@@ -289,9 +289,9 @@ export default function EditEmployeePage() {
                 onClick={() => set('isAvailable', !form.isAvailable)}
                 aria-pressed={form.isAvailable}
                 title="Click to switch Active / Inactive"
-                className={cx('mt-1 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[13px] font-bold', FOCUS_RING, form.isAvailable ? 'bg-[#EAF8EC] text-[#09AD2A]' : 'bg-[#F3F3F3] text-[#667085]')}
+                className={cx('mt-1 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[13px] font-bold', FOCUS_RING, form.isAvailable ? 'bg-[#E5F3F5] text-[#035C6C]' : 'bg-[#F3F3F3] text-[#667085]')}
               >
-                <span className={cx('h-2.5 w-2.5 rounded-full', form.isAvailable ? 'bg-[#09AD2A]' : 'bg-[#98A2B3]')} aria-hidden="true" />
+                <span className={cx('h-2.5 w-2.5 rounded-full', form.isAvailable ? 'bg-[#035C6C]' : 'bg-[#98A2B3]')} aria-hidden="true" />
                 {form.isAvailable ? 'Active' : 'Inactive'}
               </button>
               <p className="mt-1 text-[13px] text-[#667085]">ID: {code}</p>
@@ -349,12 +349,12 @@ export default function EditEmployeePage() {
                   ))}
                 </select>
               </Field>
-              <label className="block rounded-2xl border border-[#BFE5C8] bg-[#EAF8EC] px-4 py-3">
+              <label className="block rounded-2xl border border-[#C7E6EA] bg-[#E5F3F5] px-4 py-3">
                 <span className="flex items-center gap-2 text-[13px] font-semibold text-[#475467]">
-                  <Clock className="h-4 w-4 text-[#09AD2A]" aria-hidden="true" />
+                  <Clock className="h-4 w-4 text-[#035C6C]" aria-hidden="true" />
                   Check In
                 </span>
-                <input type="time" value={form.defaultCheckIn} onChange={(e) => set('defaultCheckIn', e.target.value)} className="mt-1 w-full min-w-0 bg-transparent text-[22px] font-extrabold text-[#09AD2A] focus:outline-none" />
+                <input type="time" value={form.defaultCheckIn} onChange={(e) => set('defaultCheckIn', e.target.value)} className="mt-1 w-full min-w-0 bg-transparent text-[22px] font-extrabold text-[#035C6C] focus:outline-none" />
               </label>
               <label className="block rounded-2xl border border-[#FECACA] bg-[#FEF2F2] px-4 py-3">
                 <span className="flex items-center gap-2 text-[13px] font-semibold text-[#475467]">
@@ -414,14 +414,14 @@ export default function EditEmployeePage() {
 
           <Card icon={Lock} title="App Login">
             <p className="flex items-center gap-2 text-[15px] font-bold text-[#111111]">
-              <span className={cx('flex h-6 w-6 items-center justify-center rounded-md text-white', tech?.userId ? 'bg-[#09AD2A]' : 'bg-[#98A2B3]')} aria-hidden="true">
+              <span className={cx('flex h-6 w-6 items-center justify-center rounded-md text-white', tech?.userId ? 'bg-[#035C6C]' : 'bg-[#98A2B3]')} aria-hidden="true">
                 {tech?.userId ? '✓' : '–'}
               </span>
               Employee login {tech?.userId ? 'enabled' : 'not enabled'}
             </p>
-            <p className="mt-3 flex items-start gap-2 rounded-xl bg-[#EAF8EC] px-3 py-2.5 text-[13px] text-[#08961F]">
+            <p className="mt-3 flex items-start gap-2 rounded-xl bg-[#E5F3F5] px-3 py-2.5 text-[13px] text-[#035C6C]">
               <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-              Employee signs in to the GGFIX Staff App with this mobile number + OTP. Login and password are managed from the app.
+              Employee signs in to the NearGFix Staff App with this mobile number + OTP. Login and password are managed from the app.
             </p>
           </Card>
 
@@ -444,7 +444,7 @@ export default function EditEmployeePage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className={cx('h-12 rounded-full border-2 border-[#09AD2A] bg-white text-[15px] font-extrabold text-[#09AD2A] transition hover:bg-[#EAF8EC]', FOCUS_RING)}
+              className={cx('h-12 rounded-full border-2 border-[#035C6C] bg-white text-[15px] font-extrabold text-[#035C6C] transition hover:bg-[#E5F3F5]', FOCUS_RING)}
             >
               Cancel
             </button>
@@ -452,7 +452,7 @@ export default function EditEmployeePage() {
               type="button"
               onClick={save}
               disabled={saving || Object.values(uploading).some(Boolean)}
-              className={cx('inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#09AD2A] text-[15px] font-extrabold text-white transition hover:bg-[#08961F] disabled:opacity-60', FOCUS_RING)}
+              className={cx('inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#035C6C] text-[15px] font-extrabold text-white transition hover:bg-[#035C6C] disabled:opacity-60', FOCUS_RING)}
             >
               {saving ? <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" /> : <Save className="h-5 w-5" aria-hidden="true" />}
               {saving ? 'Saving…' : 'Save Changes'}

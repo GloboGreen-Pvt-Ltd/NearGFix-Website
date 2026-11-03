@@ -10,7 +10,7 @@ import { REPAIR_STEPS } from '@/lib/repairSeoContent';
 import { pageMetadata, serviceSchema } from '@/lib/seo';
 
 /**
- * /repair/<category>/<brand>/ — one page per brand GGFIX actually lists in that
+ * /repair/<category>/<brand>/ — one page per brand NearGFix actually lists in that
  * category with at least one model (e.g. /repair/mobile/samsung/). The model
  * list is the real master-data list, which is what makes each page specific;
  * the issue list links back to the category page instead of repeating its copy.
@@ -45,7 +45,7 @@ function exampleModels(models, max) {
 function brandDescription(category, brand) {
   const { content } = category;
   const count = brand.models.length;
-  const head = `Repair your ${brand.name} ${content.deviceNoun} at a GGFIX partner shop near you.`;
+  const head = `Repair your ${brand.name} ${content.deviceNoun} at a NearGFix partner shop near you.`;
   const tail = ' Compare shops and approve the price first.';
   const room = 155 - head.length - tail.length - ` ${count} models listed, including .`.length;
   const examples = count > 1 ? exampleModels(brand.models, Math.max(room, 0)) : brand.models[0].name;
@@ -124,7 +124,7 @@ export default async function RepairBrandPage({ params }) {
             <Badge icon="Wrench">{label} repair</Badge>
             <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-brand-ink sm:text-4xl lg:text-5xl">{h1}</h1>
             <p className="mt-4 max-w-prose text-base leading-relaxed text-brand-muted sm:text-lg">
-              Get your {brand.name} {content.deviceNoun} repaired by a verified GGFIX partner shop within 20 km. Choose
+              Get your {brand.name} {content.deviceNoun} repaired by a verified NearGFix partner shop within 20 km. Choose
               your model, pick the problem and compare nearby shops — the shop sends a quote and nothing starts until
               you approve it.
             </p>
@@ -144,7 +144,7 @@ export default async function RepairBrandPage({ params }) {
       <Section tone="soft">
         <SectionHeading
           title={`${brand.name} ${content.devicePlural} we repair`}
-          subtitle={`${brand.models.length} ${brand.name} ${brand.models.length === 1 ? 'model is' : 'models are'} listed on GGFIX. Select yours in the repair flow to see the repairs available for it.`}
+          subtitle={`${brand.models.length} ${brand.name} ${brand.models.length === 1 ? 'model is' : 'models are'} listed on NearGFix. Select yours in the repair flow to see the repairs available for it.`}
         />
         <ul className="mt-10 grid grid-cols-1 gap-x-6 gap-y-2 rounded-3xl border border-brand-line bg-white p-6 text-sm text-brand-ink shadow-soft sm:grid-cols-2 sm:p-8 lg:grid-cols-3 sm:text-base">
           {brand.models.map((m) => (
@@ -181,7 +181,7 @@ export default async function RepairBrandPage({ params }) {
         <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
           <SectionHeading
             align="left"
-            title={`How ${brand.name} repair works on GGFIX`}
+            title={`How ${brand.name} repair works on NearGFix`}
             subtitle="You stay in control from booking to delivery."
           />
           <StepList steps={REPAIR_STEPS} />

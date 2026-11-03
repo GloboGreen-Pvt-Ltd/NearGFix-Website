@@ -14,14 +14,14 @@ export const BTN_PRIMARY = cx(
   FOCUS_RING,
 );
 export const BTN_GREEN = cx(
-  'inline-flex items-center justify-center gap-1.5 rounded-2xl bg-[#15803D] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#166534] disabled:cursor-not-allowed disabled:opacity-50',
+  'inline-flex items-center justify-center gap-1.5 rounded-2xl bg-[#024A57] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#023A44] disabled:cursor-not-allowed disabled:opacity-50',
   FOCUS_RING,
 );
 export const BTN_SECONDARY = cx(
   'inline-flex items-center justify-center gap-1.5 rounded-2xl border border-[#ECECEC] bg-white px-4 py-3 text-sm font-bold text-[#111111] transition hover:bg-[#F8F8F8] disabled:cursor-not-allowed disabled:opacity-50',
   FOCUS_RING,
 );
-export const BTN_LINK = cx('inline-flex items-center gap-1 text-sm font-bold text-[#15803D] hover:underline disabled:opacity-50', FOCUS_RING);
+export const BTN_LINK = cx('inline-flex items-center gap-1 text-sm font-bold text-[#024A57] hover:underline disabled:opacity-50', FOCUS_RING);
 
 export function Card({ title, subtitle, action, children, className = '' }) {
   return (
@@ -41,7 +41,7 @@ export function Card({ title, subtitle, action, children, className = '' }) {
 }
 
 const PILL = {
-  green: 'bg-[#F0FDF4] text-[#15803D]',
+  green: 'bg-[#E5F3F5] text-[#024A57]',
   blue: 'bg-blue-50 text-blue-700',
   amber: 'bg-amber-50 text-amber-800',
   red: 'bg-red-50 text-red-700',
@@ -70,7 +70,7 @@ export function Row({ label, value, tone, strong }) {
         className={cx(
           'min-w-0 max-w-[65%] break-words text-right text-sm',
           strong ? 'text-base font-extrabold' : 'font-bold',
-          tone === 'green' ? 'text-[#15803D]' : tone === 'red' ? 'text-red-600' : 'text-[#111111]',
+          tone === 'green' ? 'text-[#024A57]' : tone === 'red' ? 'text-red-600' : 'text-[#111111]',
         )}
       >
         {value}
@@ -83,7 +83,7 @@ export function Notice({ tone = 'amber', icon: Icon, children }) {
   const cls = {
     amber: 'border-amber-200 bg-amber-50 text-amber-900',
     red: 'border-red-200 bg-red-50 text-red-700',
-    green: 'border-[#BBF7D0] bg-[#F0FDF4] text-[#14532D]',
+    green: 'border-[#C7E6EA] bg-[#E5F3F5] text-[#023A44]',
     gray: 'border-[#ECECEC] bg-[#F8F8F8] text-[#444444]',
   }[tone];
   return (

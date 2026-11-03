@@ -99,7 +99,7 @@ function SelectField({ label, value, options, onChange, disabled, hint }) {
           value={value}
           onChange={(e) => onChange(e.target.value)}
           disabled={disabled}
-          className="h-[52px] w-full cursor-pointer appearance-none rounded-2xl border border-[#ECECEC] bg-[#F8F8F8] pl-4 pr-11 text-[15px] font-extrabold text-[#111111] outline-none transition focus:border-[#079455] focus:ring-4 focus:ring-[#079455]/10 disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-[52px] w-full cursor-pointer appearance-none rounded-2xl border border-[#ECECEC] bg-[#F8F8F8] pl-4 pr-11 text-[15px] font-extrabold text-[#111111] outline-none transition focus:border-[#035C6C] focus:ring-4 focus:ring-[#035C6C]/10 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {options.map((o) => (
             <option key={o.key} value={o.key}>
@@ -207,7 +207,7 @@ export default function ServiceStatusSheet({ open, ticketId, bookingRef, lifecyc
         aria-labelledby="sss-title"
         onMouseDown={(e) => e.stopPropagation()}
         className={cx(
-          'relative flex max-h-[90dvh] w-full flex-col overflow-hidden rounded-t-[30px] pb-[env(safe-area-inset-bottom)] sm:pb-0 bg-white transition-transform duration-300 ease-out sm:max-w-[560px] sm:rounded-[28px]',
+          'relative flex max-h-[90dvh] w-full flex-col overflow-hidden rounded-t-[30px] pb-[env(safe-area-inset-bottom)] sm:pb-0 bg-white transition-transform duration-300 ease-out sm:max-w-[560px] sm:rounded-[28px] lg:max-w-[760px] lg:rounded-xl',
           shown ? 'translate-y-0' : 'translate-y-full sm:translate-y-4',
         )}
       >
@@ -237,7 +237,7 @@ export default function ServiceStatusSheet({ open, ticketId, bookingRef, lifecyc
 
           {loading ? (
             <div className="flex flex-col items-center py-10 text-[#666666]">
-              <Loader2 className="h-6 w-6 animate-spin text-[#079455]" aria-hidden="true" />
+              <Loader2 className="h-6 w-6 animate-spin text-[#035C6C]" aria-hidden="true" />
               <p className="mt-2 text-[12.5px]">Checking what&apos;s next…</p>
             </div>
           ) : finished ? (
@@ -275,7 +275,7 @@ export default function ServiceStatusSheet({ open, ticketId, bookingRef, lifecyc
               />
 
               {confirming && ask ? (
-                <p className={cx('rounded-xl px-3.5 py-3 text-[13px] font-semibold', ask.destructive ? 'bg-[#FEF3F2] text-[#B42318]' : 'bg-[#F3F3F3] text-[#067647]')}>
+                <p className={cx('rounded-xl px-3.5 py-3 text-[13px] font-semibold', ask.destructive ? 'bg-[#FEF3F2] text-[#B42318]' : 'bg-[#F3F3F3] text-[#024A57]')}>
                   {ask.message}
                 </p>
               ) : null}
@@ -290,7 +290,7 @@ export default function ServiceStatusSheet({ open, ticketId, bookingRef, lifecyc
                     ? 'cursor-not-allowed bg-[#F3F3F3]'
                     : confirming && ask?.destructive
                       ? 'bg-[#D92D20] hover:bg-[#B42318]'
-                      : 'bg-[#079455] hover:bg-[#067647]',
+                      : 'bg-[#035C6C] hover:bg-[#024A57]',
                 )}
               >
                 {saving ? <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" /> : null}
@@ -300,7 +300,7 @@ export default function ServiceStatusSheet({ open, ticketId, bookingRef, lifecyc
               {invoiceStep ? (
                 <Link
                   href={`/shop-home/services/invoice/generate/?ticketId=${encodeURIComponent(ticketId || '')}`}
-                  className="inline-flex h-[50px] w-full items-center justify-center rounded-2xl border-2 border-[#079455] text-[15px] font-extrabold text-[#079455] transition hover:bg-[#F2FBF4]"
+                  className="inline-flex h-[50px] w-full items-center justify-center rounded-2xl border-2 border-[#035C6C] text-[15px] font-extrabold text-[#035C6C] transition hover:bg-[#E5F3F5]"
                 >
                   Open Invoice Generator
                 </Link>

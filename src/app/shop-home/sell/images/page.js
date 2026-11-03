@@ -95,9 +95,9 @@ export default function ImagesPage() {
               <div key={key} className="relative">
                 <label
                   className={cx(
-                    'relative flex h-36 flex-col items-center justify-center overflow-hidden rounded-[14px] border-[1.5px] transition focus-within:ring-4 focus-within:ring-[#079455]/20 sm:h-40',
-                    url ? 'border-solid border-[#079455] bg-white' : 'border-dashed border-[#CDEFD5] bg-[#EAF8EC]',
-                    uploading ? 'cursor-wait' : 'cursor-pointer hover:border-[#079455]',
+                    'relative flex h-36 flex-col items-center justify-center overflow-hidden rounded-[14px] border-[1.5px] transition focus-within:ring-4 focus-within:ring-[#035C6C]/20 sm:h-40',
+                    url ? 'border-solid border-[#035C6C] bg-white' : 'border-dashed border-[#C7E6EA] bg-[#E5F3F5]',
+                    uploading ? 'cursor-wait' : 'cursor-pointer hover:border-[#035C6C]',
                   )}
                 >
                   <input
@@ -109,7 +109,7 @@ export default function ImagesPage() {
                     aria-label={url ? `Replace ${label} photo` : `Add ${label} photo`}
                   />
                   {busy ? (
-                    <Loader2 className="h-6 w-6 animate-spin text-[#079455]" aria-hidden="true" />
+                    <Loader2 className="h-6 w-6 animate-spin text-[#035C6C]" aria-hidden="true" />
                   ) : url ? (
                     <>
                       {/* eslint-disable-next-line @next/next/no-img-element -- uploaded photo URL. */}
@@ -118,7 +118,7 @@ export default function ImagesPage() {
                     </>
                   ) : (
                     <>
-                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#079455]">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#035C6C]">
                         <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
                       </span>
                       <span className="mt-2 text-[13px] font-bold text-[#111111]">{label}</span>
@@ -154,7 +154,7 @@ export default function ImagesPage() {
             value={condition}
             onChange={(e) => setCondition(e.target.value)}
             placeholder="Good"
-            className="h-12 w-full rounded-xl border-[1.5px] border-[#ECECEC] bg-white px-3.5 text-[14px] font-semibold text-[#111111] outline-none transition placeholder:text-[#98A2B3] focus:border-[#079455] focus:ring-4 focus:ring-[#079455]/10"
+            className="h-12 w-full rounded-xl border-[1.5px] border-[#ECECEC] bg-white px-3.5 text-[14px] font-semibold text-[#111111] outline-none transition placeholder:text-[#98A2B3] focus:border-[#035C6C] focus:ring-4 focus:ring-[#035C6C]/10"
           />
         </SellCard>
       ) : null}

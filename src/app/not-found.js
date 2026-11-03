@@ -12,7 +12,7 @@ import { Button, Section } from '@/components/site/ui';
  * so it brings the site header and footer itself.
  */
 // Next adds <meta name="robots" content="noindex"> to this page itself.
-export const metadata = { title: 'Page not found | GGFIX' };
+export const metadata = { title: 'Page not found | NearGFix' };
 
 const POPULAR = [
   { href: '/repair/mobile/', label: 'Mobile phone repair' },

@@ -1,31 +1,57 @@
 'use client';
 
 /**
- * /shop-home/services/invoice/report/?ticketId=… — Deliver Invoice, the
- * Partner app's DeliveryInvoiceReportScreen on the web, plus its Billing &
- * Handover checklist (DeliveryInvoiceScreen):
+ * /shop-home/services/invoice/report/?ticketId=… — Deliver Invoice, laid out
+ * like the Partner app's DeliveryInvoiceReportScreen:
  *
- *   - Header: invoice total, delivery date, Download / Print (A4 print
- *     window — "Save as PDF") and Share (WhatsApp).
- *   - Letterhead + meta, To / From, (A) Service, (B) Spares, Tax Summary,
- *     Total Payable Summary with Payment & Credit, signatures, declaration.
- *   - Billing & Handover: Invoice Ready → Delivered Processing → Delivered,
- *     each POST /tickets/{id}/progress-events, in order.
+ *   - Header: back · "Deliver Invoice" / #invoiceNo · Download · Share ·
+ *     Print (Download / Print open the A4 invoice — the app's PDF layout,
+ *     lib/invoice.js buildInvoiceHtml — and print it: "Save as PDF").
+ *   - Summary (invoice total, status, delivery date, Edit Invoice), Shop
+ *     Details, Customer & Device, Repair Items (A · Service Charges, B ·
+ *     Spare Parts, each line expandable to its GST split), Tax & Payment,
+ *     Declaration.
+ *   - Bottom bar: Preview PDF, and Confirm Delivery while the booking is Out
+ *     for Delivery (records "Delivered to Customer").
+ *   - Billing & Handover (web): Invoice Ready → Delivered Processing →
+ *     Delivered, each POST /tickets/{id}/progress-events, in order.
  *
  * Data: GET /tickets/{id}, GET /tickets/{id}/invoice, GET /tickets/{id}/events,
  * the shop's public card (GET /auth/shops/{shopId}/public) and, when the
- * ticket has no address, GET /customers/lookup?mobile=.
+ * ticket has no address, GET /customers/lookup?mobile=. The app's Delete
+ * Invoice isn't offered: the web has no invoice-delete call.
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ArrowLeft, CheckCircle2, ListChecks, Loader2, Pencil, Printer, Share2 } from 'lucide-react';
+import {
+  ArrowLeft,
+  CheckCircle2,
+  ChevronDown,
+  CircleAlert,
+  CircleCheckBig,
+  Download,
+  Eye,
+  FileText,
+  ListChecks,
+  Loader2,
+  Pencil,
+  Printer,
+  Share2,
+  Smartphone,
+  Store,
+  Truck,
+  UserRound,
+  Wrench,
+} from 'lucide-react';
 
 import { cx } from '@/components/site/ui';
+import { withHash } from '@/components/shop-dashboard/OrdersList';
 import { fetchTicket } from '@/lib/shopDashboard';
 import { getShopPublic } from '@/lib/repairBooking';
 import { readShopOwner } from '@/lib/shopAuth';
+import { bookingRef } from '@/lib/orderStages';
 import {
   HANDOFF_STEPS,
   buildInvoiceHtml,
@@ -41,72 +67,115 @@ import {
 } from '@/lib/invoice';
 import { notifyError, notifySuccess } from '@/lib/toast';
 
-const GREEN = '#09AD2A';
-const GREEN_DARK = '#08961F';
+const TEAL = '#035C6C';
 const AMBER = '#B45309';
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2';
-const CARD = 'rounded-2xl border border-[#ECECEC] bg-white p-5 shadow-[0_4px_14px_rgba(16,24,40,0.05)]';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
+// The app's cards: white, radius 16, padding 16, soft shadow.
+const CARD = 'mt-3 rounded-2xl bg-white p-4 shadow-[0_10px_18px_rgba(17,17,17,0.08)]';
+// Edit Invoice is offered until the device has left the shop (app rule).
+const EDIT_CLOSED = ['DELIVERED_PROCESSING', 'DELIVERED', 'CANCELLED', 'RETURNED'];
+const STATUS_LABEL = {
+  READY: 'Ready for Delivery',
+  RETURN_DELIVERY: 'Return Delivery',
+  INVOICE_GENERATED: 'Invoice Generated',
+  INVOICE_READY: 'Invoice Sent',
+  DELIVERED_PROCESSING: 'Out for Delivery',
+  DELIVERED: 'Delivered',
+  CANCELLED: 'Cancelled',
+};
+const humanize = (s) =>
+  String(s || '')
+    .toLowerCase()
+    .split('_')
+    .filter(Boolean)
+    .map((w) => w[0].toUpperCase() + w.slice(1))
+    .join(' ');
+// "02 Oct 2026"
+const shortDate = (iso) => {
+  const d = iso ? new Date(iso) : null;
+  return d && !Number.isNaN(d.getTime()) ? d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
+};
 
-function SectionLabel({ children }) {
+function CardTitle({ icon: Icon, title, right }) {
   return (
-    <p className="mb-2.5 flex items-center gap-2 text-[12px] font-extrabold uppercase tracking-wide" style={{ color: GREEN_DARK }}>
-      <span className="h-3.5 w-1 rounded" style={{ backgroundColor: GREEN }} aria-hidden="true" />
-      {children}
-    </p>
+    <div className="mb-3 flex items-center gap-2">
+      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#E5F3F5] text-[#035C6C]">
+        <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+      </span>
+      <p className="min-w-0 flex-1 text-[14px] font-extrabold text-[#111111]">{title}</p>
+      {right}
+    </div>
   );
 }
 
 function Meta({ label, value }) {
   return (
-    <p className="flex gap-1 text-[12px]">
-      <span className="w-24 shrink-0 text-[#667085]">{label}</span>
-      <span className="text-[#667085]">:</span>
+    <p className="flex gap-1 text-[10.5px]">
+      <span className="w-[84px] shrink-0 text-[#6B7280]">{label}</span>
+      <span className="text-[#6B7280]">:</span>
       <span className="min-w-0 break-words font-bold text-[#111111]">{value || '—'}</span>
     </p>
   );
 }
 
-/** One GST table — header labels, rows (array of cell arrays), total row. */
-function GstTable({ heads, rows, total, minWidth = 640 }) {
+function KV({ label, value }) {
+  if (!value) return null;
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-[12px]" style={{ minWidth }}>
-        <thead>
-          <tr className="bg-[#F7FAF7] text-[10.5px] font-extrabold uppercase tracking-wide text-[#475467]">
-            {heads.map((h, i) => (
-              <th key={h} className={cx('px-2.5 py-2', i > 1 && h !== 'Warranty' ? 'text-right' : 'text-left')}>
-                {h}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.length === 0 ? (
-            <tr>
-              <td colSpan={heads.length} className="px-2.5 py-3 text-[#98A2B3]">
-                —
-              </td>
-            </tr>
-          ) : (
-            rows.map((cells, r) => (
-              <tr key={r} className="border-t border-[#EFF5EE]">
-                {cells.map((c, i) => (
-                  <td key={i} className={cx('px-2.5 py-2', i > 1 && heads[i] !== 'Warranty' ? 'text-right' : 'text-left', i >= cells.length - 2 && 'font-extrabold text-[#111111]')}>
-                    {c}
-                  </td>
-                ))}
-              </tr>
-            ))
-          )}
-          <tr className="border-t border-[#E2E8E2] bg-[#F2FBF4] font-extrabold text-[#111111]">
-            {total.map((c, i) => (
-              <td key={i} className={cx('px-2.5 py-2', i > 1 && heads[i] !== 'Warranty' ? 'text-right' : 'text-left')}>
-                {c}
-              </td>
-            ))}
-          </tr>
-        </tbody>
-      </table>
+    <p className="flex gap-2 py-0.5 text-[11.5px]">
+      <span className="w-[72px] shrink-0 text-[#6B7280]">{label}</span>
+      <span className="min-w-0 flex-1 break-words font-semibold text-[#111111]">{value}</span>
+    </p>
+  );
+}
+
+function Line({ label, value, color, bold }) {
+  return (
+    <div className="flex justify-between gap-3 py-1 text-[12px]">
+      <span className="text-[#6B7280]">{label}</span>
+      <span className={bold ? 'font-extrabold' : 'font-bold'} style={{ color: color || '#111111' }}>
+        {value}
+      </span>
+    </div>
+  );
+}
+
+/** One repair item: title, meta, total; the chevron opens its GST split. */
+function ItemRow({ title, meta, br, open, onToggle }) {
+  return (
+    <div className="border-b border-[#F3F4F6] py-2 last:border-b-0">
+      <button type="button" onClick={onToggle} aria-expanded={open} className="flex w-full items-center gap-2 text-left">
+        <span className="min-w-0 flex-1">
+          <span className="block break-words text-[12.5px] font-bold text-[#111111]">{title || '—'}</span>
+          <span className="block text-[11px] text-[#6B7280]">{meta}</span>
+        </span>
+        <span className="shrink-0 text-[12.5px] font-extrabold text-[#111111]">₹{fmt(br.total)}</span>
+        <ChevronDown className={cx('h-4 w-4 shrink-0 text-[#6B7280] transition', open && 'rotate-180')} aria-hidden="true" />
+      </button>
+      {open ? (
+        <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 rounded-xl bg-[#F8FAFB] p-2.5 text-[11.5px] sm:grid-cols-4">
+          <span className="text-[#6B7280]">
+            Taxable <b className="block text-[#111111]">₹{fmt(br.base)}</b>
+          </span>
+          <span className="text-[#6B7280]">
+            CGST <b className="block text-[#111111]">₹{fmt(br.cgst)}</b>
+          </span>
+          <span className="text-[#6B7280]">
+            SGST <b className="block text-[#111111]">₹{fmt(br.sgst)}</b>
+          </span>
+          <span className="text-[#6B7280]">
+            Total GST <b className="block text-[#111111]">₹{fmt(br.totalGst)}</b>
+          </span>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function SubHeader({ title, total }) {
+  return (
+    <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-1.5 pt-1 text-[11px] font-extrabold text-[#035C6C]">
+      <span>{title}</span>
+      <span>₹{fmt(total)}</span>
     </div>
   );
 }
@@ -150,13 +219,14 @@ export default function DeliverInvoicePage() {
   }, [load]);
 
   const owner = useMemo(() => readShopOwner() || {}, []);
-  const shopName = shop?.name || shop?.shopName || ticket?.shopName || 'GGFix Service Center';
+  const shopName = shop?.name || shop?.shopName || ticket?.shopName || 'NearGFix Service Center';
   const shopMobile = shop?.mobile || owner?.phone || '';
   const shopAddress = shop?.address || ticket?.shopAddress || '';
   const shopGst = shop?.gstNumber || invoice?.gstNo || '';
   const ownerName = owner?.name || owner?.ownerName || '';
   const customerName = ticket?.customerName || '';
-  const trackingId = ticket?.trackingId || invoice?.invoiceNo || ticketId;
+  // Short ticket ID ("#GTS-138"): the ticket's trackingId, else its booking number without the suffix.
+  const trackingId = withHash((ticket && bookingRef(ticket)) || invoice?.invoiceNo || ticketId);
   const composedAddr = customer
     ? [customer.addressLine, customer.area || customer.locality, customer.district || customer.city, customer.state, customer.pincode].filter((p) => p && String(p).trim()).join(', ')
     : '';
@@ -168,7 +238,8 @@ export default function DeliverInvoicePage() {
 
   const html = () => buildInvoiceHtml({ invoice, ticket, shopName, shopMobile, shopAddress, shopGst, ownerName, customerName, customerAddress, trackingId });
 
-  function printInvoice() {
+  // The A4 invoice in its own window; print = the browser's Print / Save as PDF.
+  function openInvoice(print) {
     const win = window.open('', '_blank', 'width=900,height=1000');
     if (!win) {
       notifyError('Allow pop-ups to print or save the invoice.');
@@ -177,8 +248,9 @@ export default function DeliverInvoicePage() {
     win.document.write(html());
     win.document.close();
     win.focus();
-    setTimeout(() => win.print(), 300);
+    if (print) setTimeout(() => win.print(), 300);
   }
+  const printInvoice = () => openInvoice(true);
 
   function shareInvoice() {
     const digits = String(ticket?.customerPhone || '').replace(/\D/g, '').slice(-10);
@@ -212,271 +284,315 @@ export default function DeliverInvoicePage() {
     }
   }
 
-  const heads = { service: ['Sl', 'Description', 'Rate (₹)', 'Taxable Value', 'CGST', 'SGST', 'Total GST', 'Total'] };
+
+  const [openItems, setOpenItems] = useState({});
+  const toggleItem = (key) => setOpenItems((o) => ({ ...o, [key]: !o[key] }));
+  const statusKey = String(ticket?.status || '').toUpperCase();
+  const statusText = STATUS_LABEL[statusKey] || humanize(statusKey);
+  const gstPct = Number(invoice?.gstPercent) || 0;
+  const gstApplied = invoice && invoice.taxMode !== 'WITHOUT' && gstPct > 0;
+  const deviceName = ticket?.deviceDisplayName || ticket?.deviceModelName || ticket?.modelName || '';
+  const deliverStep = HANDOFF_STEPS.find((s) => s.key === 'DELIVERED');
+  const canConfirmDelivery = statusKey === 'DELIVERED_PROCESSING' && !done.DELIVERED;
+  const headerBtn = cx('flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#E5F3F5] text-[#035C6C] transition hover:bg-[#C7E6EA]', FOCUS_RING);
 
   return (
-    <div className="mx-auto flex w-full max-w-[960px] flex-col gap-4">
-      {/* Header */}
-      <div className="border-b border-[#ECECEC] pb-4">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            aria-label="Back"
-            className={cx('flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3] text-[#111111] transition hover:bg-[#ECECEC]', FOCUS_RING)}
-          >
-            <ArrowLeft className="h-5 w-5" aria-hidden="true" />
-          </button>
-          <h1 className="min-w-0 flex-1 truncate text-[19px] font-extrabold text-[#111111]">Deliver Invoice</h1>
-          {invoice ? (
-            <>
-              <span className="hidden rounded-full bg-[#F3F3F3] px-3 py-1 text-[12px] font-extrabold text-[#111111] sm:inline">#{invoice.invoiceNo}</span>
-              <button type="button" onClick={printInvoice} aria-label="Download or print invoice" title="Download / Print (Save as PDF)" className={cx('flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3] transition hover:bg-[#EAF8EC]', FOCUS_RING)} style={{ color: GREEN_DARK }}>
-                <Printer className="h-5 w-5" aria-hidden="true" />
-              </button>
-              <button type="button" onClick={shareInvoice} aria-label="Share invoice on WhatsApp" title="Share on WhatsApp" className={cx('flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3] transition hover:bg-[#EAF8EC]', FOCUS_RING)} style={{ color: GREEN_DARK }}>
-                <Share2 className="h-5 w-5" aria-hidden="true" />
-              </button>
-            </>
-          ) : null}
+    <div className="-mx-4 -my-5 min-h-[calc(100vh-4rem)] bg-[#F3F4F6] sm:-mx-6 sm:-my-6">
+      {/* Header: back · Deliver Invoice / #invoiceNo · Download · Share · Print */}
+      <div className="flex items-center gap-2.5 border-b border-[#E5E7EB] bg-white px-3.5 pb-3 pt-2.5">
+        <button
+          type="button"
+          onClick={() => router.back()}
+          aria-label="Back"
+          className={cx('flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F3F4F6] text-[#111111] transition hover:bg-[#E5E7EB]', FOCUS_RING)}
+        >
+          <ArrowLeft className="h-5 w-5" aria-hidden="true" />
+        </button>
+        <div className="min-w-0 flex-1">
+          <h1 className="truncate text-[17px] font-extrabold text-[#111111]">Deliver Invoice</h1>
+          {invoice ? <p className="truncate text-[11.5px] font-extrabold text-[#035C6C]">{withHash(invoice.invoiceNo)}</p> : null}
         </div>
         {invoice ? (
-          <div className="mt-3 flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
-            <div>
-              <p className="text-[10.5px] font-bold tracking-[0.1em] text-[#98A2B3]">INVOICE TOTAL</p>
-              <p className="text-[26px] font-extrabold leading-tight text-[#111111]">₹{fmt(invoice.finalPayableAmount)}</p>
-            </div>
-            <div className="text-right">
-              <p className="text-[11px] text-[#98A2B3]">Delivery date</p>
-              <p className="text-[12.5px] font-bold text-[#111111]">{formatDateTime(invoice.generatedAt || invoice.deliveryDate)}</p>
-            </div>
-          </div>
+          <>
+            <button type="button" onClick={printInvoice} aria-label="Download invoice" title="Download (Save as PDF)" className={headerBtn}>
+              <Download className="h-[17px] w-[17px]" aria-hidden="true" />
+            </button>
+            <button type="button" onClick={shareInvoice} aria-label="Share invoice on WhatsApp" title="Share on WhatsApp" className={headerBtn}>
+              <Share2 className="h-[17px] w-[17px]" aria-hidden="true" />
+            </button>
+            <button type="button" onClick={printInvoice} aria-label="Print invoice" title="Print" className={headerBtn}>
+              <Printer className="h-[17px] w-[17px]" aria-hidden="true" />
+            </button>
+          </>
         ) : null}
       </div>
 
-      {!ticketId ? (
-        <p className="text-[14px] text-[#667085]">Open an invoice from a booking.</p>
-      ) : loading ? (
-        <div className="space-y-3">
-          {[0, 1, 2].map((i) => (
-            <div key={i} className="h-36 animate-pulse rounded-2xl bg-[#F3F3F3]" />
-          ))}
-        </div>
-      ) : error ? (
-        <p className="rounded-xl border border-[#FECACA] bg-[#FEF2F2] px-4 py-3 text-[13.5px] font-semibold text-[#B42318]">{error}</p>
-      ) : !invoice ? (
-        <div className="flex flex-col items-center rounded-2xl border border-[#E2E8E2] bg-[#F2FBF4] px-6 py-12 text-center">
-          <p className="text-[16px] font-extrabold text-[#111111]">No invoice generated yet</p>
-          <p className="mt-1 text-[13.5px] text-[#667085]">Create one with the Invoice Generator.</p>
-          <Link
-            href={`/shop-home/services/invoice/generate/?ticketId=${encodeURIComponent(ticketId)}`}
-            className={cx('mt-5 inline-flex h-11 items-center gap-2 rounded-2xl px-6 text-[14px] font-extrabold text-white', FOCUS_RING)}
-            style={{ backgroundColor: GREEN_DARK }}
-          >
-            Open Invoice Generator
-          </Link>
-        </div>
-      ) : (
-        <>
-          {/* Letterhead */}
-          <section className={CARD}>
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <p className="break-words text-[19px] font-extrabold" style={{ color: GREEN_DARK }}>
-                  {shopName}
-                </p>
-                {ownerName ? <p className="text-[12.5px] font-semibold text-[#475467]">{ownerName}</p> : null}
-                {shopMobile ? <p className="mt-1 text-[12px] text-[#667085]">Mobile : {shopMobile}</p> : null}
-              </div>
-              <div>
-                <p className="mb-1 text-right text-[11px] font-extrabold text-[#98A2B3]">Original for Deliver Receipt</p>
-                <Meta label="Invoice No" value={invoice.invoiceNo} />
-                <Meta label="Ticket Date" value={formatDateTime(invoice.ticketDate)} />
-                <Meta label="Delivery Date" value={formatDateTime(invoice.generatedAt || invoice.deliveryDate)} />
-                {shopGst ? <Meta label="GST No" value={shopGst} /> : null}
-              </div>
+      <div className={cx('mx-auto w-full max-w-[760px] px-3.5 pt-0.5', invoice ? 'pb-28' : 'pb-8')}>
+        {!ticketId ? (
+          <p className="mt-4 text-[14px] text-[#6B7280]">Open an invoice from a booking.</p>
+        ) : loading ? (
+          <div className="mt-3 space-y-3">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="h-36 animate-pulse rounded-2xl bg-white" />
+            ))}
+          </div>
+        ) : error ? (
+          <p className="mt-3 rounded-xl border border-[#FECACA] bg-[#FEF2F2] px-4 py-3 text-[13.5px] font-semibold text-[#B42318]">{error}</p>
+        ) : !invoice ? (
+          <div className="mt-3 flex flex-col items-center rounded-2xl bg-[#E5F3F5] px-6 py-12 text-center">
+            <p className="text-[16px] font-extrabold text-[#111111]">No invoice generated yet</p>
+            <p className="mt-1 text-[13.5px] text-[#6B7280]">Create one with the Invoice Generator.</p>
+            <div className="mt-5 flex flex-wrap justify-center gap-2.5">
+              <button
+                type="button"
+                onClick={() => router.back()}
+                className={cx('inline-flex h-11 items-center rounded-2xl border-[1.5px] border-[#035C6C] bg-white px-5 text-[14px] font-extrabold text-[#035C6C]', FOCUS_RING)}
+              >
+                Go Back
+              </button>
+              <Link
+                href={`/shop-home/services/invoice/generate/?ticketId=${encodeURIComponent(ticketId)}`}
+                className={cx('inline-flex h-11 items-center gap-2 rounded-2xl bg-[#035C6C] px-6 text-[14px] font-extrabold text-white', FOCUS_RING)}
+              >
+                Open Invoice Generator
+              </Link>
             </div>
-            <div className="my-4 border-t border-[#E2E8E2]" />
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <p className="text-[11px] font-extrabold tracking-wide text-[#98A2B3]">TO:</p>
-                <p className="mt-1 text-[15px] font-extrabold text-[#111111]">{customerName || '—'}</p>
-                {customerAddress ? <p className="mt-1 break-words text-[12.5px] text-[#475467]">{customerAddress}</p> : null}
-                {ticket?.customerPhone ? <p className="mt-1.5 text-[12.5px] font-semibold text-[#344054]">Mobile : {ticket.customerPhone}</p> : null}
-              </div>
-              <div className="sm:text-right">
-                <p className="text-[11px] font-extrabold tracking-wide text-[#98A2B3]">FROM:</p>
-                <p className="mt-1 text-[15px] font-extrabold text-[#111111]">{shopName}</p>
-                {shopMobile ? <p className="mt-1 text-[12.5px] font-semibold text-[#344054]">Mobile : {shopMobile}</p> : null}
-                {shopAddress ? <p className="mt-1 break-words text-[12.5px] text-[#475467]">{shopAddress}</p> : null}
-                {shopGst ? <p className="mt-1 text-[12.5px] font-semibold text-[#344054]">GSTIN : {shopGst}</p> : null}
-              </div>
-            </div>
-          </section>
-
-          <section className={CARD}>
-            <SectionLabel>(A) Service</SectionLabel>
-            <GstTable
-              heads={heads.service}
-              rows={b.serviceLines.map((r, i) => {
-                const br = b.serviceBreaks[i];
-                return [r.slNo || i + 1, r.description, fmt(r.rate), fmt(br.base), fmt(br.cgst), fmt(br.sgst), fmt(br.totalGst), fmt(br.total)];
-              })}
-              total={['', 'Total Amount (₹)', fmt(b.serviceGross), fmt(b.service.base), fmt(b.service.cgst), fmt(b.service.sgst), fmt(b.service.totalGst), fmt(b.service.total)]}
-            />
-          </section>
-
-          <section className={CARD}>
-            <SectionLabel>(B) Spares</SectionLabel>
-            <GstTable
-              minWidth={760}
-              heads={['Sl', 'Description', 'Warranty', 'Qty', 'Rate', 'Taxable Value', 'CGST', 'SGST', 'Total GST', 'Total']}
-              rows={b.spareLines.map((r, i) => {
-                const br = b.spareBreaks[i];
-                return [r.slNo || i + 1, r.description, r.warranty || '—', Number(r.qty || 1).toFixed(2), fmt(r.rate), fmt(br.base), fmt(br.cgst), fmt(br.sgst), fmt(br.totalGst), fmt(br.total)];
-              })}
-              total={['', 'Total Amount (₹)', '', '', fmt(b.spareGross), fmt(b.spares.base), fmt(b.spares.cgst), fmt(b.spares.sgst), fmt(b.spares.totalGst), fmt(b.spares.total)]}
-            />
-          </section>
-
-          <section className={CARD}>
-            <SectionLabel>Tax Summary</SectionLabel>
-            <GstTable
-              heads={['Sl', 'Description', 'Taxable Value', 'CGST', 'SGST', 'Total GST', 'Total']}
-              rows={[
-                [1, 'Service', fmt(b.service.base), fmt(b.service.cgst), fmt(b.service.sgst), fmt(b.service.totalGst), fmt(b.service.total)],
-                [2, 'Spares', fmt(b.spares.base), fmt(b.spares.cgst), fmt(b.spares.sgst), fmt(b.spares.totalGst), fmt(b.spares.total)],
-              ]}
-              total={['', 'Total payable by customer (₹)', fmt(b.grand.base), fmt(b.grand.cgst), fmt(b.grand.sgst), fmt(b.grand.totalGst), fmt(b.grand.total)]}
-            />
-          </section>
-
-          {/* Total payable summary + payment & credit */}
-          <section className={CARD}>
-            <SectionLabel>Total Payable Summary</SectionLabel>
-            <div className="flex justify-between py-1 text-[13px]">
-              <span className="text-[#475467]">Taxable Amount</span>
-              <b>₹{fmt(b.grand.base)}</b>
-            </div>
-            <div className="flex justify-between py-1 text-[13px]">
-              <span className="text-[#475467]">Total GST Tax (₹)</span>
-              <b>₹{fmt(b.grand.totalGst)}</b>
-            </div>
-            <div className="flex justify-between border-t border-dashed border-[#EFF5EE] py-1 text-[13px]">
-              <span className="text-[#475467]">Discount</span>
-              <b style={{ color: AMBER }}>− ₹{fmt(invoice.discount)}</b>
-            </div>
-            <div className="mt-3 flex items-center justify-between rounded-2xl px-4 py-3 text-white" style={{ backgroundColor: GREEN_DARK }}>
-              <span className="text-[14px] font-extrabold">Invoice Total</span>
-              <span className="text-[19px] font-extrabold">₹{fmt(invoice.finalPayableAmount)}</span>
-            </div>
-            {invoice.amountInWords ? <p className="mt-2 text-[12px] italic text-[#667085]">In words: {invoice.amountInWords}</p> : null}
-            {p.shown ? (
-              <div className="mt-3 border-t border-[#EFF5EE] pt-3 text-[13px]">
-                {p.advancePaid > 0 ? (
-                  <div className="flex justify-between py-1">
-                    <span className="text-[#475467]">Advance Already Paid</span>
-                    <b style={{ color: AMBER }}>− ₹{fmt(p.advancePaid)}</b>
-                  </div>
-                ) : null}
-                <div className="flex justify-between py-1">
-                  <span className="text-[#475467]">Net Payable</span>
-                  <b>₹{fmt(p.netPayable)}</b>
+          </div>
+        ) : (
+          <>
+            {/* 1 · Summary */}
+            <section className="mt-3 rounded-2xl bg-[#E5F3F5] p-4">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="text-[10px] font-bold tracking-[0.1em] text-[#6B7280]">INVOICE TOTAL</p>
+                  <p className="text-[24px] font-extrabold leading-tight text-[#111111]">₹{fmt(invoice.finalPayableAmount)}</p>
                 </div>
-                {p.amountPaid > 0 ? (
-                  <div className="flex justify-between py-1">
-                    <span className="text-[#475467]">Amount Paid</span>
-                    <b style={{ color: AMBER }}>− ₹{fmt(p.amountPaid)}</b>
-                  </div>
-                ) : null}
-                <div
-                  className="mt-2 flex items-center justify-between rounded-2xl px-4 py-3 font-extrabold"
-                  style={{ backgroundColor: p.creditAmount > 0 ? '#FEF3C7' : '#EAF8EC', color: p.creditAmount > 0 ? AMBER : GREEN_DARK }}
-                >
-                  <span className="text-[13px]">{p.creditAmount > 0 ? 'Credit / Balance Payable' : 'Balance Payable'}</span>
-                  <span className="text-[16px]">₹{fmt(p.creditAmount)}</span>
-                </div>
-                {p.creditAmount > 0 && invoice.paymentNote ? <p className="mt-2 text-[12px] italic text-[#667085]">Note: {invoice.paymentNote}</p> : null}
-              </div>
-            ) : null}
-          </section>
-
-          {/* Signatures */}
-          <section className={CARD}>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div>
-                <p className="text-[12px] text-[#475467]">Customer Signature :</p>
-                {customerName ? <p className="mt-1 text-[13px] font-extrabold text-[#111111]">{customerName}</p> : null}
-              </div>
-              <div className="rounded-xl bg-[#F2FBF4] p-3 text-center">
-                <p className="text-[13px] font-extrabold text-[#111111]">{shopName}</p>
-                {ownerName ? <p className="text-[12px] font-semibold text-[#475467]">{ownerName}</p> : null}
-                <p className="mt-1 text-[11px] text-[#98A2B3]">Authorised Signatory</p>
-              </div>
-            </div>
-            <p className="mt-4 text-[12px] font-extrabold text-[#344054]">Declaration</p>
-            <p className="mt-1 text-[12px] text-[#667085]">We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.</p>
-          </section>
-
-          {/* Billing & handover */}
-          <section className={CARD}>
-            <p className="mb-2 flex items-center gap-2 text-[11.5px] font-extrabold uppercase tracking-[0.12em]" style={{ color: GREEN_DARK }}>
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#EAF8EC]">
-                <ListChecks className="h-3.5 w-3.5" aria-hidden="true" />
-              </span>
-              Billing &amp; Handover
-            </p>
-            <p className="mb-3 text-[12px] text-[#667085]">Record each step as it happens: Invoice Generated → Invoice Ready → Delivered Processing → Delivered to Customer.</p>
-            <div className="space-y-2">
-              {HANDOFF_STEPS.map((step) => {
-                const isDone = !!done[step.key];
-                const busy = busyStep === step.key;
-                const auto = step.key === 'INVOICE_GENERATED';
-                return (
-                  <button
-                    key={step.key}
-                    type="button"
-                    disabled={isDone || busy || auto}
-                    onClick={() => submitStep(step)}
-                    className={cx(
-                      'flex w-full items-center gap-3 rounded-2xl border-[1.5px] p-3 text-left transition',
-                      FOCUS_RING,
-                      isDone ? 'border-[#09AD2A] bg-[#F2FBF4]' : 'border-[#E2E8E2] bg-white hover:border-[#09AD2A]',
-                      auto && !isDone && 'cursor-default opacity-70',
-                    )}
+                {statusText ? (
+                  <span
+                    className={cx('rounded-full px-2.5 py-1 text-[11px] font-extrabold', statusKey === 'DELIVERED' ? 'bg-[#EAF3E2] text-[#609138]' : 'bg-white text-[#035C6C]')}
                   >
-                    <span className={cx('flex h-10 w-10 shrink-0 items-center justify-center rounded-full', isDone ? 'bg-[#09AD2A] text-white' : 'bg-[#F2FBF4]')} style={isDone ? undefined : { color: GREEN_DARK }}>
-                      <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block text-[14px] font-extrabold" style={{ color: isDone ? GREEN_DARK : '#111111' }}>
-                        {step.label}
-                      </span>
-                      <span className="block text-[12px] text-[#667085]">{step.hint}</span>
-                    </span>
-                    <span
-                      className={cx('flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[10.5px] font-extrabold tracking-wide', isDone ? 'bg-[#09AD2A] text-white' : 'bg-[#EAF8EC]')}
-                      style={isDone ? undefined : { color: GREEN_DARK }}
-                    >
-                      {busy ? <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" /> : null}
-                      {isDone ? 'DONE' : busy ? 'SAVING' : auto ? 'AUTO' : 'SUBMIT'}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </section>
+                    {statusText}
+                  </span>
+                ) : null}
+              </div>
+              <p className="mt-1 text-[12px] text-[#6B7280]">
+                Delivery Date <b className="text-[#111111]">{shortDate(invoice.generatedAt || invoice.deliveryDate)}</b>
+                <span className="mx-1.5 text-[#C7E6EA]">|</span>
+                Tracking ID <b className="text-[#111111]">{trackingId}</b>
+              </p>
+              {!EDIT_CLOSED.includes(statusKey) ? (
+                <Link
+                  href={`/shop-home/services/invoice/generate/?ticketId=${encodeURIComponent(ticketId)}`}
+                  className={cx('mt-3 inline-flex h-9 items-center gap-1.5 rounded-xl bg-white px-3.5 text-[12.5px] font-extrabold text-[#035C6C] transition hover:bg-[#F3F4F6]', FOCUS_RING)}
+                >
+                  <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
+                  Edit Invoice
+                </Link>
+              ) : null}
+            </section>
 
-          <Link
-            href={`/shop-home/services/invoice/generate/?ticketId=${encodeURIComponent(ticketId)}`}
-            className={cx('inline-flex h-11 items-center justify-center gap-2 self-start rounded-2xl border-2 px-5 text-[13.5px] font-extrabold transition hover:bg-[#F2FBF4]', FOCUS_RING)}
-            style={{ borderColor: GREEN, color: GREEN_DARK }}
-          >
-            <Pencil className="h-4 w-4" aria-hidden="true" />
-            Edit / Re-generate invoice
-          </Link>
-        </>
-      )}
+            {/* 2 · Shop details */}
+            <section className={CARD}>
+              <CardTitle icon={Store} title="Shop Details" right={<span className="text-[10.5px] font-bold text-[#6B7280]">Original for Deliver Receipt</span>} />
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="min-w-0">
+                  <p className="break-words text-[16px] font-extrabold text-[#035C6C]">{shopName}</p>
+                  {ownerName ? <p className="text-[12px] font-semibold text-[#374151]">{ownerName}</p> : null}
+                  {shopMobile ? <p className="mt-1 text-[11.5px] text-[#6B7280]">Mobile: {shopMobile}</p> : null}
+                  {shopAddress ? <p className="break-words text-[11.5px] text-[#6B7280]">{shopAddress}</p> : null}
+                  {shopGst ? <p className="text-[11.5px] font-semibold text-[#111111]">GSTIN: {shopGst}</p> : null}
+                </div>
+                <div className="border-t border-[#E5E7EB] pt-2.5 sm:border-t-0 sm:pt-0">
+                  <Meta label="Invoice No" value={invoice.invoiceNo} />
+                  <Meta label="Ticket Date" value={formatDateTime(invoice.ticketDate)} />
+                  <Meta label="Delivery Date" value={formatDateTime(invoice.generatedAt || invoice.deliveryDate)} />
+                </div>
+              </div>
+            </section>
+
+            {/* 3 · Customer & device */}
+            <section className={CARD}>
+              <CardTitle icon={UserRound} title="Customer & Device" />
+              <p className="text-[14px] font-extrabold text-[#111111]">{customerName || '—'}</p>
+              <KV label="Mobile" value={ticket?.customerPhone} />
+              <KV label="Alt. Mobile" value={customer?.alternatePhone || customer?.altPhone} />
+              <KV label="Address" value={customerAddress} />
+              <div className="my-2.5 h-px bg-[#E5E7EB]" />
+              <p className="flex items-center gap-1.5 text-[13px] font-extrabold text-[#111111]">
+                <Smartphone className="h-4 w-4 shrink-0 text-[#035C6C]" aria-hidden="true" />
+                {deviceName || 'Device'}
+              </p>
+              <KV label="Category" value={ticket?.deviceCategory || ticket?.categoryName} />
+              <KV label="Brand" value={ticket?.brandName} />
+              <KV label="Model No" value={ticket?.modelNumber} />
+              <KV label="Variant" value={ticket?.variant || ticket?.ramStorage} />
+              <KV label="IMEI" value={ticket?.imei} />
+              <KV label="Serial No" value={ticket?.serialNumber} />
+              <KV label="Complaint" value={ticket?.issueDescription} />
+            </section>
+
+            {/* 4 · Repair items */}
+            <section className={CARD}>
+              <CardTitle icon={Wrench} title="Repair Items" />
+              <SubHeader title="A · Service Charges" total={b.service.total} />
+              {b.serviceLines.length ? (
+                b.serviceLines.map((r, i) => (
+                  <ItemRow
+                    key={`s${i}`}
+                    title={r.description}
+                    meta={`Rate ₹${fmt(r.rate)} · GST ₹${fmt(b.serviceBreaks[i].totalGst)}`}
+                    br={b.serviceBreaks[i]}
+                    open={!!openItems[`s${i}`]}
+                    onToggle={() => toggleItem(`s${i}`)}
+                  />
+                ))
+              ) : (
+                <p className="py-2 text-[12px] text-[#9CA3AF]">No service charges</p>
+              )}
+              <div className="mt-3">
+                <SubHeader title="B · Spare Parts" total={b.spares.total} />
+                {b.spareLines.length ? (
+                  b.spareLines.map((r, i) => (
+                    <ItemRow
+                      key={`p${i}`}
+                      title={r.description}
+                      meta={[`${Number(r.qty || 1)} × ₹${fmt(r.rate)}`, r.warranty].filter(Boolean).join(' · ')}
+                      br={b.spareBreaks[i]}
+                      open={!!openItems[`p${i}`]}
+                      onToggle={() => toggleItem(`p${i}`)}
+                    />
+                  ))
+                ) : (
+                  <p className="py-2 text-[12px] text-[#9CA3AF]">No spare parts</p>
+                )}
+              </div>
+            </section>
+
+            {/* 5 · Tax & payment */}
+            <section className={CARD}>
+              <CardTitle icon={FileText} title="Tax & Payment" />
+              <Line label="Taxable Amount" value={`₹${fmt(b.grand.base)}`} />
+              {gstApplied ? (
+                <>
+                  <Line label={`CGST (${gstPct / 2}%)`} value={`₹${fmt(b.grand.cgst)}`} />
+                  <Line label={`SGST (${gstPct / 2}%)`} value={`₹${fmt(b.grand.sgst)}`} />
+                </>
+              ) : (
+                <Line label="GST" value="Not applied" />
+              )}
+              {Number(invoice.discount) > 0 ? <Line label="Discount" value={`− ₹${fmt(invoice.discount)}`} color={AMBER} /> : null}
+              <div className="mt-2 flex items-center justify-between rounded-xl bg-[#035C6C] px-4 py-3 text-white">
+                <span className="text-[13px] font-extrabold">Invoice Total</span>
+                <span className="text-[17px] font-extrabold">₹{fmt(invoice.finalPayableAmount)}</span>
+              </div>
+              {invoice.amountInWords ? <p className="mt-2 text-[11px] italic text-[#6B7280]">In words: {invoice.amountInWords}</p> : null}
+              <div className="mt-3 border-t border-[#E5E7EB] pt-2">
+                {p.shown ? (
+                  <>
+                    {p.advancePaid > 0 ? (
+                      <>
+                        <Line label="Advance Paid" value={`₹${fmt(p.advancePaid)}`} />
+                        <Line label="Net Payable" value={`₹${fmt(p.netPayable)}`} />
+                      </>
+                    ) : null}
+                    <Line label="Amount Paid" value={`₹${fmt(p.advancePaid + p.amountPaid)}`} />
+                    <Line label="Balance Payable" value={`₹${fmt(p.creditAmount)}`} color={p.creditAmount > 0 ? AMBER : TEAL} bold />
+                    <span
+                      className={cx(
+                        'mt-1.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11.5px] font-extrabold',
+                        p.creditAmount > 0 ? 'bg-[#FEF3C7] text-[#B45309]' : 'bg-[#EAF3E2] text-[#609138]',
+                      )}
+                    >
+                      {p.creditAmount > 0 ? <CircleAlert className="h-3.5 w-3.5" aria-hidden="true" /> : <CircleCheckBig className="h-3.5 w-3.5" aria-hidden="true" />}
+                      {p.creditAmount > 0 ? `Balance due ₹${fmt(p.creditAmount)}` : 'Payment Completed'}
+                    </span>
+                    {invoice.paymentNote ? <p className="mt-2 text-[11.5px] italic text-[#6B7280]">Note: {invoice.paymentNote}</p> : null}
+                  </>
+                ) : (
+                  <p className="py-1 text-[12px] text-[#6B7280]">No payment recorded on this invoice.</p>
+                )}
+              </div>
+            </section>
+
+            {/* 6 · Declaration */}
+            <p className="mt-3 px-1 text-[10.5px] text-[#6B7280]">
+              <b>Declaration:</b> We declare that this invoice reflects the actual service charges and spare parts used for the above-mentioned device, and all the
+              particulars stated above are true and correct.
+            </p>
+
+            {/* Billing & handover (web): each step in order */}
+            <section className={CARD}>
+              <CardTitle icon={ListChecks} title="Billing & Handover" />
+              <p className="mb-3 text-[12px] text-[#6B7280]">Record each step as it happens: Invoice Generated → Invoice Ready → Delivered Processing → Delivered to Customer.</p>
+              <div className="space-y-2">
+                {HANDOFF_STEPS.map((step) => {
+                  const isDone = !!done[step.key];
+                  const busy = busyStep === step.key;
+                  const auto = step.key === 'INVOICE_GENERATED';
+                  return (
+                    <button
+                      key={step.key}
+                      type="button"
+                      disabled={isDone || busy || auto}
+                      onClick={() => submitStep(step)}
+                      className={cx(
+                        'flex w-full items-center gap-3 rounded-2xl border-[1.5px] p-3 text-left transition',
+                        FOCUS_RING,
+                        isDone ? 'border-[#035C6C] bg-[#E5F3F5]' : 'border-[#E5E7EB] bg-white hover:border-[#035C6C]',
+                        auto && !isDone && 'cursor-default opacity-70',
+                      )}
+                    >
+                      <span className={cx('flex h-10 w-10 shrink-0 items-center justify-center rounded-full', isDone ? 'bg-[#035C6C] text-white' : 'bg-[#E5F3F5] text-[#035C6C]')}>
+                        <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className={cx('block text-[14px] font-extrabold', isDone ? 'text-[#035C6C]' : 'text-[#111111]')}>{step.label}</span>
+                        <span className="block text-[12px] text-[#6B7280]">{step.hint}</span>
+                      </span>
+                      <span
+                        className={cx(
+                          'flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[10.5px] font-extrabold tracking-wide',
+                          isDone ? 'bg-[#035C6C] text-white' : 'bg-[#E5F3F5] text-[#035C6C]',
+                        )}
+                      >
+                        {busy ? <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" /> : null}
+                        {isDone ? 'DONE' : busy ? 'SAVING' : auto ? 'AUTO' : 'SUBMIT'}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+          </>
+        )}
+      </div>
+
+      {/* Bottom bar: Preview PDF · Confirm Delivery (Out for Delivery only) */}
+      {invoice ? (
+        <div className="sticky bottom-0 z-20 border-t border-[#E5E7EB] bg-white px-3.5 py-3">
+          <div className="mx-auto flex max-w-[760px] gap-2.5">
+            <button
+              type="button"
+              onClick={() => openInvoice(false)}
+              className={cx('inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border-[1.5px] border-[#035C6C] bg-white text-[14px] font-extrabold text-[#035C6C] transition hover:bg-[#E5F3F5]', FOCUS_RING)}
+            >
+              <Eye className="h-[18px] w-[18px]" aria-hidden="true" />
+              Preview PDF
+            </button>
+            {canConfirmDelivery && deliverStep ? (
+              <button
+                type="button"
+                onClick={() => submitStep(deliverStep)}
+                disabled={busyStep === 'DELIVERED'}
+                className={cx('inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#035C6C] text-[14px] font-extrabold text-white transition hover:bg-[#024A57] disabled:opacity-60', FOCUS_RING)}
+              >
+                {busyStep === 'DELIVERED' ? <Loader2 className="h-[18px] w-[18px] animate-spin" aria-hidden="true" /> : <Truck className="h-[18px] w-[18px]" aria-hidden="true" />}
+                Confirm Delivery
+              </button>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

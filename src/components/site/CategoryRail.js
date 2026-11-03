@@ -207,9 +207,9 @@ export default function CategoryRail({
               'sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:pb-0 lg:grid-cols-5',
               // Visible focus for the tab stop above. No ring-offset: the offset
               // would paint its own colour behind the ring, reading as a white halo
-              // on a dark band. brand-700 rather than brand-500 — #22C55E manages
+              // on a dark band. brand-700 rather than brand-500 — #035C6C manages
               // only 2.3:1 on white, under the 3:1 WCAG 1.4.11 floor for a focus
-              // indicator; #15803D clears it on every light surface.
+              // indicator; #024A57 clears it on every light surface.
               'rounded-3xl focus-visible:outline-none focus-visible:ring-2',
               isDark ? 'focus-visible:ring-white' : 'focus-visible:ring-brand-700',
             ),

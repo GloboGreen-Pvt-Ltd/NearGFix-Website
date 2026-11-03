@@ -5,7 +5,7 @@
  * Everything listed on those pages — device categories, brands, models and the
  * repair services — comes from the live master-data API (the same public
  * endpoints the /repair picker calls in the browser), so no page advertises a
- * brand or repair GGFIX does not actually carry. It runs only during
+ * brand or repair NearGFix does not actually carry. It runs only during
  * `next build`: the static export bakes the result into HTML, and a new deploy
  * picks up catalogue changes.
  *

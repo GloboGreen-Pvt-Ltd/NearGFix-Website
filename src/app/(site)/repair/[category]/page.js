@@ -70,7 +70,7 @@ export default async function RepairCategoryPage({ params }) {
       <Section tone="white" padding="tight">
         <div className="grid items-center gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
           <div>
-            <Badge icon="Wrench">Repair on GGFIX</Badge>
+            <Badge icon="Wrench">Repair on NearGFix</Badge>
             <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-brand-ink sm:text-4xl lg:text-5xl">
               {content.h1}
             </h1>
@@ -93,7 +93,7 @@ export default async function RepairCategoryPage({ params }) {
             <div className="mx-auto flex aspect-square w-full max-w-[320px] items-center justify-center rounded-4xl bg-brand-50 p-8 lg:max-w-[380px]">
               <Image
                 src={category.imageUrl}
-                alt={`${label} repair at GGFIX partner shops`}
+                alt={`${label} repair at NearGFix partner shops`}
                 width={320}
                 height={320}
                 priority
@@ -109,7 +109,7 @@ export default async function RepairCategoryPage({ params }) {
       <Section tone="white">
         <SectionHeading
           title={`Common ${content.deviceNoun} problems we can help with`}
-          subtitle={`What the problem looks like, and what a GGFIX partner shop can do about it.`}
+          subtitle={`What the problem looks like, and what a NearGFix partner shop can do about it.`}
         />
         <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {content.issues.map((issue) => (
@@ -126,7 +126,7 @@ export default async function RepairCategoryPage({ params }) {
         <Section tone="soft">
           <SectionHeading
             title={`${label} repair by brand`}
-            subtitle={`Choose your ${content.deviceNoun} brand to see the models GGFIX partner shops repair.`}
+            subtitle={`Choose your ${content.deviceNoun} brand to see the models NearGFix partner shops repair.`}
           />
           <ul className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {category.brands.map((brand) => (
@@ -165,7 +165,7 @@ export default async function RepairCategoryPage({ params }) {
         <Section tone="white">
           <SectionHeading
             title={`${label} repairs you can book`}
-            subtitle="Every repair below can be selected in the GGFIX repair flow. Which ones a shop offers, and its price, vary from shop to shop."
+            subtitle="Every repair below can be selected in the NearGFix repair flow. Which ones a shop offers, and its price, vary from shop to shop."
           />
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {category.repairGroups.map((group) => (
@@ -187,7 +187,7 @@ export default async function RepairCategoryPage({ params }) {
         <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
           <SectionHeading
             align="left"
-            title={`How ${label.toLowerCase()} repair works on GGFIX`}
+            title={`How ${label.toLowerCase()} repair works on NearGFix`}
             subtitle="From choosing your device to getting it back — and you approve the price before anything is done."
           />
           <StepList steps={REPAIR_STEPS} />
@@ -202,7 +202,7 @@ export default async function RepairCategoryPage({ params }) {
 
       {/* Other categories + CTA */}
       <Section tone="white" padding="tight">
-        <h2 className="text-center text-2xl font-bold tracking-tight text-brand-ink">Other repairs on GGFIX</h2>
+        <h2 className="text-center text-2xl font-bold tracking-tight text-brand-ink">Other repairs on NearGFix</h2>
         <ul className="mt-6 flex flex-wrap justify-center gap-3">
           {others.map((c) => (
             <li key={c.slug}>

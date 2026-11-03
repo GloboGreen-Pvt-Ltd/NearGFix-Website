@@ -28,7 +28,7 @@ import { fetchShopBookings, fetchTicketCounts, friendlyBookingStatus, sumReadyFo
 import { bookingEstimatedAmount } from '@/lib/bookingFormat';
 import { downloadReportPdf } from '@/lib/reportPdf';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 
 export default function DeliveryReportPage() {
   const [bookings, setBookings] = useState([]);
@@ -102,7 +102,7 @@ export default function DeliveryReportPage() {
     try {
       await downloadReportPdf({
         title: 'Delivery Report',
-        subtitle: `Delivered devices for ${new Date(viewDate).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })} — GGFIX Partner Dashboard`,
+        subtitle: `Delivered devices for ${new Date(viewDate).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })} — NearGFix Partner Dashboard`,
         stats: monthStats.map((s) => ({ label: s.label, value: s.value })),
         columns: [
           { header: 'Booking #', key: 'bookingNumber' },
@@ -129,7 +129,7 @@ export default function DeliveryReportPage() {
               type="button"
               onClick={() => setReloadKey((k) => k + 1)}
               className={cx(
-                'inline-flex items-center gap-1.5 rounded-xl border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#344054] transition hover:border-[#15803D] hover:text-[#15803D]',
+                'inline-flex items-center gap-1.5 rounded-xl border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#344054] transition hover:border-[#024A57] hover:text-[#024A57]',
                 FOCUS_RING,
               )}
             >
@@ -193,7 +193,7 @@ function DeliveryRow({ booking, expanded, onToggle }) {
     <div>
       <button type="button" onClick={onToggle} className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition hover:bg-[#F8F8F8] sm:px-5">
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8]">
-          <Smartphone className="h-5 w-5 text-[#15803D]" aria-hidden="true" />
+          <Smartphone className="h-5 w-5 text-[#024A57]" aria-hidden="true" />
         </span>
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-bold text-[#111111]">{booking.issueSummary || booking.deviceDisplayName || 'Service booking'}</p>
@@ -204,7 +204,7 @@ function DeliveryRow({ booking, expanded, onToggle }) {
         <div className="hidden shrink-0 text-right text-xs text-[#666666] sm:block">
           {booking.createdAt ? new Date(booking.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' }) : ''}
         </div>
-        <span className="hidden shrink-0 rounded-full bg-[#F3F3F3] px-2.5 py-1 text-[0.68rem] font-bold uppercase tracking-wide text-[#15803D] sm:inline-block">
+        <span className="hidden shrink-0 rounded-full bg-[#F3F3F3] px-2.5 py-1 text-[0.68rem] font-bold uppercase tracking-wide text-[#024A57] sm:inline-block">
           Delivered
         </span>
         <ChevronDown className={cx('h-4 w-4 shrink-0 text-[#98A2B3] transition-transform', expanded && 'rotate-180')} aria-hidden="true" />

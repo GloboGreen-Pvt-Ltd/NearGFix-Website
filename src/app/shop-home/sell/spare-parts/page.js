@@ -19,7 +19,7 @@ import { SELL_STEP_HREF } from '@/lib/sellFlow';
 import { saveSellDraft, uploadSellPhoto, useSellDraft } from '@/lib/sellListing';
 import { notifyError } from '@/lib/toast';
 
-const GREEN = { icon: 'bg-[#EAF8EC] text-[#079455]', empty: 'border-[#CDEFD5] bg-[#EAF8EC]', on: 'border-[#079455] bg-[#EAF8EC] text-[#067647]', text: 'text-[#079455]' };
+const GREEN = { icon: 'bg-[#E5F3F5] text-[#035C6C]', empty: 'border-[#C7E6EA] bg-[#E5F3F5]', on: 'border-[#035C6C] bg-[#E5F3F5] text-[#024A57]', text: 'text-[#035C6C]' };
 const AMBER = { icon: 'bg-[#FFFBEB] text-[#D97706]', empty: 'border-[#FDE68A] bg-[#FFFBEB]', on: 'border-[#D97706] bg-[#FFFBEB] text-[#B45309]', text: 'text-[#D97706]' };
 
 // The app's PRESET_GROUPS.
@@ -145,7 +145,7 @@ export default function SparePartsPage() {
     );
     const Icon = g.icon;
     return (
-      <div className={cx('relative h-28 overflow-hidden rounded-[14px] border-[1.5px]', url ? 'border-solid border-[#079455] bg-white' : cx('border-dashed', g.tone.empty))}>
+      <div className={cx('relative h-28 overflow-hidden rounded-[14px] border-[1.5px]', url ? 'border-solid border-[#035C6C] bg-white' : cx('border-dashed', g.tone.empty))}>
         {url ? (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element -- uploaded photo URL. */}
@@ -165,7 +165,7 @@ export default function SparePartsPage() {
             </label>
           </>
         ) : (
-          <label className={cx('flex h-full flex-col items-center justify-center gap-2 focus-within:ring-4 focus-within:ring-[#079455]/20', uploading ? 'cursor-wait' : 'cursor-pointer')}>
+          <label className={cx('flex h-full flex-col items-center justify-center gap-2 focus-within:ring-4 focus-within:ring-[#035C6C]/20', uploading ? 'cursor-wait' : 'cursor-pointer')}>
             {input}
             <Icon className="h-7 w-7 text-[#8E8E8E]" aria-hidden="true" />
             <span className="flex items-center gap-1 text-[11.5px] font-semibold text-[#666666]">
@@ -210,7 +210,7 @@ export default function SparePartsPage() {
                 type="button"
                 onClick={() => addCustom(g.key)}
                 aria-label={`Add a ${g.label} part`}
-                className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#079455] px-3.5 py-2 text-[12.5px] font-extrabold text-white transition hover:bg-[#067647]"
+                className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#035C6C] px-3.5 py-2 text-[12.5px] font-extrabold text-white transition hover:bg-[#024A57]"
               >
                 <Plus className="h-3.5 w-3.5" aria-hidden="true" />
                 Add
@@ -241,7 +241,7 @@ export default function SparePartsPage() {
               {(added[g.key] || []).map((c) => (
                 <div key={c.id}>
                   {photoSlot(g, c.id, false, c.name || 'custom part')}
-                  <div className="mt-1.5 flex items-center rounded-xl border border-[#ECECEC] bg-white pl-2.5 pr-1 focus-within:border-[#079455]">
+                  <div className="mt-1.5 flex items-center rounded-xl border border-[#ECECEC] bg-white pl-2.5 pr-1 focus-within:border-[#035C6C]">
                     <input
                       value={c.name}
                       onChange={(e) => renameCustom(g.key, c.id, e.target.value)}

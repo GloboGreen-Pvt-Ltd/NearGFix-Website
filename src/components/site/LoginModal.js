@@ -183,7 +183,7 @@ export default function LoginModal({ open, onClose, onSuccess, device }) {
       className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto p-4 sm:p-6"
       role="dialog"
       aria-modal="true"
-      aria-label="Log in to GGFIX"
+      aria-label="Log in to NearGFix"
     >
       {/* Backdrop */}
       <button

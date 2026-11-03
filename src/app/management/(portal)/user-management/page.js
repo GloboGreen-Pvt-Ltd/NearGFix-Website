@@ -247,7 +247,7 @@ export default function UserManagementPage() {
  */
 function StatusCell({ active, canManage, busy, onToggle }) {
   const badge = (
-    <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${active ? 'bg-emerald-500/15 text-emerald-600' : 'bg-slate-500/15 text-slate-500'}`}>
+    <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${active ? 'bg-brand-500/15 text-brand-600' : 'bg-slate-500/15 text-slate-500'}`}>
       {active ? 'Active' : 'Inactive'}
     </span>
   );
@@ -267,7 +267,7 @@ function StatusCell({ active, canManage, busy, onToggle }) {
         type="button"
         onClick={onToggle}
         disabled={busy}
-        className={`rounded-lg px-2.5 py-1 text-[11px] font-medium text-white disabled:opacity-50 ${active ? 'bg-red-600 hover:bg-red-700' : 'bg-emerald-600 hover:bg-emerald-700'}`}
+        className={`rounded-lg px-2.5 py-1 text-[11px] font-medium text-white disabled:opacity-50 ${active ? 'bg-red-600 hover:bg-red-700' : 'bg-brand-600 hover:bg-brand-700'}`}
       >
         {busy ? '…' : active ? 'Deactivate' : 'Activate'}
       </button>

@@ -1,12 +1,12 @@
 /**
  * Flat illustrations for the Sell with Us journey cards (Booking and Repair) —
  * one per step, one shared style: white/light-grey shapes, #1E1E1E outlines/details,
- * #09AD2A accents, small #F3BF23 highlights, #F84141 only on the "issue" dot.
+ * #035C6C accents, small #F3BF23 highlights, #F84141 only on the "issue" dot.
  * All 240x160, decorative (aria-hidden) — the card's title carries the meaning.
  */
 
-const G = '#09AD2A';
-const GL = '#E6F7EA'; // light green tint of #09AD2A
+const G = '#035C6C';
+const GL = '#E6F7EA'; // light green tint of #035C6C
 const D = '#1E1E1E';
 const Y = '#F3BF23';
 const L = '#F3F3F3';

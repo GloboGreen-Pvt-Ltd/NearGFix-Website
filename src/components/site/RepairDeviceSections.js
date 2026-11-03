@@ -225,7 +225,7 @@ function InTheBox({ items }) {
 /* -------------------------------------------------------------------------- */
 
 const SUPPORT = [
-  { icon: Store, title: 'Verified shops near you', text: 'GGFIX partner shops within 20 km.' },
+  { icon: Store, title: 'Verified shops near you', text: 'NearGFix partner shops within 20 km.' },
   { icon: BadgeCheck, title: 'Approve the price first', text: 'No work starts until you accept the quote.' },
   { icon: Truck, title: 'Doorstep pickup', text: 'From shops that offer pickup and delivery.' },
   { icon: BellRing, title: 'Live tracking', text: 'Every stage, plus your receipt and invoice.' },
@@ -262,7 +262,7 @@ function Ecosystem({ serviceHref, deviceNoun }) {
   ];
   return (
     <Block>
-      <h2 className={H2}>More from GGFIX</h2>
+      <h2 className={H2}>More from NearGFix</h2>
       <ul role="list" className="mt-10 grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-4">
         {items.map(({ icon: Icon, q, cta, href, scroll }) => (
           <li key={cta}>

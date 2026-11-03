@@ -39,10 +39,10 @@ import {
 } from '@/lib/invoice';
 import { notifyError, notifySuccess } from '@/lib/toast';
 
-const GREEN = '#09AD2A';
-const GREEN_DARK = '#08961F';
+const GREEN = '#035C6C';
+const GREEN_DARK = '#035C6C';
 const AMBER = '#B45309';
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
 const CARD = 'rounded-2xl border border-[#ECECEC] bg-white p-5 shadow-[0_4px_14px_rgba(16,24,40,0.05)]';
 const decimal = (v) => v.replace(/[^0-9.]/g, '');
 
@@ -50,7 +50,7 @@ function SectionHeader({ icon: Icon, label, right }) {
   return (
     <div className="mb-3 flex items-center justify-between gap-2">
       <p className="flex items-center gap-2 text-[11.5px] font-extrabold uppercase tracking-[0.12em]" style={{ color: GREEN_DARK }}>
-        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#EAF8EC]">
+        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#E5F3F5]">
           <Icon className="h-3.5 w-3.5" aria-hidden="true" />
         </span>
         {label}
@@ -71,7 +71,7 @@ function Row({ label, value, strong, divider }) {
 
 function MoneyBox({ value, onChange, readOnly, className }) {
   return (
-    <label className={cx('flex min-w-[120px] shrink-0 items-center gap-1 rounded-lg sm:min-w-[140px] border border-[#E2E8E2] px-3 py-1.5', readOnly ? 'bg-[#F4F7F4]' : 'bg-white focus-within:border-[#09AD2A]', className)}>
+    <label className={cx('flex min-w-[120px] shrink-0 items-center gap-1 rounded-lg sm:min-w-[140px] border border-[#E2E8E2] px-3 py-1.5', readOnly ? 'bg-[#F4F7F4]' : 'bg-white focus-within:border-[#035C6C]', className)}>
       <span className="text-[13px] font-extrabold text-[#475467]">₹</span>
       <input
         value={value}
@@ -274,7 +274,7 @@ export default function InvoiceGeneratorPage() {
       ) : (
         <>
           {existing ? (
-            <p className="rounded-xl border border-[#BFE5C8] bg-[#F2FBF4] px-4 py-2.5 text-[13px] font-semibold text-[#08961F]">
+            <p className="rounded-xl border border-[#C7E6EA] bg-[#E5F3F5] px-4 py-2.5 text-[13px] font-semibold text-[#035C6C]">
               Invoice #{existing.invoiceNo} already exists — generating again replaces it.
             </p>
           ) : null}
@@ -313,23 +313,23 @@ export default function InvoiceGeneratorPage() {
                       <tr key={sp.id} className="border-t border-[#E2E8E2]">
                         <td className="w-12 px-2.5 py-1.5 text-center font-extrabold text-[#475467]">{String.fromCharCode(66 + i)}</td>
                         <td className="px-1.5 py-1">
-                          <input value={sp.description} onChange={(e) => updateSpare(i, 'description', e.target.value)} className="w-full rounded px-1.5 py-1 font-semibold outline-none focus:bg-[#F2FBF4]" />
+                          <input value={sp.description} onChange={(e) => updateSpare(i, 'description', e.target.value)} className="w-full rounded px-1.5 py-1 font-semibold outline-none focus:bg-[#E5F3F5]" />
                         </td>
                         <td className="w-28 px-1.5 py-1">
-                          <input value={sp.rate} onChange={(e) => updateSpare(i, 'rate', decimal(e.target.value))} inputMode="decimal" className="w-full rounded px-1.5 py-1 font-semibold outline-none focus:bg-[#F2FBF4]" />
+                          <input value={sp.rate} onChange={(e) => updateSpare(i, 'rate', decimal(e.target.value))} inputMode="decimal" className="w-full rounded px-1.5 py-1 font-semibold outline-none focus:bg-[#E5F3F5]" />
                         </td>
                         <td className="w-28 px-1.5 py-1">
-                          <input value={sp.warranty} onChange={(e) => updateSpare(i, 'warranty', e.target.value)} placeholder="—" className="w-full rounded px-1.5 py-1 font-semibold outline-none focus:bg-[#F2FBF4]" />
+                          <input value={sp.warranty} onChange={(e) => updateSpare(i, 'warranty', e.target.value)} placeholder="—" className="w-full rounded px-1.5 py-1 font-semibold outline-none focus:bg-[#E5F3F5]" />
                         </td>
                         <td className="w-16 px-1.5 py-1">
-                          <input value={sp.qty} onChange={(e) => updateSpare(i, 'qty', decimal(e.target.value))} inputMode="decimal" className="w-full rounded px-1.5 py-1 font-semibold outline-none focus:bg-[#F2FBF4]" />
+                          <input value={sp.qty} onChange={(e) => updateSpare(i, 'qty', decimal(e.target.value))} inputMode="decimal" className="w-full rounded px-1.5 py-1 font-semibold outline-none focus:bg-[#E5F3F5]" />
                         </td>
                         <td className="w-32 px-1.5 py-1">
                           <input
                             value={sp.taxableValue}
                             onChange={(e) => updateSpare(i, 'taxableValue', decimal(e.target.value))}
                             inputMode="decimal"
-                            className="w-full rounded px-1.5 py-1 font-extrabold outline-none focus:bg-[#F2FBF4]"
+                            className="w-full rounded px-1.5 py-1 font-extrabold outline-none focus:bg-[#E5F3F5]"
                             style={{ color: GREEN_DARK }}
                           />
                         </td>
@@ -365,7 +365,7 @@ export default function InvoiceGeneratorPage() {
                     setTaxMode(e.target.value);
                     if (e.target.value === 'WITHOUT') setGstPercent(0);
                   }}
-                  className="mt-1.5 h-10 w-full rounded-xl border border-[#E2E8E2] bg-white px-3 text-[13px] font-bold text-[#111111] outline-none focus:border-[#09AD2A]"
+                  className="mt-1.5 h-10 w-full rounded-xl border border-[#E2E8E2] bg-white px-3 text-[13px] font-bold text-[#111111] outline-none focus:border-[#035C6C]"
                 >
                   {TAX_MODES.map((m) => (
                     <option key={m.value} value={m.value}>
@@ -380,7 +380,7 @@ export default function InvoiceGeneratorPage() {
                   value={taxMode === 'WITHOUT' ? '' : gstPercent}
                   disabled={taxMode === 'WITHOUT'}
                   onChange={(e) => setGstPercent(Number(e.target.value))}
-                  className="mt-1.5 h-10 w-full rounded-xl border border-[#E2E8E2] bg-white px-3 text-[13px] font-bold text-[#111111] outline-none focus:border-[#09AD2A] disabled:bg-[#EFF5EE] disabled:text-[#8FA08F]"
+                  className="mt-1.5 h-10 w-full rounded-xl border border-[#E2E8E2] bg-white px-3 text-[13px] font-bold text-[#111111] outline-none focus:border-[#035C6C] disabled:bg-[#EFF5EE] disabled:text-[#8FA08F]"
                 >
                   {taxMode === 'WITHOUT' ? <option value="">N/A</option> : null}
                   {GST_OPTIONS.map((g) => (
@@ -463,7 +463,7 @@ export default function InvoiceGeneratorPage() {
                   <button
                     type="button"
                     onClick={() => setPaidNowStr(String(+pay.netPayable.toFixed(2)))}
-                    className="rounded-full border border-[#BFE5C8] bg-[#EAF8EC] px-2.5 py-1 text-[11px] font-extrabold"
+                    className="rounded-full border border-[#C7E6EA] bg-[#E5F3F5] px-2.5 py-1 text-[11px] font-extrabold"
                     style={{ color: GREEN_DARK }}
                   >
                     Full
@@ -474,7 +474,7 @@ export default function InvoiceGeneratorPage() {
             </div>
             <div
               className="mt-2 rounded-xl border px-3.5 py-3"
-              style={{ backgroundColor: pay.settled ? '#EAF8EC' : '#FEF3C7', borderColor: pay.settled ? '#BFE5C8' : '#FDE68A', color: pay.settled ? GREEN_DARK : AMBER }}
+              style={{ backgroundColor: pay.settled ? '#E5F3F5' : '#FEF3C7', borderColor: pay.settled ? '#C7E6EA' : '#FDE68A', color: pay.settled ? GREEN_DARK : AMBER }}
             >
               <div className="flex items-center justify-between gap-3">
                 <span className="text-[13px] font-extrabold">{pay.settled ? 'Balance Payable' : 'Credit Amount (Balance Payable)'}</span>
@@ -484,7 +484,7 @@ export default function InvoiceGeneratorPage() {
             </div>
             {!pay.settled ? (
               <>
-                <div className={cx('mt-3 flex gap-2 rounded-xl border px-3 py-2.5', creditTrackable ? 'border-[#E2E8E2] bg-[#F2FBF4]' : 'border-[#FECACA] bg-[#FEE2E2]')}>
+                <div className={cx('mt-3 flex gap-2 rounded-xl border px-3 py-2.5', creditTrackable ? 'border-[#E2E8E2] bg-[#E5F3F5]' : 'border-[#FECACA] bg-[#FEE2E2]')}>
                   {creditTrackable ? <BookText className="mt-0.5 h-4 w-4 shrink-0" style={{ color: GREEN_DARK }} aria-hidden="true" /> : <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#DC2626]" aria-hidden="true" />}
                   <div className="text-[12px]">
                     <p className="font-extrabold" style={{ color: creditTrackable ? GREEN_DARK : '#B91C1C' }}>
@@ -504,7 +504,7 @@ export default function InvoiceGeneratorPage() {
                     onChange={(e) => setPaymentNote(e.target.value)}
                     rows={2}
                     placeholder="e.g. Will pay on Friday"
-                    className="mt-1.5 w-full rounded-xl border border-[#E2E8E2] px-3 py-2 text-[13px] font-semibold text-[#111111] outline-none focus:border-[#09AD2A]"
+                    className="mt-1.5 w-full rounded-xl border border-[#E2E8E2] px-3 py-2 text-[13px] font-semibold text-[#111111] outline-none focus:border-[#035C6C]"
                   />
                 </label>
               </>
@@ -512,7 +512,7 @@ export default function InvoiceGeneratorPage() {
           </section>
 
           {/* Sticky CTA */}
-          <div className="sticky bottom-[max(1rem,env(safe-area-inset-bottom))] z-10 rounded-2xl border border-[#E2E8E2] bg-[#F2FBF4]/95 p-3.5 shadow-[0_8px_24px_rgba(16,24,40,0.12)] backdrop-blur">
+          <div className="sticky bottom-[max(1rem,env(safe-area-inset-bottom))] z-10 rounded-2xl border border-[#E2E8E2] bg-[#E5F3F5]/95 p-3.5 shadow-[0_8px_24px_rgba(16,24,40,0.12)] backdrop-blur">
             {blockedBy ? (
               <p className="mb-2 text-center text-[12px] font-bold" style={{ color: AMBER }}>
                 Record &quot;{blockedBy}&quot; first — Service History moves one step at a time.

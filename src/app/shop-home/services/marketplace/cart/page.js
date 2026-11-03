@@ -113,7 +113,7 @@ export default function CartPage() {
             title="Your cart is empty"
             description="Add products and spare parts from the Buy screen to see them here."
             action={
-              <Link href={BUY_HREF.list} className="inline-flex h-11 items-center rounded-xl bg-[#079455] px-5 text-[14px] font-bold text-white transition hover:bg-[#067647]">
+              <Link href={BUY_HREF.list} className="inline-flex h-11 items-center rounded-xl bg-[#035C6C] px-5 text-[14px] font-bold text-white transition hover:bg-[#024A57]">
                 Browse Buy
               </Link>
             }
@@ -165,14 +165,14 @@ export default function CartPage() {
                         {p.conditionLabel ? <span className="rounded-md bg-[#F3F3F3] px-1.5 py-0.5 text-[11px] font-semibold text-[#475467]">{p.conditionLabel}</span> : null}
                       </div>
                       <div className="mt-auto flex flex-wrap items-end justify-between gap-2 pt-2">
-                        <p className="text-[16px] font-extrabold text-[#067647]">{formatRupees(p.price)}</p>
+                        <p className="text-[16px] font-extrabold text-[#024A57]">{formatRupees(p.price)}</p>
                         <div className="flex items-center rounded-xl border border-[#ECECEC]" aria-label={`Quantity for ${p.title || 'product'}`}>
                           <button
                             type="button"
                             onClick={() => setQuantity(r, qty - 1)}
                             disabled={qty <= 1 || Boolean(busyId)}
                             aria-label="Decrease quantity"
-                            className="flex h-9 w-9 items-center justify-center text-[#111111] transition hover:text-[#079455] disabled:text-[#D0D5DD]"
+                            className="flex h-9 w-9 items-center justify-center text-[#111111] transition hover:text-[#035C6C] disabled:text-[#D0D5DD]"
                           >
                             <Minus className="h-4 w-4" aria-hidden="true" />
                           </button>
@@ -184,7 +184,7 @@ export default function CartPage() {
                             onClick={() => setQuantity(r, qty + 1)}
                             disabled={Boolean(busyId)}
                             aria-label="Increase quantity"
-                            className="flex h-9 w-9 items-center justify-center text-[#111111] transition hover:text-[#079455] disabled:text-[#D0D5DD]"
+                            className="flex h-9 w-9 items-center justify-center text-[#111111] transition hover:text-[#035C6C] disabled:text-[#D0D5DD]"
                           >
                             <Plus className="h-4 w-4" aria-hidden="true" />
                           </button>

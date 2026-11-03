@@ -140,7 +140,7 @@ export default function ReEstimateModal({ open, ticketId, bookingLabel, onClose,
         className="flex max-h-[88dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-[22px] pb-[env(safe-area-inset-bottom)] sm:pb-0 bg-white shadow-[0_24px_60px_rgba(11,23,57,0.25)] sm:rounded-[22px]"
       >
         <div className="flex items-start gap-3 border-b border-[#ECECEC] px-5 py-4">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F3F3F3] text-[#079455]">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F3F3F3] text-[#035C6C]">
             <Pencil className="h-5 w-5" aria-hidden="true" />
           </span>
           <div className="min-w-0 flex-1">
@@ -173,9 +173,9 @@ export default function ReEstimateModal({ open, ticketId, bookingLabel, onClose,
                         onChange={(e) => setLine(l.key, 'label', e.target.value)}
                         placeholder="Service name"
                         aria-label="Service name"
-                        className="h-11 min-w-0 flex-1 rounded-xl border border-[#ECECEC] px-3 text-[14px] text-[#111111] outline-none focus:border-[#079455]"
+                        className="h-11 min-w-0 flex-1 rounded-xl border border-[#ECECEC] px-3 text-[14px] text-[#111111] outline-none focus:border-[#035C6C]"
                       />
-                      <label className="flex h-11 w-[120px] shrink-0 items-center gap-1 rounded-xl border border-[#ECECEC] px-3 focus-within:border-[#079455]">
+                      <label className="flex h-11 w-[120px] shrink-0 items-center gap-1 rounded-xl border border-[#ECECEC] px-3 focus-within:border-[#035C6C]">
                         <span className="text-[14px] font-semibold text-[#666666]">₹</span>
                         <input
                           value={l.amount}
@@ -200,7 +200,7 @@ export default function ReEstimateModal({ open, ticketId, bookingLabel, onClose,
                 <button
                   type="button"
                   onClick={() => setLines((prev) => [...prev, { key: newKey(), id: null, code: null, label: '', amount: '', warranty: null }])}
-                  className="mt-2.5 inline-flex items-center gap-1.5 rounded-xl border border-dashed border-[#ECECEC] px-3 py-2 text-[13px] font-bold text-[#067647] transition hover:bg-[#F8F8F8]"
+                  className="mt-2.5 inline-flex items-center gap-1.5 rounded-xl border border-dashed border-[#ECECEC] px-3 py-2 text-[13px] font-bold text-[#024A57] transition hover:bg-[#F8F8F8]"
                 >
                   <Plus className="h-4 w-4" aria-hidden="true" />
                   Add service
@@ -225,7 +225,7 @@ export default function ReEstimateModal({ open, ticketId, bookingLabel, onClose,
               </div>
 
               <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#ECECEC] px-3.5 py-3">
-                <input type="checkbox" checked={approved} onChange={(e) => setApproved(e.target.checked)} className="h-4 w-4 accent-[#079455]" />
+                <input type="checkbox" checked={approved} onChange={(e) => setApproved(e.target.checked)} className="h-4 w-4 accent-[#035C6C]" />
                 <span className="text-[13.5px] font-semibold text-[#111111]">Customer approved this estimate</span>
               </label>
             </div>
@@ -253,7 +253,7 @@ export default function ReEstimateModal({ open, ticketId, bookingLabel, onClose,
               disabled={saving || loading || Boolean(loadError) || Boolean(invalid) || !changed}
               className={cx(
                 'inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl text-[14px] font-bold text-white transition',
-                saving || loading || loadError || invalid || !changed ? 'cursor-not-allowed bg-[#F3F3F3]' : 'bg-[#079455] hover:bg-[#067647]',
+                saving || loading || loadError || invalid || !changed ? 'cursor-not-allowed bg-[#F3F3F3]' : 'bg-[#035C6C] hover:bg-[#024A57]',
               )}
             >
               {saving ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : null}

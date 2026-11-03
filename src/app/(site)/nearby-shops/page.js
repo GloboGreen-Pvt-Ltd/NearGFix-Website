@@ -25,7 +25,7 @@ import { pageMetadata } from '@/lib/seo';
 export const metadata = pageMetadata({
   title: 'Mobile Repair Shops Near You',
   description:
-    'Find GGFIX mobile repair shops near you. Share your location to see every shop within 20 km, closest first, with its address and whether it is open now.',
+    'Find NearGFix mobile repair shops near you. Share your location to see every shop within 20 km, closest first, with its address and whether it is open now.',
   path: '/nearby-shops',
 });
 
@@ -38,7 +38,7 @@ const SHOP_FEATURES = [
     icon: Navigation,
     title: 'Closest shops first',
     description: 'Shops within 20 km, sorted by real distance from where you are.',
-    chip: 'from-[#22C55E] to-[#079455]',
+    chip: 'from-[#035C6C] to-[#035C6C]',
   },
   {
     icon: Clock,
@@ -106,8 +106,8 @@ export default function NearbyShopsPage() {
           {/* Next step: book in the app */}
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 to-brand-800 p-6 text-white shadow-lift sm:p-8">
             <Smartphone className="pointer-events-none absolute -bottom-6 -right-4 h-36 w-36 text-white/10" aria-hidden="true" />
-            <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#C9F7D3]">Found your shop?</p>
-            <p className="mt-2 text-2xl font-extrabold tracking-tight">Book the repair in the GGFIX app</p>
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#C7E6EA]">Found your shop?</p>
+            <p className="mt-2 text-2xl font-extrabold tracking-tight">Book the repair in the NearGFix app</p>
             <ul className="relative mt-4 grid gap-2 sm:grid-cols-2">
               {['Doorstep pickup or walk in', 'Approve the price first', 'Track every stage live', 'Receipt & invoice saved'].map((point) => (
                 <li key={point} className="flex items-center gap-2 text-sm font-semibold text-white/90">
@@ -139,11 +139,11 @@ export default function NearbyShopsPage() {
       <Section tone="page">
         <div className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-brand-600 via-brand-700 to-brand-800 px-6 pt-8 text-white shadow-lift sm:px-10 lg:px-12">
           <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-2xl" aria-hidden="true" />
-          <div className="pointer-events-none absolute -bottom-32 right-10 h-80 w-80 rounded-full bg-[#9BF2AE]/15 blur-3xl" aria-hidden="true" />
+          <div className="pointer-events-none absolute -bottom-32 right-10 h-80 w-80 rounded-full bg-[#C7E6EA]/15 blur-3xl" aria-hidden="true" />
 
           <div className="relative grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_250px] lg:gap-12">
             <div className="pb-8 text-center lg:self-center lg:text-left">
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-[#C9F7D3]">
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-[#C7E6EA]">
                 <Truck className="h-3.5 w-3.5" aria-hidden="true" />
                 Doorstep pickup
               </span>
@@ -151,7 +151,7 @@ export default function NearbyShopsPage() {
                 No time to visit? The shop comes to you.
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-base leading-relaxed text-white/80 lg:mx-0">
-                Book a doorstep pickup with a nearby shop in the GGFIX app — pick your slot, approve the price, and get your device delivered back fixed.
+                Book a doorstep pickup with a nearby shop in the NearGFix app — pick your slot, approve the price, and get your device delivered back fixed.
               </p>
 
               <StoreBadges tone="dark" align="center" caption={BRAND.appsStatus} className="mt-6 lg:items-start lg:[&>div]:justify-start" />

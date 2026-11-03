@@ -7,7 +7,7 @@
  */
 
 export const BOOKING_STATUS_BADGE = {
-  Created: 'bg-[#DCFCE7] text-[#15803D]',
+  Created: 'bg-[#E5F3F5] text-[#024A57]',
   'In Progress': 'bg-sky-100 text-sky-700',
   Pickup: 'bg-orange-100 text-orange-700',
   Completed: 'bg-violet-100 text-violet-700',

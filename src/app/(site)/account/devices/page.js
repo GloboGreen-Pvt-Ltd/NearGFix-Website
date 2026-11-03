@@ -254,7 +254,7 @@ export default function ManageDevicePage() {
       <AccountPageHeader
         eyebrow="Manage My Device"
         title={editor ? (editing ? 'Edit device' : 'Add a device') : 'Saved devices'}
-        subtitle={editor ? 'The same device catalogue and save logic used in the GGFIX app.' : 'Your devices, ready for faster repair bookings.'}
+        subtitle={editor ? 'The same device catalogue and save logic used in the NearGFix app.' : 'Your devices, ready for faster repair bookings.'}
         right={!editor ? (
           <Button onClick={() => setEditor({})} variant="primary" size="sm" icon={Plus} iconPosition="left">Add device</Button>
         ) : null}

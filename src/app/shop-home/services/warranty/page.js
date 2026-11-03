@@ -19,7 +19,7 @@
  * something — rather than either a generic "Coming soon" stub or an
  * invented list of fake claims.
  *
- * 2026-09: UI-only redesign to match the premium soft-3D GGFIX visual
+ * 2026-09: UI-only redesign to match the premium soft-3D NearGFix visual
  * language used across the other redesigned Partner Dashboard pages — the
  * "no data yet" logic above, the STATS/FILTERS content, and every value
  * shown ("—") are unchanged.
@@ -53,11 +53,11 @@ function WarrantyEmptyIllustration() {
           <stop offset="1" stopColor="#0284C7" />
         </linearGradient>
       </defs>
-      <circle cx="100" cy="80" r="66" fill="#DFF8EB" opacity="0.55" />
+      <circle cx="100" cy="80" r="66" fill="#E5F3F5" opacity="0.55" />
       <circle cx="100" cy="80" r="40" fill="#EAF5FF" opacity="0.6" />
-      <ellipse cx="100" cy="138" rx="42" ry="8" fill="#0C6636" opacity="0.08" />
-      <circle cx="36" cy="44" r="4" fill="#86EFAC" />
-      <circle cx="162" cy="102" r="3.5" fill="#86EFAC" />
+      <ellipse cx="100" cy="138" rx="42" ry="8" fill="#024A57" opacity="0.08" />
+      <circle cx="36" cy="44" r="4" fill="#C7E6EA" />
+      <circle cx="162" cy="102" r="3.5" fill="#C7E6EA" />
       <ellipse cx="164" cy="46" rx="16" ry="9" fill="#BFE8FF" opacity="0.7" />
 
       <g transform="translate(64,42) rotate(-6)">
@@ -82,16 +82,16 @@ function WarrantyEmptyIllustration() {
 const WARRANTY_STAT_STYLES = {
   green: {
     card: 'bg-[#F8F8F8]',
-    chip: 'bg-gradient-to-br from-[#22C55E] to-[#0A934D]',
-    value: 'text-[#10213D]',
-    label: 'text-[#066B39]',
-    wave: 'text-[#BBF7D0]',
+    chip: 'bg-gradient-to-br from-[#035C6C] to-[#035C6C]',
+    value: 'text-[#1C3053]',
+    label: 'text-[#024A57]',
+    wave: 'text-[#C7E6EA]',
     glow: 'bg-[#F3F3F3]',
   },
   blue: {
     card: 'bg-[#F8F8F8]',
     chip: 'bg-gradient-to-br from-[#38BDF8] to-[#1DA8E8]',
-    value: 'text-[#10213D]',
+    value: 'text-[#1C3053]',
     label: 'text-[#1D6FA0]',
     wave: 'text-[#93D6F7]',
     glow: 'bg-[#93D6F7]',
@@ -99,7 +99,7 @@ const WARRANTY_STAT_STYLES = {
   orange: {
     card: 'bg-[#F8F8F8]',
     chip: 'bg-gradient-to-br from-[#FB923C] to-[#FF7A1A]',
-    value: 'text-[#10213D]',
+    value: 'text-[#1C3053]',
     label: 'text-[#9A5B27]',
     wave: 'text-[#FDBA74]',
     glow: 'bg-[#FDBA74]',
@@ -107,7 +107,7 @@ const WARRANTY_STAT_STYLES = {
   purple: {
     card: 'bg-[#F8F8F8]',
     chip: 'bg-gradient-to-br from-[#A78BFA] to-[#8B5CF6]',
-    value: 'text-[#10213D]',
+    value: 'text-[#1C3053]',
     label: 'text-[#6D5A9E]',
     wave: 'text-[#C4B5FD]',
     glow: 'bg-[#C4B5FD]',
@@ -185,7 +185,7 @@ export default function WarrantyReworkPage() {
 
         <div className="flex flex-1 flex-col items-center justify-center px-6 py-10 text-center">
           <WarrantyEmptyIllustration />
-          <p className="mt-4 max-w-[560px] text-lg font-bold text-[#10213D]">Warranty and rework tracking isn&apos;t available yet</p>
+          <p className="mt-4 max-w-[560px] text-lg font-bold text-[#1C3053]">Warranty and rework tracking isn&apos;t available yet</p>
           <p className="mt-2 max-w-[560px] text-sm leading-relaxed text-[#666666]">
             This backend has not started providing warranty or rework request data yet, so details may not be available. Nothing is being hidden or
             filtered; there&apos;s simply nothing to show until that&apos;s active.

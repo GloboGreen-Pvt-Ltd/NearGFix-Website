@@ -30,7 +30,7 @@ import { getShopPublic } from '@/lib/repairBooking';
 import { addShopLocation, deleteShopLocation, updateShopLocation } from '@/lib/shopLocations';
 import { notifyError } from '@/lib/toast';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 
 function ConfirmDeleteDialog({ location, busy, onCancel, onConfirm }) {
   return (
@@ -176,7 +176,7 @@ export default function BusinessProfilePage() {
         </div>
       ) : locations.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-[#ECECEC] bg-[#F8F8F8] py-16 text-center">
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#F8F8F8] text-[#15803D]">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#F8F8F8] text-[#024A57]">
             <Store className="h-6 w-6" aria-hidden="true" />
           </span>
           <p className="mt-3 text-sm font-semibold text-[#111111]">No business locations yet</p>

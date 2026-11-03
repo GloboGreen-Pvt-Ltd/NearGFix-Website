@@ -1,5 +1,5 @@
 /**
- * /about — who GGFIX is and what it does, written for customers first.
+ * /about — who NearGFix is and what it does, written for customers first.
  *
  * Static server component. Facts come from siteContent.js (ABOUT, ABOUT_VALUES,
  * PLATFORM_FACTS, BRAND) so numbers never drift from the rest of the site.
@@ -30,7 +30,7 @@ import { pageMetadata } from '@/lib/seo';
 export const metadata = pageMetadata({
   title: 'About Us – Device Repair, Buy & Sell Platform',
   description:
-    'GGFIX by Globogreen connects you with verified repair shops to repair, buy and sell mobiles, tablets and laptops, with doorstep pickup and live tracking.',
+    'NearGFix by Globogreen connects you with verified repair shops to repair, buy and sell mobiles, tablets and laptops, with doorstep pickup and live tracking.',
   path: '/about',
 });
 
@@ -39,7 +39,7 @@ export const metadata = pageMetadata({
 /* -------------------------------------------------------------------------- */
 
 const SERVICES = [
-  { icon: Wrench, title: 'Repair', text: 'Book a repair for your exact model and approve the price first.', href: '/repair', chip: 'from-[#22C55E] to-[#079455]' },
+  { icon: Wrench, title: 'Repair', text: 'Book a repair for your exact model and approve the price first.', href: '/repair', chip: 'from-[#035C6C] to-[#035C6C]' },
   { icon: Truck, title: 'Pickup & Delivery', text: 'A nearby shop collects your device and brings it back fixed.', href: '/pickup-delivery', chip: 'from-[#2ED3B7] to-[#0E9384]' },
   { icon: Tag, title: 'Sell', text: 'List your old device once and let nearby shops send offers.', href: '/#sell', chip: 'from-[#FDB022] to-[#F79009]' },
   { icon: ShoppingCart, title: 'Buy', text: 'Refurbished devices and accessories from verified local shops.', href: '/#buy', chip: 'from-[#5EA2FF] to-[#1570EF]' },
@@ -54,7 +54,7 @@ const AUDIENCE = [
   {
     icon: Store,
     title: 'Shop owners',
-    text: 'Run the counter, bookings, invoices, staff and inventory from the GGFIX Shop app.',
+    text: 'Run the counter, bookings, invoices, staff and inventory from the NearGFix Shop app.',
     href: '/shop',
   },
   {
@@ -72,7 +72,7 @@ export default function AboutPage() {
   return (
     <>
       {/* 1 — Hero ----------------------------------------------------------- */}
-      <Section tone="soft" padding="tight" className="bg-gradient-to-b from-[#EAF8EC] to-white">
+      <Section tone="soft" padding="tight" className="bg-gradient-to-b from-[#E5F3F5] to-white">
         <div className="grid items-center gap-10 py-6 lg:grid-cols-[1.15fr_1fr] lg:gap-14">
           <div>
             <span className="inline-flex items-center rounded-full bg-brand-soft px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-brand-700">
@@ -106,7 +106,7 @@ export default function AboutPage() {
                 <dt className={cx('text-sm font-semibold', i === 0 || i === 3 ? 'text-white/75' : 'text-brand-muted')}>{fact.label}</dt>
                 <dd className="mt-3 flex flex-wrap items-baseline gap-x-1">
                   <span className={cx('text-3xl font-extrabold tracking-tight sm:text-4xl', i === 0 || i === 3 ? 'text-white' : 'text-brand-ink')}>{fact.value}</span>
-                  <span className={cx('text-base font-bold', i === 0 || i === 3 ? 'text-[#C9F7D3]' : 'text-brand-700')}>{fact.unit}</span>
+                  <span className={cx('text-base font-bold', i === 0 || i === 3 ? 'text-[#C7E6EA]' : 'text-brand-700')}>{fact.unit}</span>
                 </dd>
               </div>
             ))}
@@ -135,7 +135,7 @@ export default function AboutPage() {
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-brand-700">
               <ClipboardList className="h-6 w-6" aria-hidden="true" />
             </span>
-            <p className="mt-5 text-xs font-bold uppercase tracking-[0.14em] text-[#C9F7D3]">With {BRAND.name}</p>
+            <p className="mt-5 text-xs font-bold uppercase tracking-[0.14em] text-[#C7E6EA]">With {BRAND.name}</p>
             <p className="mt-1 text-xl font-extrabold tracking-tight">One system, everyone in the loop</p>
             <p className="mt-2 text-sm leading-relaxed text-white/80">{ABOUT.body[1].split('. ').slice(-1)[0]}</p>
           </div>
@@ -143,7 +143,7 @@ export default function AboutPage() {
       </Section>
 
       {/* 3 — What you can do ------------------------------------------------- */}
-      <Section tone="soft" className="bg-gradient-to-b from-[#EAF8EC] via-[#F3FBF4] to-white">
+      <Section tone="soft" className="bg-gradient-to-b from-[#E5F3F5] via-[#F3FBF4] to-white">
         <SectionHeading
           eyebrow="What we do"
           title="Everything for your device, in one place"
@@ -153,7 +153,7 @@ export default function AboutPage() {
             <li key={s.title}>
               <Link
                 href={s.href}
-                className="group flex h-full flex-col rounded-3xl border border-[#D6EFDB] bg-white p-6 shadow-[0_6px_20px_rgba(9,173,42,0.06)] transition hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(9,173,42,0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-700"
+                className="group flex h-full flex-col rounded-3xl border border-[#C7E6EA] bg-white p-6 shadow-[0_6px_20px_rgba(3,92,108,0.06)] transition hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(3,92,108,0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-700"
               >
                 <span className={cx('inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br text-white shadow-md transition group-hover:scale-105', s.chip)}>
                   <s.icon className="h-6 w-6" aria-hidden="true" />
@@ -205,7 +205,7 @@ export default function AboutPage() {
               <p className="mt-2 flex-1 text-sm leading-relaxed text-brand-muted">{a.text}</p>
               {a.href ? (
                 <Link href={a.href} className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-brand-700 hover:underline">
-                  GGFIX for shops
+                  NearGFix for shops
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
               ) : null}
@@ -219,7 +219,7 @@ export default function AboutPage() {
         <div className="overflow-hidden rounded-[32px] bg-gradient-to-br from-brand-600 via-brand-700 to-brand-800 p-8 text-white shadow-lift sm:p-10">
           <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]">
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-[#C9F7D3]">
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-[#C7E6EA]">
                 <Smartphone className="h-3.5 w-3.5" aria-hidden="true" />
                 {BRAND.appsStatus}
               </span>
@@ -249,7 +249,7 @@ export default function AboutPage() {
                       <c.icon className="h-5 w-5" aria-hidden="true" />
                     </span>
                     <span className="min-w-0">
-                      <span className="block text-xs font-semibold uppercase tracking-wider text-[#C9F7D3]">{c.label}</span>
+                      <span className="block text-xs font-semibold uppercase tracking-wider text-[#C7E6EA]">{c.label}</span>
                       <span className="block truncate text-sm font-bold">{c.value}</span>
                     </span>
                   </a>

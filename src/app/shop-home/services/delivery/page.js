@@ -53,7 +53,7 @@ const DELIVERY_STAT_STYLES = {
   violet: {
     card: 'bg-[#F8F8F8]',
     chip: 'bg-gradient-to-br from-[#A78BFA] to-[#7C3AED]',
-    value: 'text-[#10213D]',
+    value: 'text-[#1C3053]',
     label: 'text-[#6D5A9E]',
     wave: 'text-[#C4B5FD]',
     glow: 'bg-[#C4B5FD]',
@@ -61,23 +61,23 @@ const DELIVERY_STAT_STYLES = {
   blue: {
     card: 'bg-[#F8F8F8]',
     chip: 'bg-gradient-to-br from-[#38BDF8] to-[#18A5E5]',
-    value: 'text-[#10213D]',
+    value: 'text-[#1C3053]',
     label: 'text-[#1D6FA0]',
     wave: 'text-[#93D6F7]',
     glow: 'bg-[#93D6F7]',
   },
   green: {
     card: 'bg-[#F8F8F8]',
-    chip: 'bg-gradient-to-br from-[#22C55E] to-[#0A934D]',
-    value: 'text-[#10213D]',
-    label: 'text-[#066B39]',
-    wave: 'text-[#BBF7D0]',
+    chip: 'bg-gradient-to-br from-[#035C6C] to-[#035C6C]',
+    value: 'text-[#1C3053]',
+    label: 'text-[#024A57]',
+    wave: 'text-[#C7E6EA]',
     glow: 'bg-[#F3F3F3]',
   },
   orange: {
     card: 'bg-[#F8F8F8]',
     chip: 'bg-gradient-to-br from-[#FB923C] to-[#FF7B24]',
-    value: 'text-[#10213D]',
+    value: 'text-[#1C3053]',
     label: 'text-[#9A5B27]',
     wave: 'text-[#FDBA74]',
     glow: 'bg-[#FDBA74]',
@@ -193,11 +193,11 @@ export default function DeliveryPage() {
             type="button"
             onClick={() => setReloadKey((k) => k + 1)}
             className={cx(
-              'inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#10213D] transition hover:border-[#079447] hover:text-[#079447]',
+              'inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#1C3053] transition hover:border-[#035C6C] hover:text-[#035C6C]',
               FOCUS_RING,
             )}
           >
-            <RefreshCw className={cx('h-4 w-4 text-[#079447]', loading && 'animate-spin')} aria-hidden="true" />
+            <RefreshCw className={cx('h-4 w-4 text-[#035C6C]', loading && 'animate-spin')} aria-hidden="true" />
             Refresh
           </button>
         </div>
@@ -233,13 +233,13 @@ export default function DeliveryPage() {
           rows.length === 0 ? (
             <div className="flex flex-col items-center px-4 py-14 text-center sm:px-5">
               <Icon3D icon={Package} tone="green" size="lg" />
-              <p className="mt-3 text-sm font-bold text-[#10213D]">No deliveries yet</p>
+              <p className="mt-3 text-sm font-bold text-[#1C3053]">No deliveries yet</p>
               <p className="mt-1 text-sm text-[#666666]">Completed repairs ready for delivery will appear here.</p>
             </div>
           ) : (
             <div className="flex flex-col items-center px-4 py-14 text-center sm:px-5">
               <Icon3D icon={Package} tone="gray" size="lg" />
-              <p className="mt-3 text-sm font-bold text-[#10213D]">No deliveries match your filters</p>
+              <p className="mt-3 text-sm font-bold text-[#1C3053]">No deliveries match your filters</p>
               <p className="mt-1 text-sm text-[#666666]">Try a different status or search term.</p>
             </div>
           )
@@ -283,7 +283,7 @@ function DeliveryRow({ ticket }) {
           <Icon3D icon={Package} tone="green" size="lg" className="relative" />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-base font-bold text-[#10213D]">{ticket.customerName || ticket.deviceDisplayName || 'Ticket'}</p>
+          <p className="truncate text-base font-bold text-[#1C3053]">{ticket.customerName || ticket.deviceDisplayName || 'Ticket'}</p>
           <p className="truncate text-[13px] text-[#666666]">#{ticket.trackingId || ticket.id}</p>
         </div>
         <span
@@ -295,7 +295,7 @@ function DeliveryRow({ ticket }) {
           <Package className="h-3 w-3 shrink-0" aria-hidden="true" />
           {ticket.stageLabel}
         </span>
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#10213D] transition">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#1C3053] transition">
           <ChevronDown className={cx('h-4 w-4 transition-transform', open && 'rotate-180')} aria-hidden="true" />
         </span>
       </button>
@@ -313,7 +313,7 @@ function DeliveryRow({ ticket }) {
           </span>
 
           {ticket.customerMobile ? (
-            <a href={`tel:${ticket.customerMobile}`} className="flex w-fit items-center gap-2 text-sm font-semibold text-[#15803D]">
+            <a href={`tel:${ticket.customerMobile}`} className="flex w-fit items-center gap-2 text-sm font-semibold text-[#024A57]">
               <Phone className="h-4 w-4" aria-hidden="true" />
               {ticket.customerMobile}
             </a>

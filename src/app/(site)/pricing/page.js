@@ -34,10 +34,12 @@ import {
 } from '@/lib/siteContent';
 import { pageMetadata } from '@/lib/seo';
 
+import LivePlans from './LivePlans';
+
 export const metadata = pageMetadata({
   title: 'Repair Shop Software Pricing – Free Trial',
   description:
-    'GGFIX pricing for repair shops: a 15-day free trial, then ₹3,000 a year for one shop and ₹2,500 a year for each extra shop. Customers use the app free.',
+    'NearGFix pricing for repair shops: a 15-day free trial, then ₹3,000 a year for one shop and ₹2,500 a year for each extra shop. Customers use the app free.',
   path: '/pricing',
 });
 
@@ -84,7 +86,7 @@ const BILLING_POINTS = [
     icon: ShieldCheck,
     title: 'No card details on the platform',
     description:
-      'Because there is no online payment gateway yet, GGFIX never asks you for card or bank details inside the apps. Treat anyone who does as a red flag.',
+      'Because there is no online payment gateway yet, NearGFix never asks you for card or bank details inside the apps. Treat anyone who does as a red flag.',
   },
 ];
 
@@ -104,9 +106,9 @@ const PRICING_FAQS = [
   findFaq('What does the paid plan cost?'),
   findFaq('How do I pay? Is there online checkout?'),
   {
-    question: 'Do my customers pay anything to use GGFIX?',
+    question: 'Do my customers pay anything to use NearGFix?',
     answer:
-      'No. The GGFIX customer app is free to use — booking a repair, requesting a doorstep pickup, collecting Sell quotations from nearby shops and browsing the Buy tab all cost the customer nothing. The only money a customer parts with is the repair price they approve with the shop, and the only money they receive is the Sell quotation they accept. The plan on this page is paid by the shop.',
+      'No. The NearGFix customer app is free to use — booking a repair, requesting a doorstep pickup, collecting Sell quotations from nearby shops and browsing the Buy tab all cost the customer nothing. The only money a customer parts with is the repair price they approve with the shop, and the only money they receive is the Sell quotation they accept. The plan on this page is paid by the shop.',
   },
 ].filter(Boolean);
 
@@ -261,7 +263,7 @@ export default function PricingPage() {
         </div>
 
         <p className="mt-6 text-center text-sm text-brand-muted">
-          No card required · No online checkout · Customers use the GGFIX app free
+          No card required · No online checkout · Customers use the NearGFix app free
         </p>
 
         <div className="mt-12 grid gap-4 sm:grid-cols-3">
@@ -285,10 +287,12 @@ export default function PricingPage() {
           subtitle="The Free Trial is what every new shop owner lands on. Basic is the same product with the ceilings taken off and the doorstep Pickup Service switched on."
         />
 
-        <div className="mx-auto mt-12 grid max-w-5xl items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
-          {freeTrial ? <PlanCard plan={freeTrial} /> : null}
-          {basic ? <PlanCard plan={basic} recommended /> : null}
-        </div>
+        <LivePlans>
+          <div className="mx-auto mt-12 grid max-w-5xl items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
+            {freeTrial ? <PlanCard plan={freeTrial} /> : null}
+            {basic ? <PlanCard plan={basic} recommended /> : null}
+          </div>
+        </LivePlans>
 
         <p className="mx-auto mt-8 max-w-prose text-center text-sm leading-relaxed text-brand-muted">
           {PRICING_NOTE}
@@ -331,7 +335,7 @@ export default function PricingPage() {
           <div className="hidden overflow-x-auto rounded-3xl border border-brand-line bg-white shadow-soft sm:block">
             <table className="w-full min-w-[28rem] border-collapse text-left">
               <caption className="sr-only">
-                GGFIX Basic plan yearly price by number of shops
+                NearGFix Basic plan yearly price by number of shops
               </caption>
               <thead>
                 <tr className="border-b border-brand-line bg-brand-page">
@@ -401,7 +405,7 @@ export default function PricingPage() {
         <div className="mx-auto mt-12 max-w-3xl overflow-x-auto rounded-3xl border border-brand-line bg-white shadow-soft">
           <table className="w-full min-w-[26rem] border-collapse text-left">
             <caption className="sr-only">
-              Feature comparison between the GGFIX Free Trial and the Basic plan
+              Feature comparison between the NearGFix Free Trial and the Basic plan
             </caption>
             <thead>
               <tr className="border-b border-brand-line bg-brand-page">
@@ -465,7 +469,7 @@ export default function PricingPage() {
               align="left"
               inverted
               title="There is no online payment gateway yet — and we would rather say so"
-              subtitle="Plans on GGFIX are activated by our team, not by a checkout page. Message us with the number of shops you run, we confirm the total, and we switch the plan on for your account."
+              subtitle="Plans on NearGFix are activated by our team, not by a checkout page. Message us with the number of shops you run, we confirm the total, and we switch the plan on for your account."
             />
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button href={CTA.talkToSales.href} variant="white" size="lg" icon="ArrowRight">

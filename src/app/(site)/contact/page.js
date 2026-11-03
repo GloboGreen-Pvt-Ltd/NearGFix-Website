@@ -32,7 +32,7 @@ import { pageMetadata } from '@/lib/seo';
 export const metadata = pageMetadata({
   title: 'Contact Us – Repair Support & Shop Enquiries',
   description:
-    'Call, WhatsApp or email the GGFIX team for help with repairs, pickups, orders, refunds and warranty, or ask about the 15-day free trial for your repair shop.',
+    'Call, WhatsApp or email the NearGFix team for help with repairs, pickups, orders, refunds and warranty, or ask about the 15-day free trial for your repair shop.',
   path: '/contact',
 });
 
@@ -119,7 +119,7 @@ const IN_THE_APP = {
   warranty: 'Profile → My Orders → open the completed job and check the service receipt and invoice for its warranty terms.',
 };
 
-/* "Our team" desks. GGFIX has one support inbox today, so every desk mails it
+/* "Our team" desks. NearGFix has one support inbox today, so every desk mails it
  * with a pre-filled subject that routes the message to the right person. */
 const mailWithSubject = (subject) => `${BRAND.emailHref}?subject=${encodeURIComponent(subject)}`;
 
@@ -144,8 +144,8 @@ const TEAM_DESKS = [
   },
   {
     icon: Handshake,
-    title: 'GGFIX Partner Program',
-    description: 'Run a repair shop and want to join GGFIX? Ask about onboarding and the 15-day free trial.',
+    title: 'NearGFix Partner Program',
+    description: 'Run a repair shop and want to join NearGFix? Ask about onboarding and the 15-day free trial.',
     subject: 'Partner program — shop onboarding',
   },
   {
@@ -203,7 +203,7 @@ export default function ContactPage() {
               as="h1"
               align="left"
               eyebrow="Contact"
-              title="Talk to the GGFIX team"
+              title="Talk to the NearGFix team"
               subtitle="Whether your phone is sitting on a repair bench right now or you are a shop owner sizing up the platform, you get the same three ways in — phone, WhatsApp and email. A real person at GloboGreen answers all three."
             />
 
@@ -269,7 +269,7 @@ export default function ContactPage() {
           align="left"
           eyebrow="Direct lines"
           title="Four ways to reach us"
-          subtitle="No ticket portal, no queue number. These are the same details printed on every GGFIX invoice."
+          subtitle="No ticket portal, no queue number. These are the same details printed on every NearGFix invoice."
         />
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -322,7 +322,7 @@ export default function ContactPage() {
                   href={mailWithSubject(desk.subject)}
                   className="group flex h-full gap-4 rounded-3xl border border-brand-line bg-brand-page p-5 transition hover:-translate-y-0.5 hover:border-brand-200 hover:bg-white hover:shadow-lift focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-700 focus-visible:ring-offset-2"
                 >
-                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#22C55E] to-[#079455] text-white shadow-md transition group-hover:scale-105">
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#035C6C] to-[#035C6C] text-white shadow-md transition group-hover:scale-105">
                     <Icon className="h-7 w-7" aria-hidden="true" />
                   </span>
                   <span className="flex min-w-0 flex-col">
@@ -439,7 +439,7 @@ export default function ContactPage() {
           align="left"
           eyebrow="Common questions"
           title="Most things are faster to fix in the app"
-          subtitle="Before you write in, these four are worth a look — every one of them is two taps away inside the GGFIX customer app."
+          subtitle="Before you write in, these four are worth a look — every one of them is two taps away inside the NearGFix customer app."
         />
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2">
@@ -493,7 +493,7 @@ export default function ContactPage() {
               align="left"
               inverted
               eyebrow="For shop owners"
-              title="Thinking about putting your shop on GGFIX?"
+              title="Thinking about putting your shop on NearGFix?"
               subtitle="Registering starts a 15-day free trial straight away — no card, no call required. If you would rather talk it through first, that is what this page is for. Tell us how many counters and technicians you run and we will walk you through onboarding, KYC and pickup zones."
             />
 

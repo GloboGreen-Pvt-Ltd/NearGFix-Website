@@ -76,13 +76,13 @@ export default function DescriptionPage() {
               onClick={() => pick(o)}
               className={cx(
                 'flex w-full items-center gap-3 rounded-[18px] border bg-white p-3.5 text-left transition hover:-translate-y-0.5',
-                current ? 'border-[#079455]' : 'border-[#ECECEC] hover:border-[#D0D5DD]',
+                current ? 'border-[#035C6C]' : 'border-[#ECECEC] hover:border-[#D0D5DD]',
               )}
             >
               <span
                 className={cx(
                   'flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px]',
-                  o.danger ? 'bg-[#FEE4E2] text-[#D92D20]' : 'bg-[#EAF8EC] text-[#079455]',
+                  o.danger ? 'bg-[#FEE4E2] text-[#D92D20]' : 'bg-[#E5F3F5] text-[#035C6C]',
                 )}
               >
                 <Icon className="h-[22px] w-[22px]" aria-hidden="true" />
@@ -93,7 +93,7 @@ export default function DescriptionPage() {
                 <span
                   className={cx(
                     'mt-1.5 inline-block rounded-full px-2 py-0.5 text-[10.5px] font-bold',
-                    o.danger ? 'bg-[#FEE4E2] text-[#D92D20]' : 'bg-[#EAF8EC] text-[#067647]',
+                    o.danger ? 'bg-[#FEE4E2] text-[#D92D20]' : 'bg-[#E5F3F5] text-[#024A57]',
                   )}
                 >
                   {o.steps} steps

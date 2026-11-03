@@ -17,7 +17,7 @@
  * mechanism the /contact page's EnquiryForm already uses: a mailto: /
  * WhatsApp link pre-filled with the details, which the visitor's own mail
  * app or WhatsApp sends. Nothing is claimed to be verified or created; the
- * copy says a request is ready to send, and that GGFIX will follow up to
+ * copy says a request is ready to send, and that NearGFix will follow up to
  * complete KYC, shop details and bank account setup (see the Requirements
  * checklist, which is informational only — none of those fields are
  * collected here, since none has a backend field to submit them to).
@@ -110,12 +110,12 @@ function validateMobile(value) {
 
 function buildHandoff(mobile) {
   const digits = normalizeMobile(mobile);
-  const subject = `GGFIX Business Registration — +91 ${digits}`;
+  const subject = `NearGFix Business Registration — +91 ${digits}`;
   const body =
-    `New business/shop owner sign-up interest via the GGFIX website.\n\n` +
+    `New business/shop owner sign-up interest via the NearGFix website.\n\n` +
     `Mobile: +91 ${digits}\n\n` +
     `Please contact this number to complete onboarding — KYC, shop details and bank account setup.\n\n` +
-    `Sent from the GGFIX Business Registration page on ${BRAND.website}.`;
+    `Sent from the NearGFix Business Registration page on ${BRAND.website}.`;
 
   return {
     digits,
@@ -132,7 +132,7 @@ const FOCUS_RING =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-700 focus-visible:ring-offset-2';
 
 /* -------------------------------------------------------------------------- */
-/* Original GGFIX illustration — storefront, device, tools, package, delivery */
+/* Original NearGFix illustration — storefront, device, tools, package, delivery */
 /* -------------------------------------------------------------------------- */
 
 function BusinessIllustration({ className }) {
@@ -144,14 +144,14 @@ function BusinessIllustration({ className }) {
       className={className}
     >
       {/* ground */}
-      <ellipse cx="160" cy="196" rx="140" ry="10" fill="#F0FDF4" />
+      <ellipse cx="160" cy="196" rx="140" ry="10" fill="#E5F3F5" />
 
       {/* storefront */}
       <rect x="26" y="86" width="130" height="92" rx="10" fill="#FFFFFF" stroke="#E5E7EB" strokeWidth="2" />
-      <path d="M20 86 L46 52 H136 L162 86 Z" fill="#DCFCE7" stroke="#16A34A" strokeWidth="2" strokeLinejoin="round" />
-      <rect x="46" y="112" width="34" height="34" rx="6" fill="#F0FDF4" stroke="#16A34A" strokeWidth="2" />
-      <rect x="98" y="112" width="46" height="66" rx="6" fill="#16A34A" />
-      <rect x="105" y="120" width="32" height="42" rx="3" fill="#F0FDF4" />
+      <path d="M20 86 L46 52 H136 L162 86 Z" fill="#E5F3F5" stroke="#035C6C" strokeWidth="2" strokeLinejoin="round" />
+      <rect x="46" y="112" width="34" height="34" rx="6" fill="#E5F3F5" stroke="#035C6C" strokeWidth="2" />
+      <rect x="98" y="112" width="46" height="66" rx="6" fill="#035C6C" />
+      <rect x="105" y="120" width="32" height="42" rx="3" fill="#E5F3F5" />
 
       {/* smartphone */}
       <g transform="translate(180 96) rotate(-8)">
@@ -161,7 +161,7 @@ function BusinessIllustration({ className }) {
       </g>
 
       {/* wrench badge */}
-      <circle cx="248" cy="72" r="26" fill="#15803D" />
+      <circle cx="248" cy="72" r="26" fill="#024A57" />
       <path
         d="M238 62 a8 8 0 1 1 5 15 l14 14 -5 5 -14 -14 a8 8 0 0 1 -10 -20 l4 4 -3 3 3 3 3 -3 4 4 z"
         fill="#FFFFFF"
@@ -174,10 +174,10 @@ function BusinessIllustration({ className }) {
       </g>
 
       {/* delivery path */}
-      <path d="M40 190 C 110 176, 210 176, 280 190" stroke="#BBF7D0" strokeWidth="3" strokeDasharray="2 8" strokeLinecap="round" />
+      <path d="M40 190 C 110 176, 210 176, 280 190" stroke="#C7E6EA" strokeWidth="3" strokeDasharray="2 8" strokeLinecap="round" />
       <g transform="translate(258 176)">
         <rect x="0" y="6" width="30" height="16" rx="3" fill="#0F172A" />
-        <rect x="-14" y="10" width="16" height="12" rx="2" fill="#16A34A" />
+        <rect x="-14" y="10" width="16" height="12" rx="2" fill="#035C6C" />
         <circle cx="0" cy="24" r="4" fill="#0F172A" />
         <circle cx="20" cy="24" r="4" fill="#0F172A" />
       </g>
@@ -264,7 +264,7 @@ export default function BusinessRegister() {
           {/* ---- LEFT — registration -------------------------------- */}
           <div className="mx-auto w-full max-w-md lg:mx-0">
             <h1 className="text-3xl font-bold tracking-tight text-brand-ink sm:text-4xl">
-              Start Your Business with GGFIX
+              Start Your Business with NearGFix
             </h1>
             <p className="mt-3 text-base leading-relaxed text-brand-muted">
               Create your business account and start selling products and offering services across{' '}

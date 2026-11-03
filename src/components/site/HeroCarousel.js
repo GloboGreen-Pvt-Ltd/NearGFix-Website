@@ -63,8 +63,8 @@ function loadBanners() {
  *                                    'tall' pins a responsive height up to
  *                                    600px and crops the sides instead;
  *                                    'short' (partner dashboard) is a shorter
- *                                    banner: full width at the banner's own
- *                                    2.4:1 shape, so the whole image shows.
+ *                                    3:1 banner (the uploads are ~2163x727);
+ *                                    the image is contained, never cropped.
  * @param {string} [props.className]
  */
 export default function HeroCarousel({ title, exclude, height = 'aspect', className }) {
@@ -202,7 +202,7 @@ export default function HeroCarousel({ title, exclude, height = 'aspect', classN
       className={cx('relative', className)}
       role="region"
       aria-roledescription="carousel"
-      aria-label="GGFIX highlights"
+      aria-label="NearGFix highlights"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -234,7 +234,7 @@ export default function HeroCarousel({ title, exclude, height = 'aspect', classN
             height === 'tall'
               ? 'h-[220px] sm:h-[360px] lg:h-[480px] xl:h-[600px]'
               : height === 'short'
-                ? 'aspect-[1944/809]'
+                ? 'aspect-[3/1]'
                 : 'aspect-[1028/366]',
           )}
         >
@@ -267,7 +267,7 @@ export default function HeroCarousel({ title, exclude, height = 'aspect', classN
                   loading={i === 0 ? 'eager' : 'lazy'}
                   fetchPriority={i === 0 ? 'high' : 'auto'}
                   decoding="async"
-                  className="h-full w-full object-cover"
+                  className={cx('h-full w-full', height === 'short' ? 'object-contain' : 'object-cover')}
                 />
               </div>
             );

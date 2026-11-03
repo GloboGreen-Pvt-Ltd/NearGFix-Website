@@ -69,18 +69,18 @@ function SalaryEmptyIllustration({ className = 'h-28 w-28' }) {
 const SALARY_STAT_STYLES = {
   green: {
     card: 'bg-[#F8F8F8]',
-    chip: 'bg-gradient-to-br from-[#22C55E] to-[#0A934D]',
-    accent: 'from-[#4ADE80] to-[#0A934D]',
-    value: 'text-[#10213D]',
-    label: 'text-[#066B39]',
-    wave: 'text-[#BBF7D0]',
+    chip: 'bg-gradient-to-br from-[#035C6C] to-[#035C6C]',
+    accent: 'from-[#357D89] to-[#035C6C]',
+    value: 'text-[#1C3053]',
+    label: 'text-[#024A57]',
+    wave: 'text-[#C7E6EA]',
     glow: 'bg-[#F3F3F3]',
   },
   blue: {
     card: 'bg-[#F8F8F8]',
     chip: 'bg-gradient-to-br from-[#38BDF8] to-[#1DA8E8]',
     accent: 'from-[#7DD3FC] to-[#1DA8E8]',
-    value: 'text-[#10213D]',
+    value: 'text-[#1C3053]',
     label: 'text-[#1D6FA0]',
     wave: 'text-[#93D6F7]',
     glow: 'bg-[#93D6F7]',
@@ -89,7 +89,7 @@ const SALARY_STAT_STYLES = {
     card: 'bg-[#F8F8F8]',
     chip: 'bg-gradient-to-br from-[#FBBF54] to-[#FF9A19]',
     accent: 'from-[#FDBA74] to-[#FF9A19]',
-    value: 'text-[#10213D]',
+    value: 'text-[#1C3053]',
     label: 'text-[#9A6A27]',
     wave: 'text-[#FDD08A]',
     glow: 'bg-[#FDD08A]',
@@ -98,7 +98,7 @@ const SALARY_STAT_STYLES = {
     card: 'bg-[#F8F8F8]',
     chip: 'bg-gradient-to-br from-[#FB7185] to-[#F43F5E]',
     accent: 'from-[#FDA4AF] to-[#F43F5E]',
-    value: 'text-[#10213D]',
+    value: 'text-[#1C3053]',
     label: 'text-[#9F5361]',
     wave: 'text-[#FDA4AF]',
     glow: 'bg-[#FDA4AF]',
@@ -199,12 +199,12 @@ export default function SalaryPayslipsPage() {
       >
 
         <div className="relative z-20 min-w-0 md:pr-[300px] lg:pr-[330px]">
-          <span className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.115em] text-[#0A934D]">
-            <span className="h-1.5 w-4 rounded-full bg-gradient-to-r from-[#22C55E] to-[#0A934D]" aria-hidden="true" />
+          <span className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.115em] text-[#035C6C]">
+            <span className="h-1.5 w-4 rounded-full bg-gradient-to-r from-[#035C6C] to-[#035C6C]" aria-hidden="true" />
             Employee Management
           </span>
           <h1 className="mt-2.5 text-[30px] font-extrabold leading-tight tracking-tight text-[#111111] sm:text-[34px]">
-            Salary &amp; <span className="text-[#0A934D]">Payslips</span>
+            Salary &amp; <span className="text-[#035C6C]">Payslips</span>
           </h1>
           <p className="mt-1 text-[14px] text-[#666666] sm:text-[15px] max-w-[520px]">
             Manage employee salary, advances, and monthly payslips.

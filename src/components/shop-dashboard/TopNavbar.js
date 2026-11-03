@@ -75,7 +75,7 @@ export default function TopNavbar({ pathname, onOpenMobileMenu, shopOwner, badge
             title="Enquiries"
             className={cx(
               'relative inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-[#F8F8F8]',
-              pathname?.startsWith('/shop-home/services/enquiries') ? 'bg-[#F3F3F3] text-[#09AD2A]' : 'text-[#666666]',
+              pathname?.startsWith('/shop-home/services/enquiries') ? 'bg-[#F3F3F3] text-[#035C6C]' : 'text-[#666666]',
               FOCUS_RING,
             )}
           >

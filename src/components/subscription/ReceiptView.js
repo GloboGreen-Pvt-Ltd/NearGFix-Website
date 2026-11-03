@@ -40,7 +40,7 @@ export default function ReceiptView({ receipt, invoice }) {
     <article className="mx-auto w-full max-w-3xl rounded-2xl border border-[#ECECEC] bg-white p-5 text-[#111111] sm:p-8 print:max-w-none print:rounded-none print:border-0 print:p-0">
       <header className="flex flex-col gap-4 border-b border-[#ECECEC] pb-5 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <p className="text-xs font-bold uppercase tracking-[0.08em] text-[#15803D]">{title}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.08em] text-[#024A57]">{title}</p>
           <p className="mt-1 break-words text-lg font-extrabold">{issuer.name || ISSUER}</p>
           {issuer.address ? <p className="mt-1 whitespace-pre-line text-sm text-[#666666]">{issuer.address}</p> : null}
           <p className="mt-1 text-sm text-[#666666]">{[issuer.email, issuer.phone].filter(Boolean).join(' · ')}</p>

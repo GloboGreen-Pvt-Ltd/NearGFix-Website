@@ -5,11 +5,11 @@ import { CheckCircle2, Eye, MapPin, Pencil, Phone, Store, Trash2 } from 'lucide-
 import { cx } from '@/components/site/ui';
 import SafeImage from '@/components/SafeImage';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 
 function DocDot({ ok, label }) {
   return (
-    <span className={cx('inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold', ok ? 'bg-[#F3F3F3] text-[#15803D]' : 'bg-[#F3F3F3] text-[#98A2B3]')}>
+    <span className={cx('inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold', ok ? 'bg-[#F3F3F3] text-[#024A57]' : 'bg-[#F3F3F3] text-[#98A2B3]')}>
       <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
       {label}
     </span>
@@ -19,7 +19,7 @@ function DocDot({ ok, label }) {
 export default function BusinessLocationCard({ location, isMain, onView, onEdit, onDelete }) {
   const addr = [location.area, location.district, location.state].filter(Boolean).join(', ') || location.address || 'Address not added yet';
   const progress = location.progressPercent ?? 0;
-  const progressColor = progress >= 100 ? 'bg-[#15803D]' : progress >= 60 ? 'bg-amber-500' : 'bg-red-400';
+  const progressColor = progress >= 100 ? 'bg-[#024A57]' : progress >= 60 ? 'bg-amber-500' : 'bg-red-400';
   // Shop front photo is the recognisable "what does this place look like"
   // shot, so it's what the card header shows; banner/visiting-card is the
   // fallback when only that was uploaded.
@@ -34,15 +34,15 @@ export default function BusinessLocationCard({ location, isMain, onView, onEdit,
             alt={`${location.name} shop front`}
             className="h-full w-full object-cover"
             placeholderClassName="flex h-full w-full items-center justify-center"
-            fallback={<span className="flex h-full w-full items-center justify-center"><Store className="h-8 w-8 text-[#86EFAC]" aria-hidden="true" /></span>}
+            fallback={<span className="flex h-full w-full items-center justify-center"><Store className="h-8 w-8 text-[#C7E6EA]" aria-hidden="true" /></span>}
           />
         ) : (
           <span className="flex h-full w-full items-center justify-center">
-            <Store className="h-8 w-8 text-[#86EFAC]" aria-hidden="true" />
+            <Store className="h-8 w-8 text-[#C7E6EA]" aria-hidden="true" />
           </span>
         )}
         {isMain ? (
-          <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#15803D] shadow-sm">
+          <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#024A57] shadow-sm">
             Main Location
           </span>
         ) : null}

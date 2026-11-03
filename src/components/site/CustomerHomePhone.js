@@ -19,14 +19,14 @@ import {
 import { cx } from '@/components/site/ui';
 
 /**
- * CustomerHomePhone — phone frame showing an illustrative GGFIX customer app
+ * CustomerHomePhone — phone frame showing an illustrative NearGFix customer app
  * home screen (sample name, location and order, not live data).
  */
 export default function CustomerHomePhone({ className }) {
   return (
     <div className={cx('relative overflow-hidden rounded-[44px] border-[10px] border-[#111827] bg-[#F6F8F7] shadow-[0_30px_60px_rgba(16,24,40,0.25)]', className)}>
       {/* Green header: notch, location, search */}
-      <div className="rounded-b-[28px] bg-gradient-to-br from-[#09AD2A] to-[#067A1E] px-4 pb-5 pt-2 text-white">
+      <div className="rounded-b-[28px] bg-gradient-to-br from-[#035C6C] to-[#067A1E] px-4 pb-5 pt-2 text-white">
         <div className="mx-auto h-5 w-28 rounded-full bg-[#111827]" aria-hidden="true" />
         <div className="mt-3 flex items-center justify-between">
           <div className="min-w-0">
@@ -38,7 +38,7 @@ export default function CustomerHomePhone({ className }) {
           </div>
           <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white/15">
             <BellRing className="h-4 w-4" aria-hidden="true" />
-            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-[#FDB022] ring-2 ring-[#09AD2A]" aria-hidden="true" />
+            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-[#FDB022] ring-2 ring-[#035C6C]" aria-hidden="true" />
           </span>
         </div>
         <div className="mt-3 flex items-center gap-2 rounded-xl bg-white px-3 py-2.5 text-brand-subtle shadow-sm">
@@ -49,9 +49,9 @@ export default function CustomerHomePhone({ className }) {
 
       <div className="px-4 pb-4 pt-4">
         {/* Promo banner */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#0B3D1A] to-[#137A2E] p-3.5 text-white">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1C3053] to-[#035C6C] p-3.5 text-white">
           <Wrench className="pointer-events-none absolute -bottom-3 -right-3 h-20 w-20 text-white/10" aria-hidden="true" />
-          <p className="text-[10px] font-bold uppercase tracking-wider text-[#9BF2AE]">Free pickup</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-[#C7E6EA]">Free pickup</p>
           <p className="mt-0.5 text-sm font-extrabold leading-snug">Screen broken?<br />Fix it at your doorstep</p>
           <span className="mt-2 inline-block rounded-full bg-white px-2.5 py-1 text-[10px] font-bold text-[#067A1E]">Book now</span>
         </div>
@@ -59,7 +59,7 @@ export default function CustomerHomePhone({ className }) {
         {/* Quick actions */}
         <div className="mt-4 grid grid-cols-4 gap-2">
           {[
-            { icon: Wrench, label: 'Repair', chip: 'from-[#22C55E] to-[#079455]' },
+            { icon: Wrench, label: 'Repair', chip: 'from-[#035C6C] to-[#035C6C]' },
             { icon: Truck, label: 'Pickup', chip: 'from-[#2ED3B7] to-[#0E9384]' },
             { icon: ShoppingCart, label: 'Buy', chip: 'from-[#5EA2FF] to-[#1570EF]' },
             { icon: Tag, label: 'Sell', chip: 'from-[#FDB022] to-[#F79009]' },
@@ -76,7 +76,7 @@ export default function CustomerHomePhone({ className }) {
         {/* Device categories */}
         <div className="mt-4 flex items-center justify-between">
           <p className="text-xs font-extrabold text-brand-ink">Repair by device</p>
-          <span className="text-[10px] font-bold text-[#09AD2A]">See all</span>
+          <span className="text-[10px] font-bold text-[#035C6C]">See all</span>
         </div>
         <div className="mt-2 grid grid-cols-4 gap-2">
           {[
@@ -86,7 +86,7 @@ export default function CustomerHomePhone({ className }) {
             { icon: Watch, label: 'Watch' },
           ].map((c) => (
             <div key={c.label} className="flex flex-col items-center gap-1 rounded-xl bg-white py-2 shadow-sm">
-              <c.icon className="h-5 w-5 text-[#09AD2A]" aria-hidden="true" />
+              <c.icon className="h-5 w-5 text-[#035C6C]" aria-hidden="true" />
               <span className="text-[10px] font-semibold text-brand-ink">{c.label}</span>
             </div>
           ))}
@@ -105,7 +105,7 @@ export default function CustomerHomePhone({ className }) {
             <span className="rounded-full bg-sky-50 px-2 py-0.5 text-[9px] font-bold uppercase text-sky-700">Live</span>
           </div>
           <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-brand-line">
-            <div className="h-full w-3/5 rounded-full bg-[#09AD2A]" />
+            <div className="h-full w-3/5 rounded-full bg-[#035C6C]" />
           </div>
         </div>
       </div>
@@ -118,7 +118,7 @@ export default function CustomerHomePhone({ className }) {
           { icon: Store, label: 'Shops' },
           { icon: User, label: 'Account' },
         ].map((t) => (
-          <span key={t.label} className={cx('flex flex-col items-center gap-0.5 text-[9px] font-bold', t.active ? 'text-[#09AD2A]' : 'text-brand-subtle')}>
+          <span key={t.label} className={cx('flex flex-col items-center gap-0.5 text-[9px] font-bold', t.active ? 'text-[#035C6C]' : 'text-brand-subtle')}>
             <t.icon className="h-4 w-4" aria-hidden="true" />
             {t.label}
           </span>

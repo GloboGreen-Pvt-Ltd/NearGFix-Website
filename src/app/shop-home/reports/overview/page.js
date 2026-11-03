@@ -74,13 +74,13 @@ import { downloadReportPdf } from '@/lib/reportPdf';
 // convention of cycling a fixed palette rather than hardcoding meaning to a
 // specific brand name (this shop's real brands may differ from any
 // reference example).
-const SLOT_COLORS = ['#0BA65A', '#2196F3', '#FF8F2C', '#8B5CF6', '#94A3B8'];
+const SLOT_COLORS = ['#035C6C', '#2196F3', '#FF8F2C', '#8B5CF6', '#94A3B8'];
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 const DASH = '—';
 
 const STATUS_BADGE = {
-  Created: 'bg-[#F3F3F3] text-[#15803D]',
+  Created: 'bg-[#F3F3F3] text-[#024A57]',
   'In Progress': 'bg-sky-100 text-sky-700',
   Pickup: 'bg-orange-100 text-orange-700',
   Completed: 'bg-violet-100 text-violet-700',
@@ -90,7 +90,7 @@ const STATUS_BADGE = {
 // Icon + tint + watermark per KPI card — six distinct identities, matching
 // a reference design's "one row of premium metric cards" look.
 const OVERVIEW_STAT_STYLES = {
-  green: { card: 'bg-[#F3F3F3]', chip: 'bg-gradient-to-br from-[#22C55E] to-[#0BA65A]', watermark: 'text-[#0BA65A]' },
+  green: { card: 'bg-[#F3F3F3]', chip: 'bg-gradient-to-br from-[#035C6C] to-[#035C6C]', watermark: 'text-[#035C6C]' },
   orange: { card: 'bg-[#F8F8F8]', chip: 'bg-gradient-to-br from-[#FFB35C] to-[#FF8F2C]', watermark: 'text-[#FF8F2C]' },
   blue: { card: 'bg-[#F8F8F8]', chip: 'bg-gradient-to-br from-[#5EB6FA] to-[#2196F3]', watermark: 'text-[#2196F3]' },
   violet: { card: 'bg-[#F8F8F8]', chip: 'bg-gradient-to-br from-[#A78BFA] to-[#8B5CF6]', watermark: 'text-[#8B5CF6]' },
@@ -108,7 +108,7 @@ function OverviewStatCard({ icon: Icon, watermark: Watermark, label, value, tren
       <p className="relative mt-4 text-[28px] font-extrabold leading-none text-[#111111]">{value}</p>
       <p className="relative mt-1.5 text-[14px] font-medium text-[#666666]">{label}</p>
       {trend ? (
-        <p className="relative mt-1 flex items-center gap-1 text-xs font-bold text-[#0BA65A]">
+        <p className="relative mt-1 flex items-center gap-1 text-xs font-bold text-[#035C6C]">
           <span aria-hidden="true">↗</span>
           {trend}
         </p>
@@ -120,6 +120,9 @@ function OverviewStatCard({ icon: Icon, watermark: Watermark, label, value, tren
 function money(n) {
   return `₹${Math.round(n || 0).toLocaleString('en-IN')}`;
 }
+
+// One card style for every section (min-w-0 so long names truncate instead of overflowing).
+const CARD = 'min-w-0 rounded-[20px] border border-[#035C6C]/[0.08] bg-[#F8F8F8] p-5 sm:p-6';
 
 export default function BusinessOverviewPage() {
   const [data, setData] = useState({ bookings: [], counts: {}, chats: [], tickets: [] });
@@ -185,7 +188,7 @@ export default function BusinessOverviewPage() {
     const cancelledCount = Number(counts.CANCELLED || 0);
     const pendingCount = Math.max(0, total - completedCount - inProcessCount - cancelledCount);
     return [
-      { label: 'Completed', value: completedCount, color: '#0BA65A' },
+      { label: 'Completed', value: completedCount, color: '#035C6C' },
       { label: 'In Process', value: inProcessCount, color: '#2196F3' },
       { label: 'Pending', value: pendingCount, color: '#FF8F2C' },
       { label: 'Cancelled', value: cancelledCount, color: '#E11D48' },
@@ -233,7 +236,7 @@ export default function BusinessOverviewPage() {
     try {
       await downloadReportPdf({
         title: 'Business Overview',
-        subtitle: 'GGFIX Partner Dashboard',
+        subtitle: 'NearGFix Partner Dashboard',
         stats: [...kpis.map((k) => ({ label: k.label, value: k.value })), { label: 'Completion Rate', value: `${rate}%` }],
         columns: [
           { header: 'Booking #', key: 'bookingNumber' },
@@ -250,7 +253,7 @@ export default function BusinessOverviewPage() {
   };
 
   return (
-    <div className="flex flex-col gap-5" style={{ background: '#FFFFFF' }}>
+    <div className="mx-auto flex w-full min-w-0 max-w-[1440px] flex-col gap-5 bg-white">
       <PageHeader
         title="Business Overview"
         subtitle="Total bookings, revenue, completed/pending services and customer growth."
@@ -281,7 +284,7 @@ export default function BusinessOverviewPage() {
       {loading ? (
         <SkeletonStatCards count={6} />
       ) : (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 2xl:grid-cols-6">
           {kpis.map((k) => (
             <OverviewStatCard key={k.key} icon={k.icon} watermark={k.watermark} label={k.label} value={k.value} trend={k.trend} tone={k.tone} />
           ))}
@@ -289,15 +292,12 @@ export default function BusinessOverviewPage() {
       )}
 
       {/* ---- Top Services Today / Device Category Distribution / Recent Bookings --- */}
-      <div className="grid gap-4 lg:grid-cols-3">
-        <section
-          className="rounded-[20px] border border-[#ECECEC] bg-[#F8F8F8] p-5"
-          style={{ border: '1px solid rgba(15, 80, 60, 0.06)' }}
-        >
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <section className={CARD}>
           <div className="flex items-center gap-2.5">
             <Icon3D icon={Wrench} tone="green" size="sm" />
             <div>
-              <p className="text-[16px] font-bold text-[#10233F]">Top Services Today</p>
+              <p className="text-[16px] font-bold text-[#1C3053]">Top Services Today</p>
               <p className="text-xs text-[#6D7E94]">Most requested services today.</p>
             </div>
           </div>
@@ -311,14 +311,14 @@ export default function BusinessOverviewPage() {
                 const maxCount = topServicesToday[0].count || 1;
                 return topServicesToday.map((s, i) => (
                   <div key={s.name} className="flex items-center gap-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3] text-xs font-bold text-[#0BA65A]">{i + 1}</span>
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3] text-xs font-bold text-[#035C6C]">{i + 1}</span>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between gap-2">
-                        <p className="truncate text-sm font-semibold text-[#10233F]">{s.name}</p>
-                        <span className="shrink-0 text-sm font-bold text-[#10233F]">{s.count}</span>
+                        <p className="truncate text-sm font-semibold text-[#1C3053]">{s.name}</p>
+                        <span className="shrink-0 text-sm font-bold text-[#1C3053]">{s.count}</span>
                       </div>
                       <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-[#F3F3F3]">
-                        <div className="h-full rounded-full bg-gradient-to-r from-[#22C55E] to-[#0BA65A]" style={{ width: `${Math.round((s.count / maxCount) * 100)}%` }} />
+                        <div className="h-full rounded-full bg-gradient-to-r from-[#035C6C] to-[#035C6C]" style={{ width: `${Math.round((s.count / maxCount) * 100)}%` }} />
                       </div>
                     </div>
                   </div>
@@ -328,14 +328,11 @@ export default function BusinessOverviewPage() {
           </div>
         </section>
 
-        <section
-          className="rounded-[20px] border border-[#ECECEC] bg-[#F8F8F8] p-5"
-          style={{ border: '1px solid rgba(15, 80, 60, 0.06)' }}
-        >
+        <section className={CARD}>
           <div className="flex items-center gap-2.5">
             <Icon3D icon={Smartphone} tone="blue" size="sm" />
             <div>
-              <p className="text-[16px] font-bold text-[#10233F]">Device Category Distribution</p>
+              <p className="text-[16px] font-bold text-[#1C3053]">Device Category Distribution</p>
               <p className="text-xs text-[#6D7E94]">Devices booked for service.</p>
             </div>
           </div>
@@ -361,7 +358,7 @@ export default function BusinessOverviewPage() {
                 }}
               >
                 <div className="absolute inset-[12px] flex flex-col items-center justify-center rounded-full bg-white">
-                  <span className="text-lg font-extrabold text-[#10233F]">{deviceDistribution.total}</span>
+                  <span className="text-lg font-extrabold text-[#1C3053]">{deviceDistribution.total}</span>
                   <span className="text-[10px] text-[#6D7E94]">Total</span>
                 </div>
               </div>
@@ -373,7 +370,7 @@ export default function BusinessOverviewPage() {
                     <div key={r.name} className="flex items-center gap-2 text-sm">
                       <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: SLOT_COLORS[i % SLOT_COLORS.length] }} aria-hidden="true" />
                       <span className="min-w-0 flex-1 truncate text-[#6D7E94]">{r.name}</span>
-                      <span className="shrink-0 font-bold text-[#10233F]">{r.count}</span>
+                      <span className="shrink-0 font-bold text-[#1C3053]">{r.count}</span>
                     </div>
                   ))
                 )}
@@ -382,21 +379,18 @@ export default function BusinessOverviewPage() {
           )}
         </section>
 
-        <section
-          className="rounded-[20px] border border-[#ECECEC] bg-[#F8F8F8] p-5"
-          style={{ border: '1px solid rgba(15, 80, 60, 0.06)' }}
-        >
+        <section className={cx(CARD, 'md:col-span-2 xl:col-span-1')}>
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-2.5">
               <Icon3D icon={FileText} tone="green" size="sm" />
               <div>
-                <p className="text-[16px] font-bold text-[#10233F]">Recent Bookings</p>
+                <p className="text-[16px] font-bold text-[#1C3053]">Recent Bookings</p>
                 <p className="text-xs text-[#6D7E94]">Latest service bookings from customers.</p>
               </div>
             </div>
             <Link
               href="/shop-home/services/bookings"
-              className="flex shrink-0 items-center gap-1 rounded-full border border-[#ECECEC] px-3 py-1.5 text-xs font-bold text-[#10233F] transition hover:border-[#0BA65A] hover:text-[#0BA65A]"
+              className="flex shrink-0 items-center gap-1 rounded-full border border-[#ECECEC] px-3 py-1.5 text-xs font-bold text-[#1C3053] transition hover:border-[#035C6C] hover:text-[#035C6C]"
             >
               View All
               <ArrowRight className="h-3 w-3" aria-hidden="true" />
@@ -407,7 +401,7 @@ export default function BusinessOverviewPage() {
           ) : recent.length === 0 ? (
             <div className="flex flex-col items-center py-8 text-center">
               <FileText className="h-6 w-6 text-[#98A2B3]" aria-hidden="true" />
-              <p className="mt-2 text-sm font-semibold text-[#10233F]">No recent bookings</p>
+              <p className="mt-2 text-sm font-semibold text-[#1C3053]">No recent bookings</p>
               <p className="mt-0.5 text-xs text-[#6D7E94]">New bookings will appear here.</p>
             </div>
           ) : (
@@ -419,10 +413,10 @@ export default function BusinessOverviewPage() {
                   className="flex items-center gap-3 py-2.5 transition hover:bg-[#F8F8F8]"
                 >
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3]">
-                    <Smartphone className="h-4 w-4 text-[#0BA65A]" aria-hidden="true" />
+                    <Smartphone className="h-4 w-4 text-[#035C6C]" aria-hidden="true" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-[#10233F]">{booking.customerName || 'Customer'}</p>
+                    <p className="truncate text-sm font-semibold text-[#1C3053]">{booking.customerName || 'Customer'}</p>
                     <p className="truncate text-xs text-[#6D7E94]">
                       {booking.deviceDisplayName || booking.modelName || 'Device'} · {booking.services?.[0]?.serviceName || booking.issueSummary || 'Service booking'}
                     </p>
@@ -437,16 +431,13 @@ export default function BusinessOverviewPage() {
         </section>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {/* ---- Weekly Bookings ------------------------------------------ */}
-        <section
-          className="rounded-[20px] border border-[#ECECEC] bg-[#F8F8F8] p-5 sm:p-6"
-          style={{ border: '1px solid rgba(15, 80, 60, 0.06)' }}
-        >
+        <section className={cx(CARD, 'xl:col-span-2')}>
           <div className="flex items-center gap-2.5">
             <Icon3D icon={ClipboardList} tone="green" size="sm" />
             <div>
-              <p className="text-[16px] font-bold text-[#10233F]">Weekly Bookings</p>
+              <p className="text-[16px] font-bold text-[#1C3053]">Weekly Bookings</p>
               <p className="text-xs text-[#6D7E94]">Total bookings created each week.</p>
             </div>
           </div>
@@ -462,11 +453,11 @@ export default function BusinessOverviewPage() {
                     <div key={`${bar.day}-${index}`} className="flex flex-1 flex-col items-center gap-2">
                       <div className="flex h-32 w-full items-end justify-center" title={`${count} booking${count === 1 ? '' : 's'}`}>
                         <div
-                          className={cx('w-full max-w-[26px] rounded-full transition-all', bar.today ? 'bg-gradient-to-b from-[#22C55E] to-[#0BA65A]' : 'bg-[#F3F3F3]')}
+                          className={cx('w-full max-w-[26px] rounded-full transition-all', bar.today ? 'bg-gradient-to-b from-[#035C6C] to-[#035C6C]' : 'bg-[#F3F3F3]')}
                           style={{ height: `${pct}%`, minHeight: pct > 0 ? '4px' : 0 }}
                         />
                       </div>
-                      <span className={cx('text-xs font-semibold', bar.today ? 'text-[#0BA65A]' : 'text-[#98A2B3]')}>{bar.day}</span>
+                      <span className={cx('text-xs font-semibold', bar.today ? 'text-[#035C6C]' : 'text-[#98A2B3]')}>{bar.day}</span>
                     </div>
                   );
                 })}
@@ -479,14 +470,11 @@ export default function BusinessOverviewPage() {
         </section>
 
         {/* ---- Completion Rate ------------------------------------------ */}
-        <section
-          className="rounded-[20px] border border-[#ECECEC] bg-[#F8F8F8] p-5 sm:p-6"
-          style={{ border: '1px solid rgba(15, 80, 60, 0.06)' }}
-        >
+        <section className={CARD}>
           <div className="flex items-center gap-2.5">
             <Icon3D icon={CheckCircle2} tone="green" size="sm" />
             <div>
-              <p className="text-[16px] font-bold text-[#10233F]">Completion Rate</p>
+              <p className="text-[16px] font-bold text-[#1C3053]">Completion Rate</p>
               <p className="text-xs text-[#6D7E94]">Percentage of completed services.</p>
             </div>
           </div>
@@ -507,13 +495,13 @@ export default function BusinessOverviewPage() {
                 />
                 <defs>
                   <linearGradient id="completionGradient" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0" stopColor="#22C55E" />
-                    <stop offset="1" stopColor="#0BA65A" />
+                    <stop offset="0" stopColor="#035C6C" />
+                    <stop offset="1" stopColor="#035C6C" />
                   </linearGradient>
                 </defs>
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-2xl font-extrabold text-[#10233F]">{loading ? DASH : `${rate}%`}</span>
+                <span className="text-2xl font-extrabold text-[#1C3053]">{loading ? DASH : `${rate}%`}</span>
                 <span className="text-[11px] font-medium text-[#6D7E94]">Completed</span>
               </div>
             </div>
@@ -523,7 +511,7 @@ export default function BusinessOverviewPage() {
                   <div key={s.label} className="flex items-center gap-2 text-sm">
                     <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: s.color }} aria-hidden="true" />
                     <span className="text-[#6D7E94]">{s.label}</span>
-                    <span className="font-bold text-[#10233F]">{s.value}</span>
+                    <span className="font-bold text-[#1C3053]">{s.value}</span>
                   </div>
                 ))}
               </div>

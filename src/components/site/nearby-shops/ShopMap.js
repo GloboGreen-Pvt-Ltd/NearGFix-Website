@@ -5,7 +5,7 @@
  *
  * Markers are built ONLY from the `shops` array NearbyShops already fetched
  * from our own backend — no second request, and Google's own "nearby search"
- * is never used to populate a pin. Every marker is a real, active GGFIX shop;
+ * is never used to populate a pin. Every marker is a real, active NearGFix shop;
  * this file has no code path that can put anything else on the map.
  */
 
@@ -30,7 +30,7 @@ function escapeHtml(value) {
  * InfoWindow doesn't invent one.
  */
 function shopInfoHtml(shop) {
-  const name = escapeHtml((shop && shop.name) || 'GGFIX shop');
+  const name = escapeHtml((shop && shop.name) || 'NearGFix shop');
   const address = escapeHtml((shop && shop.address) || '');
   const distanceKm = Number(shop && shop.distanceKm);
   const distance = Number.isFinite(distanceKm) ? `${distanceKm.toFixed(1)} km away` : '';
@@ -53,8 +53,8 @@ function shopInfoHtml(shop) {
       ${address ? `<div style="font-size:12px;color:#64748b;margin-bottom:4px;line-height:1.4;">${address}</div>` : ''}
       ${meta ? `<div style="font-size:12px;color:#475569;margin-bottom:6px;">${meta}</div>` : ''}
       <div style="display:flex;gap:10px;">
-        ${callUrl ? `<a href="${callUrl}" style="font-size:12px;font-weight:600;color:#16A34A;text-decoration:none;">Call Store</a>` : ''}
-        ${directionsUrl ? `<a href="${directionsUrl}" target="_blank" rel="noopener noreferrer" style="font-size:12px;font-weight:600;color:#16A34A;text-decoration:none;">Get Directions</a>` : ''}
+        ${callUrl ? `<a href="${callUrl}" style="font-size:12px;font-weight:600;color:#035C6C;text-decoration:none;">Call Store</a>` : ''}
+        ${directionsUrl ? `<a href="${directionsUrl}" target="_blank" rel="noopener noreferrer" style="font-size:12px;font-weight:600;color:#035C6C;text-decoration:none;">Get Directions</a>` : ''}
       </div>
     </div>
   `;
@@ -139,7 +139,7 @@ export default function ShopMap({ shops, geo, className }) {
       const marker = new google.maps.Marker({
         position,
         map,
-        title: (shop && shop.name) || 'GGFIX shop',
+        title: (shop && shop.name) || 'NearGFix shop',
       });
       marker.addListener('click', () => {
         infoWindowRef.current.setContent(shopInfoHtml(shop));

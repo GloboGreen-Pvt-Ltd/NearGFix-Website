@@ -1,5 +1,5 @@
 /**
- * partnerNav.js — single source of truth for the GGFIX Partner Dashboard
+ * partnerNav.js — single source of truth for the NearGFix Partner Dashboard
  * navigation (sidebar, breadcrumbs, page titles). Every route under
  * /shop-home/* is either the Dashboard itself or a leaf item listed here.
  *
@@ -88,13 +88,14 @@ export const PARTNER_NAV = [
     icon: Wrench,
     items: [
       { key: 'book-service', label: 'Book Service', slug: 'services/book-service', icon: PlusCircle, description: 'Create a new repair/service booking.' },
-      { key: 'requote', label: 'Requote', slug: 'services/requote', icon: FileText, description: 'Manage bookings that require revised quotations.' },
       { key: 'pickups', label: 'Pickups', slug: 'services/pickups', icon: Truck, description: 'Track and manage device pickup bookings.' },
-      { key: 'bookings', label: 'Bookings', slug: 'services/bookings', icon: ListChecks, description: 'View and manage all repair and service bookings.' },
-      { key: 'invoice', label: 'Invoice', slug: 'services/invoice', icon: Receipt, description: 'Bookings with an invoice generated.' },
+      { key: 'bookings', label: 'Jobs', slug: 'services/bookings', icon: ListChecks, description: 'View and manage all repair and service jobs.' },
+      // Not in the Services menu (as in the app, Invoice is a tile on the Bookings rail);
+      // kept here so the Invoice pages still get their title and breadcrumb.
+      { key: 'invoice', inSection: false, label: 'Invoice', slug: 'services/invoice', icon: Receipt, description: 'Bookings with an invoice generated.' },
       { key: 'customers', inSection: false, label: 'Customers', slug: 'services/customers', icon: Users, description: 'Manage customer profiles, contact information, booking history and service records.' },
       { key: 'enquiries', inSection: false, label: 'Enquiry', slug: 'services/enquiries', icon: MessageSquare, description: 'Manage customer enquiries and convert them into service bookings.' },
-      { key: 'marketplace', inSection: false, label: 'Buy', slug: 'services/marketplace', icon: ShoppingBag, description: 'Browse devices and products listed in the GGFIX marketplace.' },
+      { key: 'marketplace', inSection: false, label: 'Buy', slug: 'services/marketplace', icon: ShoppingBag, description: 'Browse devices and products listed in the NearGFix marketplace.' },
       // Sidebar shortcut into the Sell a Device flow (step 1, choose a category) — same page the Dashboard's Sell card opens.
       { key: 'sell', inSection: false, label: 'Sell', slug: 'sell/select-brand', icon: Tag, description: 'Sell a device — choose its category, brand and model.' },
       { key: 'model-compatibility', label: 'Model Compatibility', slug: 'services/model-compatibility', icon: Smartphone, description: 'Check and manage device models and supported repair/service compatibility.' },
@@ -106,16 +107,16 @@ export const PARTNER_NAV = [
     label: 'Employee',
     icon: Users,
     items: [
-      { key: 'team', label: 'Employee Management', slug: 'employee/team', icon: Users, description: 'View, add, edit, activate, deactivate and manage employees.' },
+      { key: 'team', label: 'Team', slug: 'employee/team', icon: Users, description: 'View, add, edit, activate, deactivate and manage employees.' },
       { key: 'attendance', label: 'Attendance', slug: 'employee/attendance', icon: CalendarCheck, description: 'Monitor employee attendance, late check-ins, permissions and leaves.' },
-      { key: 'service-report', label: 'Service Report', slug: 'employee/service-report', icon: BarChart3, description: 'Monitor technician work records and assigned service tasks.' },
+      { key: 'job-report', label: 'Job Report', slug: 'employee/job-report', icon: BarChart3, description: 'Monitor technician work records and assigned service tasks.' },
       { key: 'pickup-report', label: 'Pickup Report', slug: 'employee/pickup-report', icon: Truck, description: 'Monitor pickup person assignments and completed pickups.' },
-      { key: 'leave', label: 'Leave Management', slug: 'employee/leave', icon: Calendar, description: 'View, approve, reject and manage employee leave requests.' },
+      { key: 'leave', label: 'Leave', slug: 'employee/leave', icon: Calendar, description: 'View, approve, reject and manage employee leave requests.' },
       { key: 'permissions', label: 'Permissions', slug: 'employee/permissions', icon: ShieldCheck, description: 'Manage short-time employee permission requests.' },
       // Removed from the Employee menu on request; the pages still exist at their URLs.
       { key: 'shift-schedule', inSection: false, label: 'Shift Management', slug: 'employee/shift-schedule', icon: Clock, description: 'View employee work schedules and check-in/check-out details.' },
       { key: 'salary', inSection: false, label: 'Salary & Payslips', slug: 'employee/salary', icon: IndianRupee, description: 'Manage salary records, advances, monthly salary reports and payslips.' },
-      { key: 'tasks', inSection: false, label: 'Tasks', slug: 'employee/tasks', icon: ListChecks, description: 'Assign and track employee tasks.' },
+      { key: 'tasks', inSection: false, label: 'Staff Tasks', slug: 'employee/tasks', icon: ListChecks, description: 'Assign and track employee tasks.' },
       { key: 'performance', inSection: false, label: 'Performance', slug: 'employee/performance', icon: BarChart3, description: 'Monitor employee productivity and performance.' },
     ],
   },
@@ -124,7 +125,7 @@ export const PARTNER_NAV = [
     label: 'Reports',
     icon: BarChart3,
     items: [
-      { key: 'overview', label: 'Business Overview', slug: 'reports/overview', icon: LayoutDashboard, description: 'Total bookings, revenue, completed/pending services and customer growth.' },
+      { key: 'overview', label: 'Business Overview', slug: 'reports/overview', icon: BarChart3, inSection: false, description: 'Total bookings, revenue, completed/pending services and customer growth.' },
       { key: 'revenue', label: 'Revenue Report', slug: 'reports/revenue', icon: IndianRupee, description: 'Daily, weekly and monthly revenue, pending payments and payment methods.' },
       { key: 'reports-service-report', label: 'Service Status', slug: 'reports/service-report', icon: BarChart3, description: 'Booking status counts, working-pending jobs and month-by-month snapshots.' },
       { key: 'employee-report', inSection: false, label: 'Employee Report', slug: 'reports/employee-report', icon: Users, description: 'Attendance, productivity, completed tasks and leave statistics.' },
@@ -164,9 +165,9 @@ export const ALL_STUB_SLUGS = PARTNER_NAV_FLAT.map((item) => item.slug);
  * Resolve the current pathname to { title, breadcrumb, sectionKey }.
  * sectionKey tells the sidebar which section to keep expanded.
  */
-const sellStep = (title) => ({ title, breadcrumb: ['Dashboard', 'Sell on GGFIX', title] });
+const sellStep = (title) => ({ title, breadcrumb: ['Dashboard', 'Sell on NearGFix', title] });
 const FLOW_PAGES = {
-  '/shop-home/sell/select-brand': { title: 'Sell on GGFIX', breadcrumb: ['Dashboard', 'Sell on GGFIX'] },
+  '/shop-home/sell/select-brand': { title: 'Sell on NearGFix', breadcrumb: ['Dashboard', 'Sell on NearGFix'] },
   '/shop-home/sell/select-model': sellStep('Select Model'),
   '/shop-home/sell/sales-category': sellStep('What are you selling?'),
   '/shop-home/sell/select-variant': sellStep('Your Device'),

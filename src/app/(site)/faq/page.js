@@ -69,7 +69,7 @@ const HELP_TOPICS = [
     who: 'Customers',
     title: 'Where is my device?',
     description: 'Share your order ID and we will check the live status with the shop handling your repair or pickup.',
-    chip: 'from-[#22C55E] to-[#079455]',
+    chip: 'from-[#035C6C] to-[#035C6C]',
   },
   {
     icon: CalendarClock,
@@ -96,7 +96,7 @@ const HELP_TOPICS = [
     icon: Store,
     who: 'Shop owners',
     title: 'Plans, trial and KYC',
-    description: 'Get your plan set up, ask which KYC documents you need, or move an existing shop onto GGFIX.',
+    description: 'Get your plan set up, ask which KYC documents you need, or move an existing shop onto NearGFix.',
     chip: 'from-[#A48AFB] to-[#7F56D9]',
   },
   {
@@ -168,7 +168,7 @@ export default function FaqPage() {
         </div>
 
         <p className="mx-auto mt-6 max-w-prose text-center text-sm leading-relaxed text-brand-muted">
-          One thing worth saying up front: GGFIX has no online checkout. Plans are set up by our
+          One thing worth saying up front: NearGFix has no online checkout. Plans are set up by our
           team, so nothing is ever charged to a card you saved.
         </p>
       </Section>
@@ -277,13 +277,13 @@ export default function FaqPage() {
       <Section tone="page">
         <div className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-brand-600 via-brand-700 to-brand-800 px-6 pt-10 text-white shadow-lift sm:px-10 lg:px-12 lg:pt-8">
           <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-2xl" aria-hidden="true" />
-          <div className="pointer-events-none absolute -bottom-32 right-10 h-80 w-80 rounded-full bg-[#9BF2AE]/15 blur-3xl" aria-hidden="true" />
+          <div className="pointer-events-none absolute -bottom-32 right-10 h-80 w-80 rounded-full bg-[#C7E6EA]/15 blur-3xl" aria-hidden="true" />
 
           <div className="relative grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_250px] lg:gap-12">
             {/* Centre — message, store badges, actions */}
             <div className="pb-10 text-center lg:self-center lg:text-left">
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-[#C9F7D3]">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-[#9BF2AE]" aria-hidden="true" />
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-[#C7E6EA]">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-[#C7E6EA]" aria-hidden="true" />
                 {BRAND.appsStatus}
               </span>
               <h2 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">

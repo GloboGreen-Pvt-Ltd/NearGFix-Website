@@ -48,8 +48,8 @@ function PriceInput({ id, value, onChange, large, label }) {
   return (
     <div
       className={cx(
-        'flex items-center rounded-2xl border-[1.5px] px-3.5 transition focus-within:border-[#079455] focus-within:ring-4 focus-within:ring-[#079455]/10',
-        has ? 'border-[#079455] bg-[#EAF8EC]' : 'border-[#ECECEC] bg-white',
+        'flex items-center rounded-2xl border-[1.5px] px-3.5 transition focus-within:border-[#035C6C] focus-within:ring-4 focus-within:ring-[#035C6C]/10',
+        has ? 'border-[#035C6C] bg-[#E5F3F5]' : 'border-[#ECECEC] bg-white',
       )}
     >
       <span className={cx('mr-1.5 font-extrabold text-[#111111]', large ? 'text-[20px]' : 'text-[15px]')}>₹</span>
@@ -149,7 +149,7 @@ export default function PricePage() {
     <>
       <SellShell {...shell} footer={footer}>
         <div className="flex justify-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EAF8EC] px-3.5 py-1.5 text-[11.5px] font-extrabold tracking-widest text-[#067647]">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E5F3F5] px-3.5 py-1.5 text-[11.5px] font-extrabold tracking-widest text-[#024A57]">
             <Tag className="h-3.5 w-3.5" aria-hidden="true" />
             SELL NOW FOR AMAZING PRICE
           </span>
@@ -166,18 +166,18 @@ export default function PricePage() {
                     key={`${p.groupKey}-${p.partName}-${idx}`}
                     className={cx(
                       'flex items-center gap-3 rounded-2xl border-[1.5px] bg-white p-3',
-                      toPrice(partPrices[idx]) > 0 ? 'border-[#079455]' : 'border-[#ECECEC]',
+                      toPrice(partPrices[idx]) > 0 ? 'border-[#035C6C]' : 'border-[#ECECEC]',
                     )}
                   >
                     <SellThumb src={p.imageUrl} fit="cover" fallbackIcon={Wrench} className="h-[52px] w-[52px] rounded-xl bg-[#F3F3F3]" iconClassName="h-5 w-5" />
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-[13.5px] font-bold text-[#111111]">{p.partName}</p>
                       <p className="truncate text-[12.5px] text-[#666666]">{p.group}</p>
-                      {listedAlready ? <p className="text-[11.5px] font-bold text-[#067647]">Listed</p> : null}
+                      {listedAlready ? <p className="text-[11.5px] font-bold text-[#024A57]">Listed</p> : null}
                     </div>
                     <div className="w-32 shrink-0 sm:w-40">
                       {listedAlready ? (
-                        <p className="text-right text-[15px] font-extrabold text-[#067647]">₹{formatPrice(toPrice(partPrices[idx]))}</p>
+                        <p className="text-right text-[15px] font-extrabold text-[#024A57]">₹{formatPrice(toPrice(partPrices[idx]))}</p>
                       ) : (
                         <PriceInput value={partPrices[idx] || ''} onChange={(v) => setPartPrices((s) => ({ ...s, [idx]: v }))} label={`Price for ${p.partName}`} />
                       )}
@@ -186,21 +186,21 @@ export default function PricePage() {
                 );
               })}
             </div>
-            <div className="flex items-center rounded-2xl bg-[#EAF8EC] p-3.5">
+            <div className="flex items-center rounded-2xl bg-[#E5F3F5] p-3.5">
               <div className="flex-1">
                 <p className="text-[11.5px] font-bold tracking-wider text-[#666666]">
                   TOTAL · {priced.length}/{parts.length} PRICED
                 </p>
-                <p className="text-[19px] font-extrabold text-[#067647]">₹{formatPrice(total)}</p>
+                <p className="text-[19px] font-extrabold text-[#024A57]">₹{formatPrice(total)}</p>
               </div>
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#079455]">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#035C6C]">
                 <IndianRupee className="h-[18px] w-[18px]" aria-hidden="true" />
               </span>
             </div>
           </>
         ) : (
           <section className="flex flex-col items-center rounded-[20px] border border-[#ECECEC] bg-white p-4 sm:p-6">
-            <SellThumb src={device.imageUrl} className="mb-3 h-[150px] w-[150px] rounded-full bg-[#EAF8EC] p-5" iconClassName="h-11 w-11" />
+            <SellThumb src={device.imageUrl} className="mb-3 h-[150px] w-[150px] rounded-full bg-[#E5F3F5] p-5" iconClassName="h-11 w-11" />
             <p className="line-clamp-2 text-center text-[16px] font-extrabold text-[#111111]">{device.modelName || 'Device'}</p>
             {specs || device.color ? <p className="mt-0.5 text-center text-[13px] text-[#666666]">{[specs, device.color].filter(Boolean).join(' · ')}</p> : null}
 
@@ -210,7 +210,7 @@ export default function PricePage() {
               </label>
               <p className="mb-2 mt-0.5 text-[12.5px] text-[#666666]">Buyers nearby will see this price.</p>
               <PriceInput id="sell-price" value={priceText} onChange={setPriceText} large />
-              {priceNum > 0 ? <p className="mt-1.5 text-[12.5px] font-bold text-[#067647]">Listing price: ₹{formatPrice(priceNum)}</p> : null}
+              {priceNum > 0 ? <p className="mt-1.5 text-[12.5px] font-bold text-[#024A57]">Listing price: ₹{formatPrice(priceNum)}</p> : null}
             </div>
           </section>
         )}
@@ -228,8 +228,8 @@ export default function PricePage() {
             className="max-h-full w-full max-w-[420px] overflow-y-auto overscroll-contain rounded-3xl bg-white p-5 outline-none"
           >
             <div className="flex flex-col items-center">
-              <span className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-[#EAF8EC]">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#079455] text-white">
+              <span className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-[#E5F3F5]">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#035C6C] text-white">
                   <Check className="h-5 w-5" strokeWidth={3} aria-hidden="true" />
                 </span>
               </span>
@@ -246,7 +246,7 @@ export default function PricePage() {
                 ) : specs ? (
                   <p className="mt-0.5 text-[12.5px] text-[#666666]">{specs}</p>
                 ) : null}
-                <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-[#079455] px-2.5 py-1 text-[11px] font-extrabold text-white">
+                <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-[#035C6C] px-2.5 py-1 text-[11px] font-extrabold text-white">
                   <Tag className="h-3 w-3" aria-hidden="true" />
                   BEST DEAL
                 </span>
@@ -261,7 +261,7 @@ export default function PricePage() {
             </p>
             <p className="mt-2 flex items-baseline gap-2">
               <span className="text-[13.5px] font-bold text-[#666666]">{parts ? 'Total' : 'Price'}</span>
-              <span className="text-[19px] font-extrabold text-[#067647]">₹{formatPrice(total)}</span>
+              <span className="text-[19px] font-extrabold text-[#024A57]">₹{formatPrice(total)}</span>
             </p>
 
             <div className="mt-5 flex gap-2.5">

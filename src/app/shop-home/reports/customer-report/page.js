@@ -27,7 +27,7 @@ import { fetchShopBookings, friendlyBookingStatus } from '@/lib/shopDashboard';
 import { deriveCustomers as deriveCustomerDirectory } from '@/lib/customerDirectory';
 import { downloadReportPdf } from '@/lib/reportPdf';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 
 function initials(name) {
   const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
@@ -111,7 +111,7 @@ export default function CustomerReportPage() {
     try {
       await downloadReportPdf({
         title: 'Customer Report',
-        subtitle: 'GGFIX Partner Dashboard',
+        subtitle: 'NearGFix Partner Dashboard',
         stats: monthStats.map((s) => ({ label: s.label, value: s.value })),
         notes: ['Pending-payment amounts are not tracked by this backend.'],
         columns: [
@@ -139,7 +139,7 @@ export default function CustomerReportPage() {
               type="button"
               onClick={() => setReloadKey((k) => k + 1)}
               className={cx(
-                'inline-flex items-center gap-1.5 rounded-xl border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#344054] transition hover:border-[#15803D] hover:text-[#15803D]',
+                'inline-flex items-center gap-1.5 rounded-xl border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#344054] transition hover:border-[#024A57] hover:text-[#024A57]',
                 FOCUS_RING,
               )}
             >
@@ -205,7 +205,7 @@ function CustomerRow({ customer, expanded, onToggle }) {
   return (
     <div>
       <button type="button" onClick={onToggle} className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition hover:bg-[#F8F8F8] sm:px-5">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-sm font-bold text-[#15803D]">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-sm font-bold text-[#024A57]">
           {initials(customer.name)}
         </span>
         <div className="min-w-0 flex-1">

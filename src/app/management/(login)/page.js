@@ -86,7 +86,7 @@ function LoginPageInner() {
         if (loginType && !isStaff) {
           notifyError(
             loginType === 'SHOP_OWNER' || loginType === 'SHOP_LOGIN'
-              ? 'Shop accounts must sign in through the GGfix mobile app.'
+              ? 'Shop accounts must sign in through the NearGFix mobile app.'
               : 'Employee accounts must sign in through the employee app.',
           );
           return;
@@ -129,7 +129,7 @@ function LoginPageInner() {
       // taskbar eating vertical space) the effective viewport is short enough
       // that background-size:cover has to crop the image vertically to keep
       // full-width coverage. Center-anchoring split that crop evenly and
-      // clipped the GGFIX logo at the very top almost entirely; top-anchoring
+      // clipped the NearGFix logo at the very top almost entirely; top-anchoring
       // keeps the logo (and the feature list below it) intact and only trims
       // the decorative wave/leaf copy at the bottom instead.
       className="relative min-h-screen w-full bg-cover bg-top bg-no-repeat"
@@ -154,7 +154,7 @@ function LoginPageInner() {
             <div className="mb-6 flex items-center gap-3">
               <Image
                 src="/logo.png"
-                alt="GGFIX logo"
+                alt="NearGFix logo"
                 width={40}
                 height={40}
                 className="h-10 w-10 shrink-0 rounded-xl object-contain"
@@ -165,7 +165,7 @@ function LoginPageInner() {
               </div>
             </div>
             <p className="-mt-3 mb-6 text-sm text-slate-500">
-              Secure access to your GGFIX Management Portal.
+              Secure access to your NearGFix Management Portal.
             </p>
 
             <form onSubmit={handleSubmit} noValidate className="space-y-5">

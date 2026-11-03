@@ -226,7 +226,7 @@ export default function PayStep({
         notes: po.notes,
         ...(po.checkout?.method ? { method: po.checkout.method } : {}),
         ...(po.checkout?.config ? { config: po.checkout.config } : {}),
-        theme: { color: '#15803D' },
+        theme: { color: '#024A57' },
         handler: (resp) => {
           settled.current = true;
           verify(order.id, resp);
@@ -463,7 +463,7 @@ export function SuccessStep({ orderId, trial, initialOrder }) {
   return (
     <Card>
       <div className="flex flex-col items-center text-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F0FDF4] text-[#15803D]">
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E5F3F5] text-[#024A57]">
           <CheckCircle2 className="h-8 w-8" aria-hidden="true" />
         </span>
         <h2 className="mt-3 text-2xl font-extrabold text-[#111111]">{trial ? 'Free Trial Activated!' : 'Subscription Activated!'}</h2>

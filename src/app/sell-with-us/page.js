@@ -1,11 +1,11 @@
 /**
- * /sell-with-us — "Sell with GGFIX" seller homepage, opened from the customer
+ * /sell-with-us — "Sell with NearGFix" seller homepage, opened from the customer
  * site header's "Sell with Us" button.
  *
  * Brand system (this page only): Inter for headings and
  * everything else (set on the route layout). Colour system: white page;
  * #1E1E1E headings/values, #666666 body; #F8F8F8 / #F3F3F3 cards only;
- * #09AD2A brand accent + primary actions; #F3BF23 step numbers; #F84141
+ * #035C6C brand accent + primary actions; #F3BF23 step numbers; #F84141
  * errors only. Sections are all white, separated by #F1F1F1 hairlines.
  *
  * Header: logo + Login only. Login opens BusinessLoginModal (business OTP
@@ -86,8 +86,8 @@ const METRICS = [
 ];
 
 const BENEFITS = [
-  { icon: ListPlus, title: 'Easy product listing', text: 'Add devices by brand and model from the GGFIX catalogue — no long forms.' },
-  { icon: MapPin, title: 'Wider customer reach', text: 'Customers nearby find your shop and your listings on the GGFIX app.' },
+  { icon: ListPlus, title: 'Easy product listing', text: 'Add devices by brand and model from the NearGFix catalogue — no long forms.' },
+  { icon: MapPin, title: 'Wider customer reach', text: 'Customers nearby find your shop and your listings on the NearGFix app.' },
   { icon: ClipboardList, title: 'Simple order management', text: 'Bookings, pickups and deliveries in one list, with status at a glance.' },
   { icon: ShieldCheck, title: 'Secure payments', text: 'Every payment is recorded against the order, with receipts and invoices.' },
 ];
@@ -141,7 +141,7 @@ const FOOTER_LINKS = [
 ];
 
 const BTN_PRIMARY =
-  'inline-flex h-11 items-center justify-center rounded-[10px] bg-[#09AD2A] px-6 text-[15px] font-semibold text-white transition hover:bg-[#07921F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2';
+  'inline-flex h-11 items-center justify-center rounded-[10px] bg-[#035C6C] px-6 text-[15px] font-semibold text-white transition hover:bg-[#035C6C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
 
 function Container({ children, className = '' }) {
   return <div className={`mx-auto w-full max-w-[1240px] px-6 lg:px-10 ${className}`}>{children}</div>;
@@ -162,10 +162,10 @@ function Brand() {
       <Image src={BRAND.logo} alt="" width={32} height={32} className="h-8 w-8 rounded-lg object-contain" />
       <span className="leading-tight">
         {/* Logo wordmark: Raleway 500, 30px, -2px tracking, squeezed to 92% width, brand green. */}
-        <span className="ggfix-logo-text block origin-left scale-x-[0.92] font-[family-name:var(--font-raleway)] text-[30px] font-medium leading-none tracking-[-2px] text-[#09AD2A]">
+        <span className="ggfix-logo-text block origin-left scale-x-[0.92] font-[family-name:var(--font-raleway)] text-[30px] font-medium leading-none tracking-[-2px] text-[#035C6C]">
           {BRAND.name}
         </span>
-        <span className="mt-1 block text-[12px] font-medium text-[#666666]">Repair · Buy · Sell with GGFIX</span>
+        <span className="mt-1 block text-[12px] font-medium text-[#666666]">Repair · Buy · Sell with NearGFix</span>
       </span>
     </Link>
   );
@@ -202,12 +202,12 @@ function JourneySection({ id, title, text, steps, divider }) {
             </li>
             ) : (
             <li key={stepTitle} className="group">
-              <div className="relative flex h-40 items-center justify-center rounded-[16px] border border-[#EEEEEE] bg-[#F8F8F8] transition-all duration-[250ms] ease-out sm:aspect-[4/3] sm:h-auto lg:group-hover:-translate-y-[3px] lg:group-hover:border-[rgba(9,173,42,0.22)] lg:group-hover:shadow-[0_10px_28px_rgba(0,0,0,0.07)]">
+              <div className="relative flex h-40 items-center justify-center rounded-[16px] border border-[#EEEEEE] bg-[#F8F8F8] transition-all duration-[250ms] ease-out sm:aspect-[4/3] sm:h-auto lg:group-hover:-translate-y-[3px] lg:group-hover:border-[rgba(3,92,108,0.22)] lg:group-hover:shadow-[0_10px_28px_rgba(0,0,0,0.07)]">
                 <span className="absolute left-3 top-3 flex h-[29px] w-[29px] items-center justify-center rounded-full bg-[#F3BF23] text-[13px] font-bold text-[#1E1E1E]">{i + 1}</span>
                 <span className="relative flex items-center justify-center">
-                  <span className="pointer-events-none absolute h-[76px] w-[76px] rounded-full bg-[rgba(9,173,42,0.07)] blur-[10px]" aria-hidden="true" />
-                  <span className="relative flex h-[68px] w-[68px] items-center justify-center rounded-full border border-[rgba(9,173,42,0.14)] bg-white shadow-[0_6px_20px_rgba(9,173,42,0.10)] transition-all duration-[250ms] ease-out lg:group-hover:border-[rgba(9,173,42,0.24)] lg:group-hover:shadow-[0_8px_22px_rgba(9,173,42,0.14)]">
-                    <Icon className="h-[30px] w-[30px] text-[#09AD2A] transition-transform duration-[250ms] ease-out lg:group-hover:scale-105" strokeWidth={2} aria-hidden="true" />
+                  <span className="pointer-events-none absolute h-[76px] w-[76px] rounded-full bg-[rgba(3,92,108,0.07)] blur-[10px]" aria-hidden="true" />
+                  <span className="relative flex h-[68px] w-[68px] items-center justify-center rounded-full border border-[rgba(3,92,108,0.14)] bg-white shadow-[0_6px_20px_rgba(3,92,108,0.10)] transition-all duration-[250ms] ease-out lg:group-hover:border-[rgba(3,92,108,0.24)] lg:group-hover:shadow-[0_8px_22px_rgba(3,92,108,0.14)]">
+                    <Icon className="h-[30px] w-[30px] text-[#035C6C] transition-transform duration-[250ms] ease-out lg:group-hover:scale-105" strokeWidth={2} aria-hidden="true" />
                   </span>
                 </span>
               </div>
@@ -253,9 +253,9 @@ export default function SellWithUsPage() {
           </div>
           <div className="relative px-6 py-10 sm:px-10 md:py-14 xl:flex xl:h-[360px] xl:items-center xl:px-14 xl:py-0">
             <div className="max-w-[620px] xl:max-w-[540px]">
-              <p className="text-[13px] font-bold uppercase tracking-[0.16em] text-[#09AD2A]">Sell with GGFIX</p>
+              <p className="text-[13px] font-bold uppercase tracking-[0.16em] text-[#035C6C]">Sell with NearGFix</p>
               <h1 className={`${HEADING_FONT} mt-3 text-[32px] font-semibold leading-[1.12] sm:text-[40px] xl:text-[44px]`}>
-                Grow Your Business with <span className="mt-1 block text-[calc(0.82em-4px)] leading-none text-[#09AD2A]">GGFIX</span>
+                Grow Your Business with <span className="mt-1 block text-[calc(0.82em-4px)] leading-none text-[#035C6C]">NearGFix</span>
               </h1>
               <p className="mt-4 max-w-xl text-[16px] leading-relaxed text-[#555555]">
                 List your devices, reach more customers, manage orders, and grow your business with one simple platform.
@@ -283,24 +283,24 @@ export default function SellWithUsPage() {
                 key={m.label}
                 className={`px-2 py-7 text-center ${i % 2 === 1 ? 'border-l border-[#EEEEEE]' : ''} ${i >= 2 ? 'border-t border-[#EEEEEE] lg:border-t-0' : ''} ${i === 2 ? 'lg:border-l' : ''}`}
               >
-                <p className={`${HEADING_FONT} text-[22px] font-semibold text-[#09AD2A] sm:text-[26px]`}>{m.value}</p>
+                <p className={`${HEADING_FONT} text-[22px] font-semibold text-[#035C6C] sm:text-[26px]`}>{m.value}</p>
                 <p className="mt-1 text-[14px] text-[#666666]">{m.label}</p>
               </div>
             ))}
           </Container>
         </section>
 
-        {/* Why sell with GGFIX */}
+        {/* Why sell with NearGFix */}
         <section id="why" className="scroll-mt-20 bg-white py-14 md:py-[72px]">
           <Container>
             <SectionHeading
-              title="Why Choose GGFIX for Repair, Buy & Sell"
+              title="Why Choose NearGFix for Repair, Buy & Sell"
               text="A simpler way to repair devices, discover the right products, and sell with confidence — all through one trusted platform."
             />
             <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {BENEFITS.map(({ icon: Icon, title, text }) => (
                 <div key={title} className="rounded-[16px] border border-[#EEEEEE] bg-white p-6 shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
-                  <Icon className="h-6 w-6 text-[#09AD2A]" strokeWidth={1.8} aria-hidden="true" />
+                  <Icon className="h-6 w-6 text-[#035C6C]" strokeWidth={1.8} aria-hidden="true" />
                   <h3 className="mt-4 text-[17px] font-bold">{title}</h3>
                   <p className="mt-2 text-[14.5px] leading-relaxed text-[#666666]">{text}</p>
                 </div>
@@ -310,19 +310,19 @@ export default function SellWithUsPage() {
         </section>
 
         {/* Journeys: Booking -> Repair -> Buy -> Sell */}
-        <JourneySection id="booking-journey" title="Your Booking Journey with GGFIX" text="Book your device service in a few simple steps." steps={BOOKING_JOURNEY} />
-        <JourneySection id="repair-journey" title="Your Repair Journey with GGFIX" text="Track your device repair from booking to delivery." steps={REPAIR_JOURNEY} divider />
-        <JourneySection id="buy-journey" title="Your Buying Journey with GGFIX" text="Buy quality devices in a few simple steps." steps={BUY_JOURNEY} divider />
-        <JourneySection id="journey" title="Your Selling Journey with GGFIX" text="Start selling in a few simple steps." steps={SELL_JOURNEY} divider />
+        <JourneySection id="booking-journey" title="Your Booking Journey with NearGFix" text="Book your device service in a few simple steps." steps={BOOKING_JOURNEY} />
+        <JourneySection id="repair-journey" title="Your Repair Journey with NearGFix" text="Track your device repair from booking to delivery." steps={REPAIR_JOURNEY} divider />
+        <JourneySection id="buy-journey" title="Your Buying Journey with NearGFix" text="Buy quality devices in a few simple steps." steps={BUY_JOURNEY} divider />
+        <JourneySection id="journey" title="Your Selling Journey with NearGFix" text="Start selling in a few simple steps." steps={SELL_JOURNEY} divider />
 
         {/* Growth tools */}
         <section id="tools" className="scroll-mt-20 border-t border-[#F1F1F1] bg-white py-14 md:py-[72px]">
           <Container>
-            <SectionHeading title="Tools to help you grow faster" text="The same tools GGFIX shops use every day, in the app and on the web dashboard." />
+            <SectionHeading title="Tools to help you grow faster" text="The same tools NearGFix shops use every day, in the app and on the web dashboard." />
             <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {TOOLS.map(({ icon: Icon, title, text }) => (
                 <div key={title} className="flex flex-col rounded-[16px] border border-[#EEEEEE] bg-white p-6 shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
-                  <Icon className="h-6 w-6 text-[#09AD2A]" strokeWidth={1.8} aria-hidden="true" />
+                  <Icon className="h-6 w-6 text-[#035C6C]" strokeWidth={1.8} aria-hidden="true" />
                   <h3 className="mt-4 text-[17px] font-bold">{title}</h3>
                   <p className="mt-2 text-[14.5px] leading-relaxed text-[#666666]">{text}</p>
                 </div>
@@ -337,7 +337,7 @@ export default function SellWithUsPage() {
             <div className="flex flex-col items-start gap-6 rounded-[18px] border border-[#EEEEEE] bg-[#F3F3F3] px-7 py-10 md:flex-row md:items-center md:justify-between md:px-12">
               <div className="max-w-xl">
                 <h2 className={`${HEADING_FONT} text-[28px] font-semibold leading-tight sm:text-[32px]`}>Ready to start selling?</h2>
-                <p className="mt-2 text-[16px] leading-relaxed text-[#666666]">Join GGFIX and manage your selling journey from one simple dashboard.</p>
+                <p className="mt-2 text-[16px] leading-relaxed text-[#666666]">Join NearGFix and manage your selling journey from one simple dashboard.</p>
               </div>
               <Link href={ROUTES.register} className={`${BTN_PRIMARY} w-full shrink-0 sm:w-auto`}>
                 Start Selling
@@ -353,7 +353,7 @@ export default function SellWithUsPage() {
           <Brand />
           <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2">
             {FOOTER_LINKS.map((l) => (
-              <Link key={l.label} href={l.href} className="text-[14px] font-medium text-[#5F5F5F] hover:text-[#09AD2A]">
+              <Link key={l.label} href={l.href} className="text-[14px] font-medium text-[#5F5F5F] hover:text-[#035C6C]">
                 {l.label}
               </Link>
             ))}

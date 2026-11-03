@@ -1,5 +1,5 @@
 /**
- * AppBenefitsSection — "Why customers love the GGFIX app": a full-width
+ * AppBenefitsSection — "Why customers love the NearGFix app": a full-width
  * section (heading, benefit cards, download strip) used on the home page
  * (#repair) and /repair, so both pages always say the same thing. Every
  * benefit is a feature the customer app actually has.
@@ -21,7 +21,7 @@ import StoreBadges from '@/components/site/StoreBadges';
 import { SectionHeading } from '@/components/site/ui';
 
 const BENEFITS = [
-  { icon: Navigation, title: 'Live repair tracking', text: 'Follow every step — accepted, in repair, ready, delivered — as the shop updates it.', tone: 'from-[#E9F9EE] to-[#CFF2DA] text-[#067647]' },
+  { icon: Navigation, title: 'Live repair tracking', text: 'Follow every step — accepted, in repair, ready, delivered — as the shop updates it.', tone: 'from-[#E5F3F5] to-[#CFF2DA] text-[#024A57]' },
   { icon: Truck, title: 'Doorstep pickup & delivery', text: 'Book a pickup slot; the device is collected and returned to your door.', tone: 'from-[#EEF5FF] to-[#D6E7FF] text-[#175CD3]' },
   { icon: MapPin, title: 'Verified shops near you', text: 'Find trusted repair shops nearby and book in a few taps.', tone: 'from-[#FFF6EA] to-[#FFE3BF] text-[#B54708]' },
   { icon: BadgeCheck, title: 'Approve the price first', text: 'See the estimate before work starts — no surprise charges.', tone: 'from-[#F5EFFF] to-[#E4D6FF] text-[#6941C6]' },
@@ -35,8 +35,8 @@ export default function AppBenefitsSection() {
   return (
     <div>
       <SectionHeading
-        eyebrow="GGFIX App"
-        title="Why customers love the GGFIX app"
+        eyebrow="NearGFix App"
+        title="Why customers love the NearGFix app"
         subtitle="Repair, track, buy and sell — everything for your device in one app."
       />
 
@@ -59,7 +59,7 @@ export default function AppBenefitsSection() {
             <Smartphone className="h-6 w-6" aria-hidden="true" />
           </span>
           <div>
-            <p className="text-lg font-extrabold text-white">Get the GGFIX app</p>
+            <p className="text-lg font-extrabold text-white">Get the NearGFix app</p>
             <p className="text-sm text-brand-100">Book repairs, track them live and manage everything from your phone.</p>
           </div>
         </div>

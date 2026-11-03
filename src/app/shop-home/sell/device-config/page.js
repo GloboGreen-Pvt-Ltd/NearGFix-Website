@@ -101,8 +101,8 @@ export default function DeviceConfigPage() {
                 value={value}
                 onChange={(e) => setSelected((s) => ({ ...s, [f.id]: e.target.value }))}
                 className={cx(
-                  'h-12 w-full cursor-pointer appearance-none rounded-xl border-[1.5px] pl-3.5 pr-10 text-[14px] outline-none transition focus:ring-4 focus:ring-[#079455]/10',
-                  value ? 'border-[#079455] bg-[#EAF8EC] font-bold text-[#067647]' : 'border-[#ECECEC] bg-white font-medium text-[#98A2B3]',
+                  'h-12 w-full cursor-pointer appearance-none rounded-xl border-[1.5px] pl-3.5 pr-10 text-[14px] outline-none transition focus:ring-4 focus:ring-[#035C6C]/10',
+                  value ? 'border-[#035C6C] bg-[#E5F3F5] font-bold text-[#024A57]' : 'border-[#ECECEC] bg-white font-medium text-[#98A2B3]',
                 )}
               >
                 <option value="" disabled>

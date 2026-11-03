@@ -101,7 +101,7 @@ export default function ScreeningPage() {
         return (
           <SellCard key={q.id}>
             <div className="flex items-start gap-2.5">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#EAF8EC] text-[12.5px] font-extrabold text-[#067647]">{i + 1}</span>
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#E5F3F5] text-[12.5px] font-extrabold text-[#024A57]">{i + 1}</span>
               <div className="min-w-0 flex-1">
                 <p id={`q-${q.id}`} className="text-[14.5px] font-bold leading-snug text-[#111111]">
                   {q.question}

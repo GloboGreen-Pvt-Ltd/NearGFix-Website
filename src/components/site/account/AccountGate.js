@@ -25,7 +25,7 @@ export default function AccountGate() {
           <span className="mb-5 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-soft text-brand-700">
             <LockKeyhole className="h-8 w-8" aria-hidden="true" />
           </span>
-          <h1 className="text-2xl font-extrabold tracking-tight text-brand-ink">Sign in to GGFIX</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight text-brand-ink">Sign in to NearGFix</h1>
           <p className="mt-2 max-w-sm text-sm text-brand-muted">
             Log in with your mobile number to see your orders, cart, saved devices and addresses.
           </p>
@@ -33,7 +33,7 @@ export default function AccountGate() {
             Login with OTP
           </Button>
           <p className="mt-4 text-xs text-brand-subtle">
-            New to GGFIX? Create your account in the GGFIX app.
+            New to NearGFix? Create your account in the NearGFix app.
           </p>
         </div>
       </Container>

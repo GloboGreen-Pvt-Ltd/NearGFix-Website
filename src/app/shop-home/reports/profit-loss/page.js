@@ -25,7 +25,7 @@ import { shiftMonth, MONTHS } from '@/components/shop-dashboard/MonthSwitcher';
 import { fetchTicketsPaged } from '@/lib/shopDashboard';
 import { downloadReportPdf } from '@/lib/reportPdf';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 
 function money(n) {
   return `₹${Math.round(n || 0).toLocaleString('en-IN')}`;
@@ -120,11 +120,11 @@ export default function ProfitLossReportPage() {
             type="button"
             onClick={() => setReloadKey((k) => k + 1)}
             className={cx(
-              'inline-flex h-9 items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white/95 px-3 text-sm font-semibold text-[#10233F] backdrop-blur-sm transition hover:border-[#0BA65A] hover:text-[#0BA65A] sm:px-3.5',
+              'inline-flex h-9 items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white/95 px-3 text-sm font-semibold text-[#1C3053] backdrop-blur-sm transition hover:border-[#035C6C] hover:text-[#035C6C] sm:px-3.5',
               FOCUS_RING,
             )}
           >
-            <RefreshCw className={cx('h-4 w-4 text-[#0BA65A]', loading && 'animate-spin')} aria-hidden="true" />
+            <RefreshCw className={cx('h-4 w-4 text-[#035C6C]', loading && 'animate-spin')} aria-hidden="true" />
             <span className="hidden sm:inline">Refresh</span>
           </button>
           <button
@@ -139,7 +139,7 @@ export default function ProfitLossReportPage() {
             {exporting ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Download className="h-4 w-4" aria-hidden="true" />}
             <span className="hidden sm:inline">Download PDF</span>
           </button>
-          <div className="inline-flex h-9 items-center gap-0.5 rounded-full bg-gradient-to-r from-[#22C55E] to-[#0BA65A] p-1">
+          <div className="inline-flex h-9 items-center gap-0.5 rounded-full bg-gradient-to-r from-[#035C6C] to-[#035C6C] p-1">
             <button
               type="button"
               onClick={goPrevMonth}

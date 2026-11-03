@@ -76,6 +76,8 @@ export function buildOrderRows(bookings, tickets) {
         ...b,
         ...friendlyBookingStatus(b.status),
         ticketRef: ticket?.id || b.ticketId || null,
+        // The ticket's own tracking number ("GTS-138") — what the app shows.
+        trackingId: ticket?.trackingId || null,
         ticketStatus: ticket?.status,
         assignedTechnicianId: ticket?.assignedTechnicianId || null,
         assignedTechnicianName: ticket?.assignedTechnicianName || b.technicianName || '',
@@ -91,9 +93,27 @@ export function buildOrderRows(bookings, tickets) {
     .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 }
 
+/**
+ * On the Bookings list? A doorstep pickup joins it only once the device is
+ * at the shop and its repair ticket exists — as in the Partner app, whose
+ * Jobs list is the ticket book (bookingScopes.js). Until then it lives on
+ * the Pickups page only.
+ */
+export const onBookingsList = (row) => !row.isPickup || Boolean(row.ticketRef);
+
+/**
+ * The number shown for a booking: the ticket's tracking ID ("GTS-138"), as in
+ * the Partner app. A shop booking's bookingNumber is that ID plus an 8-char
+ * suffix ("GTS-138-67AD4907"); without a ticket the suffix is dropped.
+ */
+export const bookingRef = (row) =>
+  row?.trackingId || String(row?.bookingNumber || '').replace(/^(#?[A-Z]+-\d+)-[0-9A-F]{8}$/i, '$1') || row?.id || '';
+
+/** Bookings-list stage counts — over onBookingsList rows, so each count matches its tab. */
 export function countByStage(rows) {
-  const c = { all: rows.length, active: 0, ready: 0, invoice: 0, delivered: 0, returned: 0, completed: 0, cancelled: 0 };
-  rows.forEach((r) => {
+  const list = rows.filter(onBookingsList);
+  const c = { all: list.length, active: 0, ready: 0, invoice: 0, delivered: 0, returned: 0, completed: 0, cancelled: 0 };
+  list.forEach((r) => {
     c[r.stage] = (c[r.stage] || 0) + 1;
   });
   return c;
@@ -110,12 +130,12 @@ const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
 /** Tabs + per-tab header/empty copy for the Bookings page (?stage=). */
 export const BOOKING_STAGE_TABS = [
-  { key: 'all', label: 'Bookings', eyebrow: 'Bookings', title: (n) => plural(n, 'Booking', 'Bookings'), emptyTitle: 'No bookings yet', emptyText: 'Every repair or service booking your customers create will show up here.' },
-  { key: 'active', label: 'Active', eyebrow: 'Bookings', title: (n) => plural(n, 'Booking', 'Bookings'), emptyTitle: 'No active bookings', emptyText: 'Bookings that are still being worked on will appear here.' },
-  { key: 'ready', label: 'Ready for Delivery', eyebrow: 'Ready for Delivery', title: (n) => `${plural(n, 'Booking', 'Bookings')} Ready for Delivery`, emptyTitle: 'Nothing ready for delivery', emptyText: 'Repaired devices waiting to be handed back to the customer will appear here.' },
-  { key: 'delivered', label: 'Delivered', eyebrow: 'Delivered Bookings', title: (n) => plural(n, 'Delivered Booking', 'Delivered Bookings'), emptyTitle: 'No delivered bookings', emptyText: 'Bookings handed back to the customer will appear here.' },
-  { key: 'returned', label: 'Return', eyebrow: 'Returned', title: (n) => plural(n, 'Returned Booking', 'Returned Bookings'), emptyTitle: 'No returned bookings', emptyText: 'Devices handed back to the customer without repair will appear here.' },
-  { key: 'invoice', label: 'Invoice', eyebrow: 'Invoice', title: (n) => `${plural(n, 'Booking', 'Bookings')} Invoiced`, emptyTitle: 'No invoiced bookings', emptyText: 'Bookings with an invoice generated will appear here.' },
+  { key: 'all', label: 'Jobs', eyebrow: 'Jobs', title: (n) => plural(n, 'Job', 'Jobs'), emptyTitle: 'No jobs yet', emptyText: 'Every repair job your shop creates or receives will show up here.' },
+  { key: 'active', label: 'Active', eyebrow: 'Jobs', title: (n) => plural(n, 'Job', 'Jobs'), emptyTitle: 'No active jobs', emptyText: 'Jobs that are still being worked on will appear here.' },
+  { key: 'ready', label: 'Ready for Delivery', eyebrow: 'Ready for Delivery', title: (n) => `${plural(n, 'Job', 'Jobs')} Ready for Delivery`, emptyTitle: 'Nothing ready for delivery', emptyText: 'Repaired devices waiting to be handed back to the customer will appear here.' },
+  { key: 'delivered', label: 'Delivered', eyebrow: 'Delivered Jobs', title: (n) => plural(n, 'Delivered Job', 'Delivered Jobs'), emptyTitle: 'No delivered jobs', emptyText: 'Jobs handed back to the customer will appear here.' },
+  { key: 'returned', label: 'Return', eyebrow: 'Returned', title: (n) => plural(n, 'Returned Job', 'Returned Jobs'), emptyTitle: 'No returned jobs', emptyText: 'Devices handed back to the customer without repair will appear here.' },
+  { key: 'invoice', label: 'Invoice', eyebrow: 'Invoice', title: (n) => `${plural(n, 'Job', 'Jobs')} Invoiced`, emptyTitle: 'No invoiced jobs', emptyText: 'Jobs with an invoice generated will appear here.' },
 ];
 
 /** Tabs + per-tab header/empty copy for the Pickups page (?tab=). */

@@ -371,7 +371,7 @@ export default function SiteHeader() {
             <HeaderAccount variant="icon" className="lg:hidden" />
             <HeaderAccount size="lg" />
 
-            {/* Business / shop-owner door — the Sell with GGFIX homepage
+            {/* Business / shop-owner door — the Sell with NearGFix homepage
                 (/sell-with-us). Deliberately a separate control from
                 HeaderAccount. Below lg it lives in the menu panel. */}
             <Link

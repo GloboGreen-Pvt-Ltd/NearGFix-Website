@@ -12,7 +12,7 @@ import SafeImage from '@/components/SafeImage';
  * per-owner, not per-location, so it isn't shown here.
  */
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 
 function isImageUrl(u) {
   return !!u && (/\.(png|jpe?g|webp|gif|svg)(\?|$)/i.test(u) || u.startsWith('data:image'));
@@ -35,7 +35,7 @@ function DocPreview({ label, url }) {
     <div className="rounded-xl border border-[#ECECEC] bg-[#F8F8F8] p-3">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-[11px] font-semibold uppercase tracking-wide text-[#666666]">{label}</span>
-        {url && <a href={url} target="_blank" rel="noreferrer" className="text-[11px] font-semibold text-[#15803D] hover:underline">Open</a>}
+        {url && <a href={url} target="_blank" rel="noreferrer" className="text-[11px] font-semibold text-[#024A57] hover:underline">Open</a>}
       </div>
       {url ? (
         isImageUrl(url) ? (
@@ -98,7 +98,7 @@ export default function LocationDetailModal({ loc, onClose }) {
           <div>
             <div className="mb-2 flex items-center justify-between">
               <h4 className="text-sm font-bold text-[#111111]">Shop Documents</h4>
-              <span className="text-xs font-semibold text-[#15803D]">{loc.progressPercent ?? 0}% complete</span>
+              <span className="text-xs font-semibold text-[#024A57]">{loc.progressPercent ?? 0}% complete</span>
             </div>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {shopDocs.map((d) => <DocPreview key={d.label} label={d.label} url={d.url} />)}

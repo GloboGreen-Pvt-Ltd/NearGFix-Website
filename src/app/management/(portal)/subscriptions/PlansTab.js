@@ -103,7 +103,7 @@ export default function PlansTab() {
 
 function Yes({ on, label }) {
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ${on ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-400 line-through'}`}>
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ${on ? 'bg-brand-50 text-brand-700' : 'bg-slate-100 text-slate-400 line-through'}`}>
       {on ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
       {label}
     </span>
@@ -389,16 +389,16 @@ function PlanEditor({ plan, onClose, onSaved }) {
               ))}
             </select>
           </Field>
-          <Field label="Accent color" hint="Hex, e.g. #15803D (blank = default)">
+          <Field label="Accent color" hint="Hex, e.g. #024A57 (blank = default)">
             <div className="flex gap-2">
               <input
                 type="color"
-                value={/^#[0-9a-f]{6}$/i.test(draft.color) ? draft.color : '#15803d'}
+                value={/^#[0-9a-f]{6}$/i.test(draft.color) ? draft.color : '#024A57'}
                 onChange={set('color')}
                 className="h-9 w-11 shrink-0 cursor-pointer rounded border border-admin-border bg-white"
                 aria-label="Pick color"
               />
-              <input value={draft.color} onChange={set('color')} placeholder="#15803D" className={`${inputCls} font-mono`} />
+              <input value={draft.color} onChange={set('color')} placeholder="#024A57" className={`${inputCls} font-mono`} />
             </div>
           </Field>
           <div className="grid gap-2 sm:col-span-2 sm:grid-cols-2">

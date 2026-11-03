@@ -134,12 +134,12 @@ export function OrdersHeader({ eyebrow, title, loading, onRefresh, filtersOpen, 
         type="button"
         onClick={() => router.back()}
         aria-label="Back"
-        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#111111] transition hover:border-[#079455] hover:text-[#079455]"
+        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#111111] transition hover:border-[#035C6C] hover:text-[#035C6C]"
       >
         <ArrowLeft className="h-5 w-5" aria-hidden="true" />
       </button>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-[11.5px] font-bold uppercase tracking-[0.16em] text-[#079455]">{eyebrow}</p>
+        <p className="truncate text-[11.5px] font-bold uppercase tracking-[0.16em] text-[#035C6C]">{eyebrow}</p>
         <h1 className="truncate text-[24px] font-extrabold leading-tight tracking-tight text-[#111111] sm:text-[28px]">{title}</h1>
       </div>
       <button
@@ -147,7 +147,7 @@ export function OrdersHeader({ eyebrow, title, loading, onRefresh, filtersOpen, 
         onClick={onRefresh}
         aria-label="Refresh"
         title="Refresh"
-        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] border border-[#ECECEC] bg-[#F8F8F8] text-[#079455] transition hover:border-[#079455]"
+        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] border border-[#ECECEC] bg-[#F8F8F8] text-[#035C6C] transition hover:border-[#035C6C]"
       >
         <RefreshCw className={cx('h-[18px] w-[18px]', loading && 'animate-spin')} aria-hidden="true" />
       </button>
@@ -157,12 +157,12 @@ export function OrdersHeader({ eyebrow, title, loading, onRefresh, filtersOpen, 
         aria-expanded={filtersOpen}
         className={cx(
           'inline-flex h-11 shrink-0 items-center gap-2 rounded-[14px] border px-4 text-[14px] font-bold transition',
-          filtersOpen || filtersActive ? 'border-[#079455] bg-[#F3F3F3] text-[#067647]' : 'border-[#ECECEC] bg-white text-[#111111] hover:border-[#079455]',
+          filtersOpen || filtersActive ? 'border-[#035C6C] bg-[#F3F3F3] text-[#024A57]' : 'border-[#ECECEC] bg-white text-[#111111] hover:border-[#035C6C]',
         )}
       >
         <SlidersHorizontal className="h-[18px] w-[18px]" aria-hidden="true" />
         <span className="hidden sm:inline">Filters</span>
-        {filtersActive ? <span className="h-2 w-2 rounded-full bg-[#079455]" aria-hidden="true" /> : null}
+        {filtersActive ? <span className="h-2 w-2 rounded-full bg-[#035C6C]" aria-hidden="true" /> : null}
       </button>
     </div>
   );
@@ -170,7 +170,7 @@ export function OrdersHeader({ eyebrow, title, loading, onRefresh, filtersOpen, 
 
 export function OrdersSearch({ value, onChange }) {
   return (
-    <label className="flex h-14 items-center gap-3 rounded-[16px] border border-[#ECECEC] bg-[#F8F8F8] px-4 transition focus-within:border-[#079455] focus-within:ring-4 focus-within:ring-[#079455]/10">
+    <label className="flex h-14 items-center gap-3 rounded-[16px] border border-[#ECECEC] bg-[#F8F8F8] px-4 transition focus-within:border-[#035C6C] focus-within:ring-4 focus-within:ring-[#035C6C]/10">
       <Search className="h-5 w-5 shrink-0 text-[#98A2B3]" aria-hidden="true" />
       <input
         value={value}
@@ -203,12 +203,12 @@ export function StageTabs({ tabs, value, onChange, counts, loading, ariaLabel })
             onClick={() => onChange(key)}
             className={cx(
               'inline-flex min-w-0 items-center gap-2 rounded-full border-[1.5px] px-4 py-2.5 text-[13.5px] font-bold transition',
-              selected ? 'border-[#079455] bg-[#F3F3F3] text-[#067647]' : 'border-[#ECECEC] bg-white text-[#344054] hover:border-[#ECECEC]',
+              selected ? 'border-[#035C6C] bg-[#F3F3F3] text-[#024A57]' : 'border-[#ECECEC] bg-white text-[#344054] hover:border-[#ECECEC]',
             )}
           >
-            {Icon ? <Icon className={cx('h-4 w-4 shrink-0', selected ? 'text-[#079455]' : 'text-[#98A2B3]')} aria-hidden="true" /> : null}
+            {Icon ? <Icon className={cx('h-4 w-4 shrink-0', selected ? 'text-[#035C6C]' : 'text-[#98A2B3]')} aria-hidden="true" /> : null}
             <span className="truncate">{label}</span>
-            <span className={cx('ml-auto shrink-0 rounded-full px-1.5 text-[12px] sm:ml-0', selected ? 'bg-[#079455] text-white' : 'bg-[#F3F3F3] text-[#475467]')}>
+            <span className={cx('ml-auto shrink-0 rounded-full px-1.5 text-[12px] sm:ml-0', selected ? 'bg-[#035C6C] text-white' : 'bg-[#F3F3F3] text-[#475467]')}>
               {loading ? '…' : counts[key] ?? 0}
             </span>
           </button>
@@ -221,7 +221,7 @@ export function StageTabs({ tabs, value, onChange, counts, loading, ariaLabel })
 export function OrdersEmpty({ icon: Icon = ClipboardList, title, text, action }) {
   return (
     <div className="flex flex-col items-center rounded-[20px] border border-[#ECECEC] bg-[#F8F8F8] px-4 py-16 text-center">
-      <span className="flex h-20 w-20 items-center justify-center rounded-full bg-[#F3F3F3] text-[#079455]">
+      <span className="flex h-20 w-20 items-center justify-center rounded-full bg-[#F3F3F3] text-[#035C6C]">
         <Icon className="h-9 w-9" aria-hidden="true" />
       </span>
       <p className="mt-4 text-[17px] font-extrabold text-[#111111]">{title}</p>
@@ -250,11 +250,11 @@ export function OrdersSkeleton() {
 const STAGE_BADGE = {
   ready: 'bg-[#FEF0C7] text-[#B54708]',
   invoice: 'bg-[#F4EBFF] text-[#6941C6]',
-  delivered: 'bg-[#F3F3F3] text-[#067647]',
+  delivered: 'bg-[#F3F3F3] text-[#024A57]',
   returned: 'bg-[#FFE4E8] text-[#C01048]',
 };
 const BUCKET_BADGE = {
-  Created: 'bg-[#F3F3F3] text-[#067647]',
+  Created: 'bg-[#F3F3F3] text-[#024A57]',
   'In Progress': 'bg-[#E0F0FF] text-[#175CD3]',
   Pickup: 'bg-[#FEF0C7] text-[#B54708]',
   Completed: 'bg-[#F4EBFF] text-[#6941C6]',
@@ -297,7 +297,7 @@ export function DeviceThumb({ url, sizeClass = 'h-[88px] w-[72px] p-2 sm:h-[96px
     // eslint-disable-next-line @next/next/no-img-element -- device photos are arbitrary catalog URLs, not app assets Next can optimize.
     <img src={url} alt="" loading="lazy" onError={() => setBroken(true)} className="h-full w-full object-contain object-center" />
   ) : (
-    <Smartphone className="h-8 w-8 text-[#079455]/50" aria-hidden="true" />
+    <Smartphone className="h-8 w-8 text-[#035C6C]/50" aria-hidden="true" />
   );
   if (hasImage && onPreview) {
     return (
@@ -306,7 +306,7 @@ export function DeviceThumb({ url, sizeClass = 'h-[88px] w-[72px] p-2 sm:h-[96px
         onClick={onPreview}
         aria-label="Preview device image"
         title="Preview device image"
-        className={cx(boxCls, 'cursor-zoom-in transition hover:ring-2 hover:ring-[#09AD2A]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A]')}
+        className={cx(boxCls, 'cursor-zoom-in transition hover:ring-2 hover:ring-[#035C6C]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C]')}
       >
         {content}
       </button>
@@ -320,7 +320,7 @@ function ActionButton({ icon: Icon, label, href, onClick, disabled, title }) {
     'inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl border px-3 text-[12.5px] font-bold transition sm:flex-none',
     disabled
       ? 'cursor-not-allowed border-[#ECECEC] bg-[#F8F8F8] text-[#98A2B3]'
-      : 'border-[#ECECEC] bg-white text-[#111111] hover:border-[#079455] hover:bg-[#F8F8F8] hover:text-[#079455]',
+      : 'border-[#ECECEC] bg-white text-[#111111] hover:border-[#035C6C] hover:bg-[#F8F8F8] hover:text-[#035C6C]',
   );
   if (href && !disabled) {
     return (
@@ -381,7 +381,7 @@ function StatusBlock({ badgeText, badgeCls, createdAt, amount, className, onOpen
       onClick={onOpen}
       aria-label={openLabel}
       title="Update service status"
-      className={cx(cls, '-m-1.5 rounded-xl p-1.5 transition hover:bg-[#F3F3F3] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#09AD2A]/15')}
+      className={cx(cls, '-m-1.5 rounded-xl p-1.5 transition hover:bg-[#F3F3F3] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#035C6C]/15')}
     >
       {body}
     </button>
@@ -455,7 +455,7 @@ export function OrderCard({ row, variant, onAssign, onOpenStatus, onReturned, on
         <div className="flex min-w-0 items-center gap-3 sm:gap-4">
           <DeviceThumb url={image} sizeClass="h-16 w-16 p-1.5 sm:h-[70px] sm:w-[70px]" onPreview={() => setPreviewing(true)} />
           <div className="min-w-0 flex-1">
-            <p className="text-[12.5px] font-bold tracking-wide text-[#079455]">{ref}</p>
+            <p className="text-[12.5px] font-bold tracking-wide text-[#035C6C]">{ref}</p>
             <p className="mt-0.5 truncate text-[16px] font-extrabold text-[#111111]" title={deviceName}>
               {deviceName}
             </p>
@@ -473,7 +473,7 @@ export function OrderCard({ row, variant, onAssign, onOpenStatus, onReturned, on
           <DetailRow label="Customer">{row.customerName || 'Not available'}</DetailRow>
           <DetailRow label="Mobile">
             {row.customerMobile ? (
-              <a href={`tel:${row.customerMobile}`} className="text-[#079455] hover:underline">
+              <a href={`tel:${row.customerMobile}`} className="text-[#035C6C] hover:underline">
                 {row.customerMobile}
               </a>
             ) : (
@@ -491,14 +491,14 @@ export function OrderCard({ row, variant, onAssign, onOpenStatus, onReturned, on
         <div className="flex flex-wrap gap-x-5 gap-y-1.5 border-t border-dashed border-[#ECECEC] px-4 py-2.5 text-[12.5px] text-[#475467] sm:px-5">
           {row.pickupDate ? (
             <span className="flex items-center gap-1.5">
-              <CalendarDays className="h-3.5 w-3.5 text-[#079455]" aria-hidden="true" />
+              <CalendarDays className="h-3.5 w-3.5 text-[#035C6C]" aria-hidden="true" />
               Pickup {formatDay(row.pickupDate)}
               {slot ? ` · ${slot}` : ''}
             </span>
           ) : null}
           {address ? (
             <span className="flex min-w-0 items-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5 shrink-0 text-[#079455]" aria-hidden="true" />
+              <MapPin className="h-3.5 w-3.5 shrink-0 text-[#035C6C]" aria-hidden="true" />
               <span className="truncate">{address}</span>
             </span>
           ) : null}
@@ -536,7 +536,7 @@ export function OrderCard({ row, variant, onAssign, onOpenStatus, onReturned, on
             title={row.ticketRef ? 'Change the ready and delivery date & time' : 'This booking has no repair ticket yet'}
           />
         ) : null}
-        {showReEstimate ? <ActionButton icon={Calculator} label="Re-Est" href="/shop-home/services/requote" /> : null}
+        {showReEstimate ? <ActionButton icon={Calculator} label="Re-Est" href="/shop-home/services/bookings/" /> : null}
         {onReturned ? (
           <ActionButton
             icon={Undo2}

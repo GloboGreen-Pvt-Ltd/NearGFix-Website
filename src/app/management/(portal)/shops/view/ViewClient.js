@@ -227,7 +227,7 @@ export default function ShopOwnerViewPage() {
                     title={approved ? 'Set back to Under Review' : 'Approve all KYC documents'}
                     disabled={kycBusy}
                     onClick={() => reviewKyc(approved ? 'PENDING_REVIEW' : 'APPROVED')}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${approved ? 'bg-emerald-500' : 'bg-slate-300'} ${kycBusy ? 'opacity-60' : ''}`}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${approved ? 'bg-brand-500' : 'bg-slate-300'} ${kycBusy ? 'opacity-60' : ''}`}
                   >
                     <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${approved ? 'translate-x-5' : 'translate-x-0.5'}`} />
                   </button>
@@ -346,7 +346,7 @@ function DocPreview({ label, url }) {
 }
 function Badge({ tone, children }) {
   const tones = {
-    success: 'bg-emerald-500/15 text-emerald-300',
+    success: 'bg-brand-500/15 text-brand-300',
     warn:    'bg-amber-500/15 text-amber-300',
     muted:   'bg-slate-500/15 text-slate-500',
     info:    'bg-admin-accent/15 text-admin-accent',

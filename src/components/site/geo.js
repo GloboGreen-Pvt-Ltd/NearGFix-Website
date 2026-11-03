@@ -123,7 +123,7 @@ function normalize(raw) {
  * api-bdc.io — both hops send `access-control-allow-origin: *`, so a plain
  * browser fetch follows the redirect fine.
  *
- * PRIVACY: this sends the visitor's exact coordinates to a third party GGFIX has
+ * PRIVACY: this sends the visitor's exact coordinates to a third party NearGFix has
  * no agreement with. That is a deliberate, approved trade to show a place name
  * instead of "Near you". It is disclosed in /privacy — if this call is ever
  * removed or swapped, update that page too.
@@ -172,7 +172,7 @@ export async function lookupPlaceName(lat, lng) {
 }
 
 /**
- * Reverse-geocode via GGFIX's own backend (Google Geocoding, server-side —
+ * Reverse-geocode via NearGFix's own backend (Google Geocoding, server-side —
  * the API key never reaches the browser). This is the PRIMARY path; callers
  * fall back to lookupPlaceName() (BigDataCloud) only when this returns null,
  * so the location chip keeps working even if the key isn't configured yet or

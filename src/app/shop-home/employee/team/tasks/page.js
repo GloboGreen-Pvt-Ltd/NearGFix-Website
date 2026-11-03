@@ -28,8 +28,8 @@ import { fetchTechnician, fetchTicketsPaged } from '@/lib/shopDashboard';
 import { SERVICE_STEPS } from '@/lib/serviceTimeline';
 import { ticketStageLabel } from '@/lib/ticketStatus';
 
-const GREEN = '#09AD2A';
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2';
+const GREEN = '#035C6C';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
 const STEP_LABEL = new Map(SERVICE_STEPS);
 const FILTERS = ['All', 'Completed', 'In Process', 'Pending'];
 
@@ -57,8 +57,8 @@ const fmtStamp = (v) => {
 const withHash = (v) => (v ? `#${String(v).replace(/^#+/, '')}` : '');
 
 function Tile({ icon: Icon, label, value, sub, tone }) {
-  const t = tone === 'yellow' ? 'bg-[#FFF8E1]' : 'bg-[#EAF8EC]';
-  const ic = tone === 'yellow' ? 'text-[#E8A800]' : 'text-[#09AD2A]';
+  const t = tone === 'yellow' ? 'bg-[#FFF8E1]' : 'bg-[#E5F3F5]';
+  const ic = tone === 'yellow' ? 'text-[#E8A800]' : 'text-[#035C6C]';
   return (
     <div className={cx('rounded-2xl p-3.5', t)}>
       <p className={cx('flex items-center gap-1.5 text-[13px] font-bold', ic)}>
@@ -77,7 +77,7 @@ function TaskCard({ t }) {
       <span className="absolute inset-y-0 left-0 w-1.5" style={{ backgroundColor: GREEN }} aria-hidden="true" />
       <div className="flex items-start justify-between gap-3">
         <p className="flex items-center gap-1.5 text-[15px] font-extrabold text-[#111111]">
-          <CalendarDays className="h-4 w-4 text-[#09AD2A]" aria-hidden="true" />
+          <CalendarDays className="h-4 w-4 text-[#035C6C]" aria-hidden="true" />
           {fmtDay(t.createdAt)}
         </p>
         <span className="max-w-[45%] shrink-0 truncate text-[13px] font-bold text-[#98A2B3]">{withHash(t.trackingId)}</span>
@@ -93,7 +93,7 @@ function TaskCard({ t }) {
           </p>
           <p className="text-[12.5px] text-[#667085]">In Service Process On {fmtStamp(t.updatedAt || t.createdAt)}</p>
         </div>
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EAF8EC] text-[#09AD2A]" aria-hidden="true">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#E5F3F5] text-[#035C6C]" aria-hidden="true">
           <RefreshCw className="h-4 w-4" />
         </span>
       </div>
@@ -103,8 +103,8 @@ function TaskCard({ t }) {
 
 function Empty({ title, text }) {
   return (
-    <div className="flex flex-col items-center rounded-2xl border border-[#BFE5C8] bg-[#EAF8EC] px-4 py-7 text-center">
-      <Inbox className="h-7 w-7 text-[#09AD2A]" aria-hidden="true" />
+    <div className="flex flex-col items-center rounded-2xl border border-[#C7E6EA] bg-[#E5F3F5] px-4 py-7 text-center">
+      <Inbox className="h-7 w-7 text-[#035C6C]" aria-hidden="true" />
       <p className="mt-2 text-[16px] font-extrabold text-[#111111]">{title}</p>
       <p className="text-[13.5px] text-[#667085]">{text}</p>
     </div>
@@ -116,7 +116,7 @@ function SectionHead({ title, onViewAll }) {
     <div className="mb-3 flex items-center justify-between gap-3">
       <h2 className="text-[17px] font-extrabold text-[#111111]">{title}</h2>
       {onViewAll ? (
-        <button type="button" onClick={onViewAll} className={cx('text-[15px] font-extrabold text-[#09AD2A] hover:underline', FOCUS_RING)}>
+        <button type="button" onClick={onViewAll} className={cx('text-[15px] font-extrabold text-[#035C6C] hover:underline', FOCUS_RING)}>
           View all
         </button>
       ) : null}
@@ -199,7 +199,7 @@ export default function WorkingRecordPage() {
           type="button"
           onClick={() => router.back()}
           aria-label="Back"
-          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#EAF8EC] text-[#111111] transition hover:bg-[#DCF2E0]', FOCUS_RING)}
+          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#E5F3F5] text-[#111111] transition hover:bg-[#E5F3F5]', FOCUS_RING)}
         >
           <ArrowLeft className="h-5 w-5" aria-hidden="true" />
         </button>
@@ -211,7 +211,7 @@ export default function WorkingRecordPage() {
           type="button"
           onClick={() => setReloadKey((k) => k + 1)}
           aria-label="Refresh"
-          className={cx('absolute right-0 flex h-10 w-10 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#09AD2A] transition hover:border-[#09AD2A]', FOCUS_RING)}
+          className={cx('absolute right-0 flex h-10 w-10 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#035C6C] transition hover:border-[#035C6C]', FOCUS_RING)}
         >
           <RefreshCw className={cx('h-4 w-4', loading && 'animate-spin')} aria-hidden="true" />
         </button>
@@ -285,7 +285,7 @@ export default function WorkingRecordPage() {
               className={cx(
                 'rounded-full border px-5 py-2 text-[14px] font-bold transition',
                 FOCUS_RING,
-                filter === f ? 'border-transparent bg-[#09AD2A] text-white' : 'border-[#ECECEC] bg-white text-[#475467] hover:border-[#09AD2A]',
+                filter === f ? 'border-transparent bg-[#035C6C] text-white' : 'border-[#ECECEC] bg-white text-[#475467] hover:border-[#035C6C]',
               )}
             >
               {f}

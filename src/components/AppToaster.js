@@ -28,7 +28,7 @@ export default function AppToaster() {
           maxWidth: '440px',
           boxShadow: '0 10px 30px rgba(30,30,30,0.12)',
         },
-        success: { iconTheme: { primary: '#09AD2A', secondary: '#FFFFFF' } },
+        success: { iconTheme: { primary: '#035C6C', secondary: '#FFFFFF' } },
         error: { duration: 5000, iconTheme: { primary: '#F84141', secondary: '#FFFFFF' } },
       }}
     />

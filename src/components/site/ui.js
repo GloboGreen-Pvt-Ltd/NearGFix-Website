@@ -1,5 +1,5 @@
 /**
- * ui.js — presentational kit for the public GGFIX marketing site.
+ * ui.js — presentational kit for the public NearGFix marketing site.
  *
  * Everything in here is a server component: no state, no effects, no browser
  * APIs. Safe under `output: 'export'`.
@@ -281,7 +281,7 @@ const BUTTON_BASE =
 
 const BUTTON_VARIANTS = {
   primary: 'bg-brand-600 text-white shadow-soft hover:bg-brand-700 hover:shadow-lift',
-  accent: 'bg-accent-500 text-white shadow-soft hover:bg-accent-600 hover:shadow-lift',
+  accent: 'bg-accent-500 text-[#111111] shadow-soft hover:bg-accent-600 hover:shadow-lift',
   outline: 'border border-brand-strong bg-white text-brand-ink hover:border-brand-600 hover:text-brand-700',
   ghost: 'text-brand-700 hover:bg-brand-soft',
   white: 'bg-white text-brand-700 shadow-soft hover:bg-brand-50 hover:shadow-lift',
@@ -507,7 +507,7 @@ export function StepList({ steps, className, tone = 'brand', startAt = 1 }) {
               className={cx(
                 'relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold sm:h-12 sm:w-12 sm:text-base',
                 step.highlight || tone === 'accent'
-                  ? 'bg-accent-500 text-white'
+                  ? 'bg-accent-500 text-[#111111]'
                   : 'bg-brand-600 text-white'
               )}
             >

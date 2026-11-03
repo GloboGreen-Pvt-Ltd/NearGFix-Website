@@ -25,7 +25,7 @@ import { ArrowLeft, CalendarDays, ChevronLeft, ChevronRight, Info, LogIn, LogOut
 import { cx } from '@/components/site/ui';
 import { fetchTechnician, fetchTechnicianAttendanceDay, fetchTechnicians } from '@/lib/shopDashboard';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
 const START_HOUR = 9; // the app's timeline starts at 09:00
 const HOURS = Array.from({ length: 25 }, (_, i) => (START_HOUR + i) % 24); // 09:00 … 09:00 next day
 const ROW_PX = 64;
@@ -132,7 +132,7 @@ export default function EmployeeShiftDayPage() {
           type="button"
           onClick={() => router.back()}
           aria-label="Back"
-          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#EAF8EC] text-[#111111] transition hover:bg-[#DCF2E0]', FOCUS_RING)}
+          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#E5F3F5] text-[#111111] transition hover:bg-[#E5F3F5]', FOCUS_RING)}
         >
           <ArrowLeft className="h-5 w-5" aria-hidden="true" />
         </button>
@@ -149,7 +149,7 @@ export default function EmployeeShiftDayPage() {
       {/* Date + Today */}
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="text-[30px] font-extrabold leading-none text-[#09AD2A]">{selected.getDate()}</span>
+          <span className="text-[30px] font-extrabold leading-none text-[#035C6C]">{selected.getDate()}</span>
           <div>
             <p className="text-[17px] font-bold text-[#111111]">{selected.toLocaleDateString('en-US', { weekday: 'long' })}</p>
             <p className="text-[13.5px] text-[#666666]">{selected.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
@@ -160,7 +160,7 @@ export default function EmployeeShiftDayPage() {
             type="button"
             onClick={() => setSelected(addDays(selected, -7))}
             aria-label="Previous week"
-            className={cx('flex h-10 w-10 items-center justify-center rounded-xl border border-[#ECECEC] bg-white text-[#344054] transition hover:border-[#09AD2A] hover:text-[#09AD2A]', FOCUS_RING)}
+            className={cx('flex h-10 w-10 items-center justify-center rounded-xl border border-[#ECECEC] bg-white text-[#344054] transition hover:border-[#035C6C] hover:text-[#035C6C]', FOCUS_RING)}
           >
             <ChevronLeft className="h-5 w-5" aria-hidden="true" />
           </button>
@@ -168,7 +168,7 @@ export default function EmployeeShiftDayPage() {
             type="button"
             onClick={() => setSelected(today)}
             className={cx(
-              'inline-flex h-10 items-center gap-2 rounded-xl border-2 border-[#09AD2A] bg-white px-4 text-[14px] font-bold text-[#09AD2A] transition hover:bg-[#EAF8EC]',
+              'inline-flex h-10 items-center gap-2 rounded-xl border-2 border-[#035C6C] bg-white px-4 text-[14px] font-bold text-[#035C6C] transition hover:bg-[#E5F3F5]',
               FOCUS_RING,
             )}
           >
@@ -179,7 +179,7 @@ export default function EmployeeShiftDayPage() {
             type="button"
             onClick={() => setSelected(addDays(selected, 7))}
             aria-label="Next week"
-            className={cx('flex h-10 w-10 items-center justify-center rounded-xl border border-[#ECECEC] bg-white text-[#344054] transition hover:border-[#09AD2A] hover:text-[#09AD2A]', FOCUS_RING)}
+            className={cx('flex h-10 w-10 items-center justify-center rounded-xl border border-[#ECECEC] bg-white text-[#344054] transition hover:border-[#035C6C] hover:text-[#035C6C]', FOCUS_RING)}
           >
             <ChevronRight className="h-5 w-5" aria-hidden="true" />
           </button>
@@ -204,9 +204,9 @@ export default function EmployeeShiftDayPage() {
                 sunday
                   ? 'border-[#DC2626] bg-[#DC2626] text-white hover:bg-[#C81E1E]'
                   : on
-                    ? 'border-[#09AD2A] bg-[#09AD2A] text-white'
-                    : 'border-[#ECECEC] bg-white text-[#111111] hover:border-[#09AD2A]',
-                sunday && on && 'ring-2 ring-[#09AD2A] ring-offset-2',
+                    ? 'border-[#035C6C] bg-[#035C6C] text-white'
+                    : 'border-[#ECECEC] bg-white text-[#111111] hover:border-[#035C6C]',
+                sunday && on && 'ring-2 ring-[#035C6C] ring-offset-2',
               )}
             >
               <span className={cx('text-[13px] font-semibold', sunday || on ? 'text-white/90' : 'text-[#666666]')}>{d.toLocaleDateString('en-US', { weekday: 'short' })}</span>
@@ -224,7 +224,7 @@ export default function EmployeeShiftDayPage() {
       <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {[
           { label: 'Shift', value: shiftIn && shiftOut ? `${fmtTime(shiftIn)} – ${fmtTime(shiftOut)}` : 'Not set' },
-          { label: 'Checked in', value: fmtTime(actualIn), tone: actualIn ? 'text-[#09AD2A]' : '' },
+          { label: 'Checked in', value: fmtTime(actualIn), tone: actualIn ? 'text-[#035C6C]' : '' },
           { label: 'Checked out', value: fmtTime(actualOut), tone: actualOut ? 'text-[#B42318]' : '' },
           {
             label: 'Status',
@@ -246,30 +246,30 @@ export default function EmployeeShiftDayPage() {
           const { time, meridiem } = hourLabel(h);
           return (
             <div key={i} className="absolute left-0 right-0 flex items-center" style={{ top: i * ROW_PX, height: ROW_PX }}>
-              <span className="flex w-[86px] shrink-0 items-baseline justify-center gap-1 rounded-full border border-[#BFE5C8] bg-[#EAF8EC] py-1.5 text-[14px] font-bold text-[#09AD2A]">
+              <span className="flex w-[86px] shrink-0 items-baseline justify-center gap-1 rounded-full border border-[#C7E6EA] bg-[#E5F3F5] py-1.5 text-[14px] font-bold text-[#035C6C]">
                 {time}
-                <span className="text-[10px] font-semibold text-[#09AD2A]/70">{meridiem}</span>
+                <span className="text-[10px] font-semibold text-[#035C6C]/70">{meridiem}</span>
               </span>
-              <span className="ml-[13px] h-3 w-3 shrink-0 rounded-full bg-[#09AD2A]" aria-hidden="true" />
-              <span className="ml-4 flex-1 border-t border-dotted border-[#D6EFDB]" aria-hidden="true" />
+              <span className="ml-[13px] h-3 w-3 shrink-0 rounded-full bg-[#035C6C]" aria-hidden="true" />
+              <span className="ml-4 flex-1 border-t border-dotted border-[#C7E6EA]" aria-hidden="true" />
             </div>
           );
         })}
         {hasShift ? (
           <div
-            className="absolute left-[140px] right-2 overflow-hidden rounded-2xl border border-[#09AD2A]/25 bg-[#EAF8EC] px-4 py-2.5"
+            className="absolute left-[140px] right-2 overflow-hidden rounded-2xl border border-[#035C6C]/25 bg-[#E5F3F5] px-4 py-2.5"
             style={{ top: shiftTop * ROW_PX + ROW_PX / 2, height: shiftRows * ROW_PX }}
           >
-            <span className="absolute inset-y-0 left-0 w-1.5 bg-[#09AD2A]" aria-hidden="true" />
-            <p className="truncate text-[14px] font-extrabold text-[#09AD2A]">{employee?.name ? `${employee.name}'s shift` : 'Shift'}</p>
-            <p className="text-[12.5px] font-semibold text-[#09AD2A]/80">
+            <span className="absolute inset-y-0 left-0 w-1.5 bg-[#035C6C]" aria-hidden="true" />
+            <p className="truncate text-[14px] font-extrabold text-[#035C6C]">{employee?.name ? `${employee.name}'s shift` : 'Shift'}</p>
+            <p className="text-[12.5px] font-semibold text-[#035C6C]/80">
               {fmtTime(shiftIn)} – {fmtTime(shiftOut)}
               {record?.workingHours ? ` · worked ${record.workingHours}` : ''}
             </p>
           </div>
         ) : null}
         {[
-          { t: actualIn, label: 'Check in', icon: LogIn, cls: 'bg-[#09AD2A]' },
+          { t: actualIn, label: 'Check in', icon: LogIn, cls: 'bg-[#035C6C]' },
           { t: actualOut, label: 'Check out', icon: LogOut, cls: 'bg-[#B42318]' },
         ]
           .filter((m) => m.t)
@@ -294,7 +294,7 @@ export default function EmployeeShiftDayPage() {
 
       {employee && !(shiftIn && shiftOut) ? (
         <p className="mt-4 flex items-start gap-2 rounded-xl border border-[#ECECEC] bg-[#F8F8F8] px-3 py-2.5 text-[12.5px] text-[#666666]">
-          <Info className="mt-0.5 h-4 w-4 shrink-0 text-[#09AD2A]" aria-hidden="true" />
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-[#035C6C]" aria-hidden="true" />
           No default check-in / check-out time is set for this employee, so there&apos;s no shift to draw.
         </p>
       ) : null}

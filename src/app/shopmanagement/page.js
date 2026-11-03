@@ -2,7 +2,7 @@
 
 /**
  * /shopmanagement used to be a separate full-page Business Login. Business
- * login now lives only in the Sell with GGFIX popup, so this address just
+ * login now lives only in the Sell with NearGFix popup, so this address just
  * forwards there (with the popup open) — old links and bookmarks keep working.
  * A client redirect because the site is a static export (no server redirects).
  */

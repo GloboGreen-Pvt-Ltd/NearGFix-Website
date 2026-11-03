@@ -14,14 +14,14 @@ const ICONS = { crown: Crown, gem: Gem, gift: Gift, sparkles: Sparkles, star: St
 const TYPE_ICONS = { TRIAL: Gift, BASIC: Crown, PREMIUM: Gem };
 
 const BADGES = {
-  CURRENT: { label: 'Current Plan', cls: 'bg-[#15803D] text-white' },
-  AVAILABLE: { label: 'Available', cls: 'bg-[#F3F3F3] text-[#15803D]' },
+  CURRENT: { label: 'Current Plan', cls: 'bg-[#024A57] text-white' },
+  AVAILABLE: { label: 'Available', cls: 'bg-[#F3F3F3] text-[#024A57]' },
   COMING_SOON: { label: 'Coming Soon', cls: 'bg-amber-100 text-amber-800' },
   EXPIRED: { label: 'Expired', cls: 'bg-red-50 text-red-700' },
   INACTIVE: { label: 'Inactive', cls: 'bg-slate-100 text-slate-600' },
 };
 
-const safeColor = (c) => (typeof c === 'string' && /^#[0-9a-f]{3,8}$/i.test(c.trim()) ? c.trim() : '#15803D');
+const safeColor = (c) => (typeof c === 'string' && /^#[0-9a-f]{3,8}$/i.test(c.trim()) ? c.trim() : '#024A57');
 
 export function planIcon(plan) {
   const key = String(plan?.icon || '').trim().toLowerCase();
@@ -76,7 +76,7 @@ export default function PlanCard({ plan, badge, selected = false, action, footno
           </>
         )}
         {!free && pct > 0 ? (
-          <p className="mt-1.5 inline-flex rounded-lg bg-[#F0FDF4] px-2 py-1 text-xs font-semibold text-[#15803D]">
+          <p className="mt-1.5 inline-flex rounded-lg bg-[#E5F3F5] px-2 py-1 text-xs font-semibold text-[#024A57]">
             {pct}% off each additional shop
           </p>
         ) : null}
@@ -88,7 +88,7 @@ export default function PlanCard({ plan, badge, selected = false, action, footno
           {features.map((f, i) => (
             // eslint-disable-next-line react/no-array-index-key -- server display lines have no id
             <li key={i} className="flex items-start gap-2.5 text-sm text-[#111111]">
-              <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#F0FDF4]" style={{ color }}>
+              <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#E5F3F5]" style={{ color }}>
                 <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
               </span>
               <span className="min-w-0 break-words">{f}</span>

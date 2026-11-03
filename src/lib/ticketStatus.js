@@ -63,6 +63,6 @@ export const TICKET_STAGE_BADGE = {
   'Quote Approved': 'bg-teal-100 text-teal-700',
   'Repair In Progress': 'bg-orange-100 text-orange-700',
   'Ready for Delivery': 'bg-violet-100 text-violet-700',
-  Delivered: 'bg-[#DCFCE7] text-[#15803D]',
+  Delivered: 'bg-[#E5F3F5] text-[#024A57]',
   Cancelled: 'bg-red-100 text-red-700',
 };

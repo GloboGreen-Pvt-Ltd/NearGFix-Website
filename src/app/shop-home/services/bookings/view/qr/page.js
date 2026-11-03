@@ -24,28 +24,20 @@
  * app's (BarcodePrintScreen / LabelPreview): service number on top, QR left
  * with brand+model / customer / security right, booking date + time at the
  * bottom. Page Setup offers the app's two label stocks (BarCode 38 x 25 mm,
- * BarCode1 50 x 25 mm); each option previews that same markup and CSS at its
- * own size, and the picked one is what prints.
+ * BarCode1 50 x 25 mm); the picked one is previewed and is what prints.
+ *
+ * Layout (2026-11-03) mirrors the app's BarcodePrintScreen: header "QR
+ * E-Print", Booking card (photo, device, variant, services pill; Tracking ID
+ * with Copy, Customer, Services, Device Lock), QR Label card (stock + live
+ * label preview, Page Setup chips) and a sticky "Print QR Slip" bar. The
+ * tracking number shown/printed is the short ticket ID (bookingRef); the QR
+ * still encodes the booking number, as before.
  */
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import QRCode from 'qrcode';
-import {
-  AlertTriangle,
-  ArrowLeft,
-  Calendar,
-  Check,
-  CheckCircle2,
-  ClipboardList,
-  Copy,
-  Printer,
-  ScanLine,
-  ShieldCheck,
-  Smartphone,
-  User,
-  Wrench,
-} from 'lucide-react';
+import { AlertTriangle, Check, ChevronLeft, Copy, Printer, QrCode, Wrench } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';
 import EmptyState from '@/components/shop-dashboard/EmptyState';
@@ -54,6 +46,7 @@ import ImagePreviewModal from '@/components/shop-dashboard/ImagePreviewModal';
 import { DeviceThumb } from '@/components/shop-dashboard/OrdersList';
 import { enrichWithCatalog, resolveMediaUrl } from '@/lib/deviceImage';
 import { fetchShopBookingDetail, fetchTicket } from '@/lib/shopDashboard';
+import { bookingRef } from '@/lib/orderStages';
 import { notifyError } from '@/lib/toast';
 
 // Page Setup presets — the Partner app's services/printer/labelPresets.js.
@@ -168,7 +161,6 @@ export default function BookingQrPage() {
   const [error, setError] = useState('');
   const [reloadKey, setReloadKey] = useState(0);
   const [copied, setCopied] = useState(false);
-  const [qrDataUrl, setQrDataUrl] = useState('');
   const [printQrDataUrl, setPrintQrDataUrl] = useState('');
   const [previewing, setPreviewing] = useState(false);
   const closePreview = useCallback(() => setPreviewing(false), []);
@@ -225,35 +217,33 @@ export default function BookingQrPage() {
 
   // What the QR encodes — unchanged: the booking number as stored, else its id.
   const qrValue = booking?.bookingNumber || booking?.id || id;
-  // Shown/printed text: one tracking number, never "##…".
-  const trackingNo = String(booking?.bookingNumber || ticket?.trackingId || booking?.id || id || '')
+  // Shown/printed text: the short ticket ID ("GTS-138"), never "##…".
+  const trackingNo = String(bookingRef({ trackingId: ticket?.trackingId, bookingNumber: booking?.bookingNumber, id: booking?.id }) || id || '')
     .trim()
     .replace(/^#+/, '');
+  const [tidPrefix, tidDigits] = (() => {
+    const m = trackingNo.match(/^([A-Za-z-]*?)(\d[\s\S]*)?$/);
+    return m ? [m[1], m[2] || ''] : [trackingNo, ''];
+  })();
   const services = Array.isArray(booking?.services) ? booking.services : [];
-  const servicesText = services.map((s) => s.serviceName || s.serviceCode).filter(Boolean).join(', ') || 'Not specified';
+  const servicesText = services.map((s) => s.serviceName || s.serviceCode).filter(Boolean).join(', ') || '—';
+  const serviceCountLabel = services.length ? `${services.length} service${services.length === 1 ? '' : 's'} added` : '';
   const ticketModel = String(ticket?.deviceDisplayName || '').split(' · ')[0].trim();
   const brandModel = joinBrandModel(booking?.brandName, booking?.deviceDisplayName || booking?.modelName || ticketModel) || 'Device not specified';
+  const variant = [booking?.ramStorage, booking?.color].filter(Boolean).join(' · ');
   const customerName = booking?.customerName || ticket?.customerName || 'Not available';
+  const customerPhone = booking?.customerMobile || ticket?.customerPhone || '';
   const security = formatSecurity(booking?.deviceSecurityType || ticket?.deviceSecurityType, booking?.devicePin || ticket?.deviceSecurityValue);
   const createdOn = fmtCreatedOn(booking?.createdAt || ticket?.createdAt);
-  const createdOnText = createdOn ? `${createdOn.date} ${createdOn.time}` : 'Not available';
   const deviceImage = resolveMediaUrl(booking?.deviceImageUrl) || resolveMediaUrl(ticket?.deviceImageUrl) || resolveMediaUrl(booking?.brandImageUrl);
   const label = { trackingNo, brandModel, customerName, security, createdOn };
 
+  // The label's QR: pure black modules with a generous quiet zone, as a
+  // thermal printer needs (no dark-green-as-gray dithering). Preview = print.
   useEffect(() => {
-    setQrDataUrl('');
     setPrintQrDataUrl('');
     if (!qrValue) return undefined;
     let cancelled = false;
-    QRCode.toDataURL(String(qrValue), { width: 320, margin: 1, color: { dark: '#14532D', light: '#FFFFFF' } })
-      .then((url) => {
-        if (!cancelled) setQrDataUrl(url);
-      })
-      .catch(() => {});
-    // A second, pure-black rendering for the printed label only — the
-    // on-screen preview keeps the brand-green QR above, but a thermal
-    // printer needs true black modules (no dark-green-as-gray dithering)
-    // with a generous quiet zone, per the label's print-quality requirements.
     QRCode.toDataURL(String(qrValue), { width: 320, margin: 2, color: { dark: '#000000', light: '#FFFFFF' } })
       .then((url) => {
         if (!cancelled) setPrintQrDataUrl(url);
@@ -299,176 +289,151 @@ export default function BookingQrPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-start gap-3">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          aria-label="Back"
-          className="mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#344054] transition hover:border-[#15803D] hover:text-[#15803D]"
-        >
-          <ArrowLeft className="h-4.5 w-4.5" aria-hidden="true" />
-        </button>
-        <div className="min-w-0 flex-1">
-          <h1 className="text-2xl font-bold tracking-tight text-[#111111] sm:text-[28px]">QR E-Print</h1>
-          <p className="mt-1 text-sm text-[#666666]">Generate and print a QR slip for this booking.</p>
-        </div>
-        {trackingNo ? (
+    <div className="-mx-4 -my-5 flex min-h-[calc(100vh-4rem)] flex-col bg-[#F3F4F6] sm:-mx-6 sm:-my-6">
+      <style dangerouslySetInnerHTML={{ __html: LABEL_CSS + PREVIEW_CSS }} />
+      {/* Header: back · QR E-Print / subtitle */}
+      <div className="border-b border-[#E5E7EB] bg-white px-3.5 pb-3 pt-2.5">
+        <div className="mx-auto flex max-w-[640px] lg:max-w-[1200px] items-center">
           <button
             type="button"
-            onClick={copyTrackingId}
-            className="mt-1 inline-flex min-w-0 max-w-[45%] shrink-0 items-center gap-1.5 rounded-full sm:max-w-none bg-[#F8F8F8] px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-[#15803D] transition hover:bg-[#F3F3F3]"
+            onClick={() => router.back()}
+            aria-label="Back"
+            className="mr-2.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#E5E7EB] bg-[#F3F4F6] text-[#111111] transition hover:bg-[#E5E7EB]"
           >
-            <span className="truncate">#{trackingNo}</span>
-            <Copy className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-            {copied ? 'Copied' : ''}
+            <ChevronLeft className="h-[19px] w-[19px]" aria-hidden="true" />
           </button>
-        ) : null}
+          <div className="min-w-0 flex-1">
+            <h1 className="truncate text-[17px] font-extrabold text-[#111111]">QR E-Print</h1>
+            <p className="mt-0.5 text-[11px] text-[#6B7280]">Generate and print a QR slip for easy tracking</p>
+          </div>
+        </div>
       </div>
 
-      {loading ? (
-        <div className="space-y-4">
-          <div className="h-28 animate-pulse rounded-3xl border border-[#ECECEC] bg-[#F8F8F8]" />
-          <div className="h-24 animate-pulse rounded-3xl border border-[#ECECEC] bg-[#F8F8F8]" />
-          <div className="h-[420px] animate-pulse rounded-3xl border border-[#ECECEC] bg-[#F8F8F8]" />
-        </div>
-      ) : error ? (
-        <ErrorBanner message={error} onRetry={() => setReloadKey((k) => k + 1)} />
-      ) : !booking ? (
-        <EmptyState icon={AlertTriangle} tone="muted" title="Booking not found" description="We couldn't find this booking." />
-      ) : (
-        <div className="grid items-start gap-6 lg:grid-cols-2">
-          {/* Left: summary + booking. Right: the QR slip and print setup. */}
-          <div className="flex flex-col gap-6 lg:sticky lg:top-4">
-            <section className="rounded-3xl border border-[#ECECEC] bg-[#F8F8F8] p-5">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-lg font-bold text-[#111111]">One Scan.<br />Complete Service Details.</p>
-                  <p className="mt-1 text-sm text-[#666666]">Faster service. Better tomorrow.</p>
-                </div>
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#14532D] text-white">
-                  <ScanLine className="h-6 w-6" aria-hidden="true" />
-                </span>
-              </div>
-              <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-[#ECECEC] pt-4 text-xs font-bold text-[#15803D]">
-                {['Repair', 'Track', 'Resolve'].map((item) => (
-                  <span key={item} className="flex items-center gap-1.5 uppercase tracking-wide">
-                    <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </section>
-
-            <section className="flex items-center gap-4 rounded-3xl border border-[#ECECEC] bg-[#F8F8F8] p-5">
-              <DeviceThumb url={deviceImage} sizeClass="h-14 w-14 p-1.5" onPreview={() => setPreviewing(true)} />
-              <div className="min-w-0 flex-1">
-                <p className="text-[0.7rem] font-bold uppercase tracking-wide text-[#98A2B3]">Booking</p>
-                <p className="truncate text-lg font-bold text-[#111111]" title={brandModel}>
-                  {brandModel}
-                </p>
-                <div className="mt-1.5 flex flex-wrap items-center gap-2">
-                  <span className="max-w-full truncate rounded-full bg-[#F8F8F8] px-2.5 py-1 text-[0.68rem] font-bold uppercase tracking-wide text-[#15803D]">#{trackingNo}</span>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#F8F8F8] px-2.5 py-1 text-[0.68rem] font-bold text-[#15803D]">
-                    <Wrench className="h-3 w-3" aria-hidden="true" />
-                    {services.length} service{services.length === 1 ? '' : 's'} added
-                  </span>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={copyTrackingId}
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#D0D5DD] bg-white px-3 py-1.5 text-xs font-bold text-[#344054] transition hover:border-[#15803D] hover:text-[#15803D]"
-              >
-                <Copy className="h-3.5 w-3.5" aria-hidden="true" />
-                {copied ? 'Copied' : 'Copy'}
-              </button>
-            </section>
+      <div className="mx-auto w-full max-w-[640px] lg:max-w-[1200px] flex-1 px-3.5 pb-6 pt-3">
+        {loading ? (
+          <div className="space-y-2.5">
+            <div className="h-56 animate-pulse rounded-[18px] bg-white" />
+            <div className="h-48 animate-pulse rounded-[18px] bg-white" />
           </div>
-
-          <div className="flex min-w-0 flex-col gap-6">
-            <section className="overflow-hidden rounded-3xl border border-[#ECECEC] bg-[#F8F8F8]">
-              <div className="flex flex-wrap items-center justify-between gap-3 bg-[#14532D] px-5 py-4 text-white">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
-                    <ScanLine className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                  <div>
-                    <p className="text-base font-bold">QR Slip</p>
-                    <p className="text-xs text-white/75">Scan to view service details</p>
-                  </div>
+        ) : error ? (
+          <ErrorBanner message={error} onRetry={() => setReloadKey((k) => k + 1)} />
+        ) : !booking ? (
+          <EmptyState icon={AlertTriangle} tone="muted" title="Booking not found" description="We couldn't find this booking." />
+        ) : (
+          <div className="mx-auto max-w-[640px]">
+            {/* Booking card: photo, device, variant, services; then tracking ID / customer / services / device lock */}
+            <section className={CARD}>
+              <div className="flex items-center">
+                <DeviceThumb url={deviceImage} sizeClass="mr-3 h-16 w-[60px] rounded-[14px] border border-[#F3F4F6] bg-white p-1" onPreview={() => setPreviewing(true)} />
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.07em] text-[#6B7280]">Booking</p>
+                  <p className="mt-px break-words text-[15px] font-extrabold leading-[19px] text-[#111111]">{brandModel}</p>
+                  {variant ? <p className="mt-0.5 text-[11px] text-[#6B7280]">{variant}</p> : null}
+                  {serviceCountLabel ? (
+                    <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-[#E5F3F5] px-2 py-[3px] text-[10px] font-extrabold text-[#035C6C]">
+                      <Wrench className="h-2.5 w-2.5" aria-hidden="true" />
+                      {serviceCountLabel}
+                    </span>
+                  ) : null}
                 </div>
-                <span className="flex shrink-0 items-center gap-1.5 text-[0.62rem] font-bold uppercase tracking-wide text-white/90">
-                  <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-                  Authentic Service Slip
-                </span>
               </div>
-
-              <div className="grid grid-cols-1 gap-6 p-5 sm:grid-cols-2">
-                <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-[#ECECEC] bg-[#F8F8F8] p-5">
-                  {qrDataUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element -- generated data: URL, not a static asset.
-                    <img src={qrDataUrl} alt={`QR code for booking ${trackingNo}`} className="h-48 w-48" />
-                  ) : (
-                    <div className="flex h-48 w-48 items-center justify-center text-xs text-[#98A2B3]">Generating…</div>
-                  )}
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F8F8F8] px-3 py-1.5 text-xs font-bold text-[#15803D]">
-                    <ScanLine className="h-3.5 w-3.5" aria-hidden="true" />
-                    Scan to identify this booking
+              <div className="mt-2.5 border-t border-[#F3F4F6]">
+                <DetailRow label="Tracking ID">
+                  <span className="flex items-center justify-end">
+                    <span className="text-[13px] font-extrabold tracking-[0.2px]">
+                      <span className="text-[#111111]">#{tidPrefix}</span>
+                      <span className="text-[#035C6C]">{tidDigits}</span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={copyTrackingId}
+                      className="ml-2 inline-flex items-center gap-1 rounded-full bg-[#E5F3F5] px-2 py-1 text-[10px] font-extrabold text-[#035C6C] transition hover:bg-[#C7E6EA]"
+                    >
+                      <Copy className="h-[11px] w-[11px]" aria-hidden="true" />
+                      {copied ? 'Copied' : 'Copy'}
+                    </button>
                   </span>
-                  <p className="text-center text-xs text-[#98A2B3]">Present this QR code at the service counter for quick processing.</p>
-                </div>
-
-                <dl className="space-y-4">
-                  <DetailRow icon={ClipboardList} label="Service No." value={`#${trackingNo}`} />
-                  <DetailRow icon={Smartphone} label="Device" value={brandModel} />
-                  <DetailRow icon={User} label="Customer" value={customerName} />
-                  <DetailRow icon={Wrench} label="Repair Services" value={servicesText} />
-                  <DetailRow icon={ShieldCheck} label="Device Security" value={security} />
-                  <DetailRow icon={Calendar} label="Created On" value={createdOnText} />
-                </dl>
+                </DetailRow>
+                <DetailRow label="Customer">
+                  {[customerName, customerPhone].filter((v) => v && v !== 'Not available').join(' · ') || '—'}
+                </DetailRow>
+                <DetailRow label="Services">
+                  {servicesText}
+                </DetailRow>
+                <DetailRow label="Device Lock" last>
+                  {security}
+                </DetailRow>
               </div>
-
-              <p className="border-t border-dashed border-[#ECECEC] py-3 text-center text-[0.65rem] font-bold uppercase tracking-wide text-[#98A2B3]">
-                Service Today · A Better Tomorrow
-              </p>
             </section>
 
-            <section className="flex flex-col gap-5 rounded-3xl border border-[#ECECEC] bg-[#F8F8F8] p-4 sm:p-5 2xl:flex-row 2xl:items-center 2xl:gap-6">
-              <style dangerouslySetInnerHTML={{ __html: LABEL_CSS + PREVIEW_CSS }} />
-              <div role="radiogroup" aria-label="Page setup — label size" className="grid gap-3 sm:grid-cols-2 2xl:shrink-0">
-                {LABEL_PRESETS.map((p) => (
-                  <PresetCard
-                    key={p.id}
-                    preset={p}
-                    selected={p.id === preset.id}
-                    onSelect={() => choosePreset(p.id)}
-                    markup={printQrDataUrl ? labelMarkup({ ...label, preset: p, qrSrc: printQrDataUrl }) : ''}
-                    trackingNo={trackingNo}
-                  />
-                ))}
+            {/* QR label preview — the printed label's own markup, at the chosen stock */}
+            <section className={cx(CARD, 'mt-2.5')}>
+              <div className="flex items-center">
+                <span className="mr-[9px] flex h-7 w-7 shrink-0 items-center justify-center rounded-[9px] bg-[#E5F3F5] text-[#035C6C]">
+                  <QrCode className="h-3.5 w-3.5" aria-hidden="true" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[13px] font-extrabold text-[#111111]">QR Label</p>
+                  <p className="mt-px text-[11px] text-[#6B7280]">
+                    {preset.name} · {presetSizeText(preset)}
+                  </p>
+                </div>
               </div>
-              <div className="flex min-w-0 flex-1 flex-col items-center text-center sm:items-start sm:text-left">
-                <p className="text-[0.7rem] font-bold uppercase tracking-wide text-[#98A2B3]">Page Setup · TVS LP-46 Dlite</p>
-                <p className="text-base font-bold text-[#111111]">
-                  {preset.name} · {preset.widthMm} × {preset.heightMm} mm thermal label
-                </p>
-                <p className="mt-1 text-xs text-[#666666]">
-                  Pick the label size loaded in the printer. The selected preview is exactly what prints — service number, QR, device, customer, security and booking date.
-                </p>
-                <button
-                  type="button"
-                  onClick={printSlip}
-                  className="mt-3 inline-flex items-center justify-center gap-2 rounded-2xl bg-[#F3BF23] px-5 py-3 text-sm font-bold text-[#1E1E1E] transition hover:bg-[#E5B11A]"
-                >
-                  <Printer className="h-4.5 w-4.5" aria-hidden="true" />
-                  Print QR Slip
-                </button>
+              <div className="mb-1 mt-3 flex justify-center">
+                <LabelPreview preset={preset} markup={printQrDataUrl ? labelMarkup({ ...label, preset, qrSrc: printQrDataUrl }) : ''} trackingNo={trackingNo} />
+              </div>
+              {/* Page Setup: the label stock loaded in the printer (remembered in this browser). */}
+              <div role="radiogroup" aria-label="Page setup — label size" className="mt-3 grid grid-cols-2 gap-2 border-t border-[#F3F4F6] pt-3">
+                {LABEL_PRESETS.map((p) => {
+                  const selected = p.id === preset.id;
+                  return (
+                    <button
+                      key={p.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={selected}
+                      onClick={() => choosePreset(p.id)}
+                      className={cx(
+                        'flex min-w-0 items-center gap-2 rounded-xl border-[1.5px] px-2.5 py-2 text-left transition',
+                        selected ? 'border-[#035C6C] bg-[#E5F3F5]' : 'border-[#E5E7EB] bg-white hover:border-[#C7E6EA]',
+                      )}
+                    >
+                      {selected ? (
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#035C6C] text-white">
+                          <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
+                        </span>
+                      ) : (
+                        <span className="h-5 w-5 shrink-0 rounded-full border-2 border-[#D1D5DB]" aria-hidden="true" />
+                      )}
+                      <span className="min-w-0">
+                        <span className="block truncate text-[12.5px] font-extrabold text-[#111111]">{p.name}</span>
+                        <span className="block truncate text-[11px] text-[#6B7280]">{presetSizeText(p)}</span>
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </section>
           </div>
+        )}
+      </div>
+
+      {/* Sticky action bar: Print QR Slip */}
+      {booking ? (
+        <div className="sticky bottom-0 z-20 border-t border-[#E5E7EB] bg-white/95 px-3.5 py-2.5">
+          <div className="mx-auto max-w-[640px]">
+            <button
+              type="button"
+              onClick={printSlip}
+              disabled={!printQrDataUrl}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#035C6C] to-[#035C6C] py-[13px] text-[13px] font-extrabold text-white transition hover:brightness-110 disabled:opacity-70"
+            >
+              <Printer className="h-4 w-4" aria-hidden="true" />
+              Print QR Slip
+            </button>
+          </div>
         </div>
-      )}
+      ) : null}
 
       <ImagePreviewModal
         open={previewing}
@@ -481,44 +446,12 @@ export default function BookingQrPage() {
   );
 }
 
-// One Page Setup option, as in the app's Print QR Label sheet: name, size,
-// a check when picked, and that preset's own label preview.
-function PresetCard({ preset, selected, onSelect, markup, trackingNo }) {
-  return (
-    <button
-      type="button"
-      role="radio"
-      aria-checked={selected}
-      aria-label={`${preset.name}, ${presetSizeText(preset)}`}
-      onClick={onSelect}
-      className={cx(
-        'flex min-w-0 flex-col gap-3 overflow-hidden rounded-2xl border-2 bg-white p-3.5 text-left transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#15803D]/15',
-        selected ? 'border-[#15803D]' : 'border-[#ECECEC] hover:border-[#D0D5DD]',
-      )}
-    >
-      <span className="flex items-start justify-between gap-3">
-        <span className="min-w-0">
-          <span className="block text-[15px] font-extrabold text-[#111111]">{preset.name}</span>
-          <span className="block text-[12.5px] text-[#666666]">{presetSizeText(preset)}</span>
-        </span>
-        {selected ? (
-          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#15803D] text-white">
-            <Check className="h-4 w-4" strokeWidth={3} aria-hidden="true" />
-          </span>
-        ) : (
-          <span className="h-6 w-6 shrink-0 rounded-full border-2 border-[#D0D5DD]" aria-hidden="true" />
-        )}
-      </span>
-      <span className="flex justify-center">
-        <LabelPreview preset={preset} markup={markup} trackingNo={trackingNo} />
-      </span>
-    </button>
-  );
-}
+// The app's white cards: radius 18, padding 12, hairline border, soft shadow.
+const CARD = 'rounded-xl border border-[#F3F4F6] bg-white p-3 shadow-[0_3px_10px_rgba(17,17,17,0.05)]';
 
 // The printed label's own markup + CSS (escaped values and the generated
 // data: QR only), scaled up — so the preview can't drift from the print.
-// LABEL_CSS + PREVIEW_CSS are injected once by the Page Setup section.
+// LABEL_CSS + PREVIEW_CSS are injected once at the top of the page.
 function LabelPreview({ preset, markup, trackingNo }) {
   const size = { '--ggl-w': `${preset.widthMm}mm`, '--ggl-h': `${preset.heightMm}mm` };
   return markup ? (
@@ -530,22 +463,18 @@ function LabelPreview({ preset, markup, trackingNo }) {
       dangerouslySetInnerHTML={{ __html: markup }}
     />
   ) : (
-    <span style={size} className="ggl-preview flex shrink-0 items-center justify-center rounded-md bg-white text-xs text-[#98A2B3] ring-[1.5px] ring-[#ECECEC]">
+    <span style={size} className="ggl-preview flex shrink-0 items-center justify-center rounded-md bg-white text-xs text-[#9CA3AF] ring-[1.5px] ring-[#E5E7EB]">
       Generating…
     </span>
   );
 }
 
-function DetailRow({ icon: Icon, label, value }) {
+// Booking-card line: label left, the full value right (wraps).
+function DetailRow({ label, children, last }) {
   return (
-    <div className="flex items-start gap-3">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8]">
-        <Icon className="h-4 w-4 text-[#15803D]" aria-hidden="true" />
-      </span>
-      <div className="min-w-0">
-        <p className="text-[0.65rem] font-bold uppercase tracking-wide text-[#98A2B3]">{label}</p>
-        <p className="break-words text-sm font-bold text-[#111111]">{value}</p>
-      </div>
+    <div className={cx('flex items-center py-[7px]', !last && 'border-b border-[#F3F4F6]')}>
+      <span className="w-[78px] shrink-0 text-[11px] font-semibold text-[#6B7280]">{label}</span>
+      <div className="min-w-0 flex-1 break-words text-right text-[12px] font-bold text-[#111111]">{children}</div>
     </div>
   );
 }

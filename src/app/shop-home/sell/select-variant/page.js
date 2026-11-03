@@ -34,7 +34,7 @@ import { draftCategoryCode, noRamStorageFor, saveSellDraft, useSellDraft } from 
 // The app's swatch lookup: exact two-word names first, then a keyword match.
 const COLOR_SWATCHES = {
   black: '#1A1A1A', white: '#F7FAF7', silver: '#C7CDD1', gold: '#E6C384',
-  rose: '#E8B4B8', blue: '#3B82F6', red: '#DC2626', green: '#16A34A',
+  rose: '#E8B4B8', blue: '#3B82F6', red: '#DC2626', green: '#035C6C',
   purple: '#8B5CF6', pink: '#EC4899', graphite: '#4B5563', midnight: '#1E293B',
   starlight: '#F5F1E6', sierra: '#9DB4C0', alpine: '#2F6B4F', sky: '#BFDBFE',
   phantom: '#374151', cosmic: '#1E3A5F',
@@ -57,13 +57,13 @@ const FALLBACK_COLORS = ['Midnight Black', 'Phantom Silver', 'Cosmic Blue', 'Ros
 
 const onlyUuid = (v) => (isUuid(v) ? v : undefined);
 const solidCls = (active) =>
-  active ? 'border-[#079455] bg-[#079455] text-white' : 'border-[#ECECEC] bg-white text-[#111111] hover:border-[#D0D5DD]';
+  active ? 'border-[#035C6C] bg-[#035C6C] text-white' : 'border-[#ECECEC] bg-white text-[#111111] hover:border-[#D0D5DD]';
 
 function PickerCard({ icon: Icon, title, aside, children }) {
   return (
     <SellCard>
       <div className="mb-3 flex items-center gap-2">
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EAF8EC] text-[#079455]">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E5F3F5] text-[#035C6C]">
           <Icon className="h-4 w-4" aria-hidden="true" />
         </span>
         <h3 className="flex-1 text-[14px] font-extrabold text-[#111111]">{title}</h3>
@@ -157,14 +157,14 @@ export default function SelectVariantPage() {
 
   return (
     <SellShell {...shell} footer={footer}>
-      <div className="flex items-center gap-3.5 rounded-[20px] border border-[#CDEFD5] bg-gradient-to-br from-[#EAF8EC] to-white p-3.5">
-        <SellThumb src={model.imageUrl} className="h-20 w-20 rounded-2xl border border-[#CDEFD5] bg-white p-1.5" />
+      <div className="flex items-center gap-3.5 rounded-[20px] border border-[#C7E6EA] bg-gradient-to-br from-[#E5F3F5] to-white p-3.5">
+        <SellThumb src={model.imageUrl} className="h-20 w-20 rounded-2xl border border-[#C7E6EA] bg-white p-1.5" />
         <div className="min-w-0 flex-1">
           <p className="text-[11px] font-bold uppercase tracking-widest text-[#666666]">Your device</p>
           <p className="line-clamp-2 text-[16px] font-extrabold text-[#111111]">{model.name}</p>
           {brand?.name ? <p className="text-[12.5px] text-[#666666]">{brand.name}</p> : null}
         </div>
-        {ready ? <span className="self-start rounded-full bg-[#079455] px-2.5 py-0.5 text-[10.5px] font-extrabold tracking-wide text-white">READY</span> : null}
+        {ready ? <span className="self-start rounded-full bg-[#035C6C] px-2.5 py-0.5 text-[10.5px] font-extrabold tracking-wide text-white">READY</span> : null}
       </div>
 
       <SellCard className="p-0 sm:p-0">

@@ -93,7 +93,7 @@ async function searchAddressSuggestions(query) {
 
 function Badge({ tone, children }) {
   const tones = {
-    success: 'bg-emerald-500/15 text-emerald-300',
+    success: 'bg-brand-500/15 text-brand-300',
     warn:    'bg-amber-500/15 text-amber-300',
     muted:   'bg-slate-500/15 text-slate-500',
     info:    'bg-admin-accent/15 text-admin-accent',
@@ -146,13 +146,13 @@ function DocPreview({ label, url }) {
 function DocChip({ label, url }) {
   if (!url) return <span className="text-[10px] text-admin-muted">{label}—</span>;
   return (
-    <a href={url} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-md bg-emerald-500/15 text-emerald-300 px-1.5 py-0.5 hover:bg-emerald-500/25">
+    <a href={url} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-md bg-brand-500/15 text-brand-300 px-1.5 py-0.5 hover:bg-brand-500/25">
       ✓ {label}
     </a>
   );
 }
 function Progress({ percent }) {
-  const color = percent >= 100 ? 'bg-emerald-500' : percent >= 60 ? 'bg-amber-500' : 'bg-red-500';
+  const color = percent >= 100 ? 'bg-brand-500' : percent >= 60 ? 'bg-amber-500' : 'bg-red-500';
   return (
     <div className="space-y-1">
       <span className="text-[11px] font-semibold text-slate-800">{percent}%</span>
