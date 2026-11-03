@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * EmployeeMonthList — the Partner app's per-month employee roster (Permission,
+ * EmployeeMonthList — the Partner app's per-month employee roster (Attendance,
  * Leave Report): back · title, a month switcher, a "Total …" pill, then one
  * row per employee (avatar initial, name, role) with that month's counts,
  * each row opening the employee's own page.
@@ -20,7 +20,7 @@ import { cx } from '@/components/site/ui';
 import { MONTHS, shiftMonth } from '@/components/shop-dashboard/MonthSwitcher';
 import { fetchTechnicians } from '@/lib/shopDashboard';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
 
 export default function EmployeeMonthList({ title, icon: Icon, totalLabel, columns, loadStats, totalOf, hrefFor, emptyText = 'Employees added to your shop will show up here.' }) {
   const router = useRouter();
@@ -64,13 +64,13 @@ export default function EmployeeMonthList({ title, icon: Icon, totalLabel, colum
   const total = team.reduce((sum, t) => sum + (stats[t.id] ? Number(totalOf(stats[t.id])) || 0 : 0), 0);
 
   return (
-    <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-5">
+    <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-5">
       <div className="relative flex items-center justify-center pb-1">
         <button
           type="button"
           onClick={() => router.back()}
           aria-label="Back"
-          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#EAF8EC] text-[#111111] transition hover:bg-[#DCF2E0]', FOCUS_RING)}
+          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#E5F3F5] text-[#111111] transition hover:bg-[#E5F3F5]', FOCUS_RING)}
         >
           <ChevronLeft className="h-5 w-5" aria-hidden="true" />
         </button>
@@ -92,13 +92,13 @@ export default function EmployeeMonthList({ title, icon: Icon, totalLabel, colum
             <ChevronRight className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
-        <span className="rounded-full bg-[#F3F3F3] px-4 py-2 text-[15px] font-extrabold text-[#15803D]">
+        <span className="rounded-full bg-[#F3F3F3] px-4 py-2 text-[15px] font-extrabold text-[#024A57]">
           {totalLabel}: {total}
         </span>
       </div>
 
       {loading ? (
-        <div className="space-y-3">
+        <div className="grid gap-3 lg:grid-cols-2">
           {[0, 1, 2].map((i) => (
             <div key={i} className="h-24 animate-pulse rounded-[24px] bg-[#F3F3F3]" />
           ))}
@@ -108,7 +108,7 @@ export default function EmployeeMonthList({ title, icon: Icon, totalLabel, colum
       ) : team.length === 0 ? (
         <p className="rounded-[24px] border border-[#ECECEC] bg-white px-5 py-12 text-center text-[14px] text-[#667085]">{emptyText}</p>
       ) : (
-        <ul className="space-y-3">
+        <ul className="grid gap-3 lg:grid-cols-2">
           {team.map((t) => {
             const s = stats[t.id];
             return (
@@ -116,11 +116,11 @@ export default function EmployeeMonthList({ title, icon: Icon, totalLabel, colum
                 <Link
                   href={hrefFor(t)}
                   className={cx(
-                    'flex flex-wrap items-center gap-4 rounded-[24px] border border-[#ECECEC] bg-white px-4 py-4 shadow-[0_4px_14px_rgba(16,24,40,0.05)] transition hover:border-[#16A34A] sm:flex-nowrap sm:px-5',
+                    'flex flex-wrap items-center gap-4 rounded-[24px] border border-[#ECECEC] bg-white px-4 py-4 shadow-[0_4px_14px_rgba(16,24,40,0.05)] transition hover:border-[#035C6C] sm:flex-nowrap sm:px-5',
                     FOCUS_RING,
                   )}
                 >
-                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#EAF8EC] text-[22px] font-extrabold text-[#15803D]">
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#E5F3F5] text-[22px] font-extrabold text-[#024A57]">
                     {String(t.name || '?').trim().charAt(0).toUpperCase()}
                   </span>
                   <span className="min-w-0 flex-1">

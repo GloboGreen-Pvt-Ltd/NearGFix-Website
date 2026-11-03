@@ -21,8 +21,8 @@ export default function FilterChips({ options, value, onChange, counts }) {
             className={cx(
               'rounded-full px-4 py-2 text-xs font-bold transition',
               active
-                ? 'bg-gradient-to-r from-[#22C55E] to-[#15803D] text-white'
-                : 'bg-[#F8F8F8] text-[#344054] hover:bg-[#F3F3F3] hover:text-[#15803D]',
+                ? 'bg-gradient-to-r from-[#035C6C] to-[#024A57] text-white'
+                : 'bg-[#F8F8F8] text-[#344054] hover:bg-[#F3F3F3] hover:text-[#024A57]',
             )}
           >
             {label}

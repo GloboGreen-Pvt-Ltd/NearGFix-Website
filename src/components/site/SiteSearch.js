@@ -351,7 +351,7 @@ export default function SiteSearch({ className, placeholder, autoFocus = false, 
           aria-activedescendant={
             panelOpen && activeIndex >= 0 ? optionId(activeIndex) : undefined
           }
-          aria-label="Search GGFIX"
+          aria-label="Search NearGFix"
           autoComplete="off"
           autoCorrect="off"
           spellCheck="false"

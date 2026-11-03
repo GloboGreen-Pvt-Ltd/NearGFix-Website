@@ -3,9 +3,9 @@ import { Search } from 'lucide-react';
 import { cx } from '@/components/site/ui';
 
 export const FIELD_INPUT_CLS =
-  'w-full rounded-2xl border border-[#D0D5DD] bg-[#F8F8F8] px-3.5 py-3.5 text-sm text-[#111111] placeholder:text-[#98A2B3] transition focus:border-[#15803D] focus:bg-white focus:outline-none focus:ring-[3px] focus:ring-[#ECECEC]';
+  'w-full rounded-2xl border border-[#D0D5DD] bg-[#F8F8F8] px-3.5 py-3.5 text-sm text-[#111111] placeholder:text-[#98A2B3] transition focus:border-[#024A57] focus:bg-white focus:outline-none focus:ring-[3px] focus:ring-[#ECECEC]';
 
-export const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+export const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 
 export default function SearchField({ value, onChange, placeholder, ariaLabel }) {
   return (

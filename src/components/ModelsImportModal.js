@@ -33,14 +33,14 @@ const FILTER_LABELS = {
 };
 
 const ACTION_STYLES = {
-  create: 'bg-emerald-100 text-emerald-700',
+  create: 'bg-brand-100 text-brand-700',
   update: 'bg-blue-100 text-blue-700',
   error: 'bg-red-100 text-red-700',
 };
 
 const STAT_TONES = {
   slate: 'border-admin-border bg-admin-dark text-slate-700',
-  green: 'border-emerald-200 bg-emerald-50 text-emerald-800',
+  green: 'border-brand-200 bg-brand-50 text-brand-800',
   blue: 'border-blue-200 bg-blue-50 text-blue-800',
   red: 'border-red-200 bg-red-50 text-red-800',
   amber: 'border-amber-200 bg-amber-50 text-amber-800',
@@ -287,7 +287,7 @@ export default function ModelsImportModal({
       <div className="w-full max-w-4xl flex flex-col max-h-[90dvh] rounded-xl bg-admin-card border border-admin-border shadow-xl">
         <div className="flex items-center justify-between gap-3 px-4 py-4 sm:px-6 border-b border-admin-border shrink-0">
           <h2 className="text-lg font-medium text-slate-900 flex items-center gap-2">
-            <FileSpreadsheet size={18} className="text-emerald-600" />
+            <FileSpreadsheet size={18} className="text-brand-600" />
             Import models from Excel
           </h2>
           <button type="button" onClick={close} aria-label="Close" className="text-slate-400 hover:text-slate-700 text-2xl leading-none">×</button>
@@ -487,7 +487,7 @@ export default function ModelsImportModal({
             <>
               <div className="flex items-center gap-2">
                 {result.failures.length === 0
-                  ? <CheckCircle2 size={20} className="text-emerald-600" />
+                  ? <CheckCircle2 size={20} className="text-brand-600" />
                   : <AlertTriangle size={20} className="text-amber-600" />}
                 <p className="text-sm font-medium text-slate-900">
                   {result.cancelled ? 'Import stopped early.' : 'Import finished.'}

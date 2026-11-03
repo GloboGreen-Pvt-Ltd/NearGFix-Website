@@ -14,7 +14,7 @@ const asArray = (d) => (Array.isArray(d) ? d : d?.content ?? []);
 // Fixed hue-per-category assignment, keyed by category id so a colour always
 // tracks the same category rather than shuffling when the count-sorted rank
 // changes on reload.
-const CATEGORY_COLORS = ['bg-sky-500', 'bg-violet-500', 'bg-amber-500', 'bg-emerald-500', 'bg-rose-500', 'bg-cyan-500'];
+const CATEGORY_COLORS = ['bg-sky-500', 'bg-violet-500', 'bg-amber-500', 'bg-brand-500', 'bg-rose-500', 'bg-cyan-500'];
 
 function greetingName() {
   try {
@@ -28,7 +28,7 @@ function greetingName() {
 
 const OVERVIEW_TINTS = {
   blue: { bg: 'from-sky-50 to-white', iconBg: 'bg-sky-100', iconText: 'text-sky-600', watermark: 'text-sky-900/[0.06]' },
-  green: { bg: 'from-emerald-50 to-white', iconBg: 'bg-emerald-100', iconText: 'text-emerald-600', watermark: 'text-emerald-900/[0.06]' },
+  green: { bg: 'from-brand-50 to-white', iconBg: 'bg-brand-100', iconText: 'text-brand-600', watermark: 'text-brand-900/[0.06]' },
   red: { bg: 'from-rose-50 to-white', iconBg: 'bg-rose-100', iconText: 'text-rose-600', watermark: 'text-rose-900/[0.06]' },
 };
 
@@ -103,7 +103,7 @@ function ShopsSummaryRing({ active, inactive }) {
       {active > 0 && (
         <circle
           cx={size / 2} cy={size / 2} r={r} fill="none"
-          stroke="#16A34A" strokeWidth={strokeWidth} strokeLinecap="round"
+          stroke="#035C6C" strokeWidth={strokeWidth} strokeLinecap="round"
           strokeDasharray={`${activeLen} ${circumference - activeLen}`}
           transform={`rotate(-90 ${size / 2} ${size / 2})`}
         />
@@ -299,7 +299,7 @@ export default function AdminDashboardPage() {
             <div className="flex-1 space-y-3 self-stretch text-sm sm:self-auto">
               <div className="flex items-center justify-between gap-4">
                 <span className="flex items-center gap-2 text-slate-600">
-                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-brand-500" />
                   Active Shops
                 </span>
                 <span className="font-semibold text-slate-900">{stats.shopsActive}</span>

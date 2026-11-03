@@ -40,15 +40,15 @@ const ICONS = {
 };
 
 const WHY = [
-  { icon: ShieldCheck, tone: 'bg-[#EAF8EC] text-[#079455]', title: 'Verified buyers in your area', sub: 'We connect you with trusted, local buyers' },
+  { icon: ShieldCheck, tone: 'bg-[#E5F3F5] text-[#035C6C]', title: 'Verified buyers in your area', sub: 'We connect you with trusted, local buyers' },
   { icon: Award, tone: 'bg-[#FEF3C7] text-[#B45309]', title: 'Get paid quickly & safely', sub: 'Secure payments with instant transfers' },
-  { icon: Rocket, tone: 'bg-[#EAF8EC] text-[#079455]', title: 'Listing live in under a minute', sub: 'A few simple steps and you are done' },
+  { icon: Rocket, tone: 'bg-[#E5F3F5] text-[#035C6C]', title: 'Listing live in under a minute', sub: 'A few simple steps and you are done' },
 ];
 
 export default function SalesCategoryPage() {
   const router = useRouter();
   const draft = useSellDraft();
-  const shell = { title: 'Sell on GGFIX', subtitle: 'Reach nearby buyers in minutes' };
+  const shell = { title: 'Sell on NearGFix', subtitle: 'Reach nearby buyers in minutes' };
 
   if (draft === undefined) return <SellShell {...shell}><SellLoading /></SellShell>;
   if (!draft?.model) return <SellShell {...shell}><SellMissingDraft /></SellShell>;
@@ -80,12 +80,12 @@ export default function SalesCategoryPage() {
 
   return (
     <SellShell {...shell}>
-      <div className="flex items-center gap-3 rounded-2xl border border-[#CDEFD5] bg-[#EAF8EC] px-3.5 py-2.5">
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-[#079455]">
+      <div className="flex items-center gap-3 rounded-2xl border border-[#C7E6EA] bg-[#E5F3F5] px-3.5 py-2.5">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-[#035C6C]">
           <Zap className="h-4 w-4" aria-hidden="true" />
         </span>
         <div className="min-w-0">
-          <p className="text-[13.5px] font-extrabold text-[#067647]">Zero commission on first 10 listings</p>
+          <p className="text-[13.5px] font-extrabold text-[#024A57]">Zero commission on first 10 listings</p>
           <p className="text-[12.5px] text-[#666666]">List more, sell more – we only win when you do!</p>
         </div>
       </div>
@@ -96,12 +96,12 @@ export default function SalesCategoryPage() {
         className="flex w-full items-center gap-3 rounded-2xl border border-[#ECECEC] bg-white p-3 text-left transition hover:border-[#D0D5DD]"
         aria-label={`Selected ${model.name}. Change model`}
       >
-        <SellThumb src={model.imageUrl} fallbackIcon={DeviceIcon} className="h-14 w-14 rounded-xl bg-[#EAF8EC] p-1" iconClassName="h-6 w-6" />
+        <SellThumb src={model.imageUrl} fallbackIcon={DeviceIcon} className="h-14 w-14 rounded-xl bg-[#E5F3F5] p-1" iconClassName="h-6 w-6" />
         <span className="min-w-0 flex-1">
-          <span className="block text-[10.5px] font-extrabold uppercase tracking-wider text-[#067647]">Selected</span>
+          <span className="block text-[10.5px] font-extrabold uppercase tracking-wider text-[#024A57]">Selected</span>
           <span className="block truncate text-[15px] font-extrabold text-[#111111]">{model.name}</span>
           {category?.name ? (
-            <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-[#EAF8EC] px-2 py-0.5 text-[11px] font-bold text-[#067647]">
+            <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-[#E5F3F5] px-2 py-0.5 text-[11px] font-bold text-[#024A57]">
               <DeviceIcon className="h-3 w-3" aria-hidden="true" />
               {category.name}
             </span>
@@ -118,26 +118,26 @@ export default function SalesCategoryPage() {
               key={key}
               type="button"
               onClick={onClick}
-              className="flex items-center gap-3 rounded-2xl border border-[#ECECEC] bg-white p-3.5 text-left transition hover:-translate-y-0.5 hover:border-[#079455]"
+              className="flex items-center gap-3 rounded-2xl border border-[#ECECEC] bg-white p-3.5 text-left transition hover:-translate-y-0.5 hover:border-[#035C6C]"
             >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-[#EAF8EC] text-[#079455]">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-[#E5F3F5] text-[#035C6C]">
                 <Icon className="h-6 w-6" aria-hidden="true" />
               </span>
               <span className="min-w-0 flex-1">
                 <span className="flex items-center gap-2">
                   <span className="truncate text-[15px] font-extrabold text-[#111111]">{title}</span>
-                  <span className="shrink-0 rounded-full bg-[#EAF8EC] px-1.5 py-0.5 text-[9.5px] font-extrabold uppercase tracking-wide text-[#067647]">{tag}</span>
+                  <span className="shrink-0 rounded-full bg-[#E5F3F5] px-1.5 py-0.5 text-[9.5px] font-extrabold uppercase tracking-wide text-[#024A57]">{tag}</span>
                 </span>
                 <span className="mt-1 block text-[12.5px] leading-snug text-[#666666]">{sub}</span>
               </span>
-              <ChevronRight className="h-5 w-5 shrink-0 text-[#079455]" aria-hidden="true" />
+              <ChevronRight className="h-5 w-5 shrink-0 text-[#035C6C]" aria-hidden="true" />
             </button>
           ))}
         </div>
       </div>
 
       <section className="rounded-2xl border border-[#ECECEC] bg-white p-3.5">
-        <p className="mb-1 text-[11.5px] font-extrabold uppercase tracking-wider text-[#8E8E8E]">Why sell on GGFIX</p>
+        <p className="mb-1 text-[11.5px] font-extrabold uppercase tracking-wider text-[#8E8E8E]">Why sell on NearGFix</p>
         {WHY.map(({ icon: Icon, tone, title, sub }, i) => (
           <div key={title} className={i ? 'flex items-center gap-3 border-t border-[#F3F3F3] py-2.5' : 'flex items-center gap-3 py-2.5'}>
             <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${tone}`}>

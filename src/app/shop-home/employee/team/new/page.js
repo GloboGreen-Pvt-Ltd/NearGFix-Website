@@ -2,7 +2,7 @@
 
 /**
  * /shop-home/employee/team/new — "Add Staff" screen, matching the real
- * GGFIX Staff mobile app screen of the same name (screenshot supplied
+ * NearGFix Staff mobile app screen of the same name (screenshot supplied
  * 2026-09). Reached from the Employees list's "+ Add Employee" button.
  *
  * `TECHNICIAN_BASE` (src/lib/api.js, `https://api.ggfix.in/technician`) is
@@ -23,7 +23,7 @@ import { ArrowLeft, Search, UserPlus } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 
 export default function AddStaffPage() {
   const router = useRouter();
@@ -38,25 +38,25 @@ export default function AddStaffPage() {
           type="button"
           onClick={() => router.back()}
           aria-label="Back"
-          className={cx('flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#344054] transition hover:border-[#15803D] hover:text-[#15803D]', FOCUS_RING)}
+          className={cx('flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#344054] transition hover:border-[#024A57] hover:text-[#024A57]', FOCUS_RING)}
         >
           <ArrowLeft className="h-4.5 w-4.5" aria-hidden="true" />
         </button>
-        <h1 className="text-xl font-extrabold tracking-tight text-[#10213D]">Add Staff</h1>
+        <h1 className="text-xl font-extrabold tracking-tight text-[#1C3053]">Add Staff</h1>
       </div>
 
       <button
         type="button"
         onClick={() => router.push('/shop-home/employee/team/new/create')}
         className={cx(
-          'flex flex-col items-center gap-2 rounded-[22px] border border-[#ECECEC] bg-[#F8F8F8] p-7 text-center transition hover:border-[#079447]',
+          'flex flex-col items-center gap-2 rounded-[22px] border border-[#ECECEC] bg-[#F8F8F8] p-7 text-center transition hover:border-[#035C6C]',
           FOCUS_RING,
         )}
       >
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F3F3F3] text-[#0A934D]">
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F3F3F3] text-[#035C6C]">
           <UserPlus className="h-6 w-6" aria-hidden="true" />
         </span>
-        <span className="text-base font-extrabold text-[#10213D]">New Staff</span>
+        <span className="text-base font-extrabold text-[#1C3053]">New Staff</span>
         <span className="text-sm text-[#666666]">Add a new employee to your shop</span>
       </button>
 

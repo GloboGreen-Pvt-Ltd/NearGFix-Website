@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * HeaderNav — the GGFIX Partner Dashboard's top header, replacing the old
+ * HeaderNav — the NearGFix Partner Dashboard's top header, replacing the old
  * left sidebar (Sidebar.js, 2026-09 redesign) with a compact header-based
  * layout: brand, mega-menu dropdowns for each nav section, global search,
  * help/notification icons, and the profile dropdown, all in one sticky bar.
@@ -85,7 +85,7 @@ function NavMenu({ section, activeItemKey, badges, openKey, setOpenKey }) {
           'flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition',
           FOCUS_RING,
           hasActive || open
-            ? 'bg-[#F3F3F3] text-[#15803D]'
+            ? 'bg-[#F3F3F3] text-[#024A57]'
             : 'text-[#344054] hover:bg-[#F8F8F8]',
         )}
       >
@@ -114,7 +114,7 @@ function NavMenu({ section, activeItemKey, badges, openKey, setOpenKey }) {
                 title={item.description}
                 className={cx(
                   'flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition',
-                  active ? 'bg-[#F3F3F3] text-[#15803D] font-semibold' : 'text-[#344054] hover:bg-[#F8F8F8]',
+                  active ? 'bg-[#F3F3F3] text-[#024A57] font-semibold' : 'text-[#344054] hover:bg-[#F8F8F8]',
                 )}
               >
                 <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -152,7 +152,7 @@ export default function HeaderNav({ pathname, shopOwner, badges, onOpenMobileMen
         <Link href="/shop-home" className="mr-2 flex shrink-0 items-center gap-2">
           <Image src={BRAND.logo} alt="" width={30} height={30} className="h-[30px] w-[30px] shrink-0 rounded-xl object-contain" />
           <div className="hidden min-w-0 lg:block">
-            <p className="truncate text-sm font-extrabold leading-tight text-[#111111]">GGFIX Partner</p>
+            <p className="truncate text-sm font-extrabold leading-tight text-[#111111]">NearGFix Partner</p>
             <p className="truncate text-[0.68rem] text-[#666666]">Business Dashboard</p>
           </div>
         </Link>
@@ -165,7 +165,7 @@ export default function HeaderNav({ pathname, shopOwner, badges, onOpenMobileMen
               'flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition',
               FOCUS_RING,
               dashboardActive
-                ? 'bg-[#F3F3F3] text-[#15803D]'
+                ? 'bg-[#F3F3F3] text-[#024A57]'
                 : 'text-[#344054] hover:bg-[#F8F8F8]',
             )}
           >

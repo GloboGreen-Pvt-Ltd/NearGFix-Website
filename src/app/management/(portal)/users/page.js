@@ -74,7 +74,7 @@ export default function UserManagementPage() {
       key: 'isActive',
       label: 'Active',
       render: (r) => (
-        <span className={r.isActive ? 'text-emerald-400' : 'text-admin-muted'}>
+        <span className={r.isActive ? 'text-brand-400' : 'text-admin-muted'}>
           {r.isActive ? 'Yes' : 'No'}
         </span>
       ),

@@ -24,8 +24,8 @@ import { MONTHS, shiftMonth } from '@/components/shop-dashboard/MonthSwitcher';
 import { createTechnicianLeave, decideLeave, fetchTechnician, fetchTechnicianLeaves } from '@/lib/shopDashboard';
 import { notifyError, notifySuccess } from '@/lib/toast';
 
-const DARK = '#09AD2A';
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2';
+const DARK = '#035C6C';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
 const LEAVE_TYPES = [
   { value: 'CASUAL_LEAVE', label: 'Casual Leave' },
   { value: 'SICK_LEAVE', label: 'Sick Leave' },
@@ -42,7 +42,7 @@ const FILTERS = [
 ];
 const STATUS_STYLE = {
   PENDING: { label: 'Processing', cls: 'bg-[#FFF8E1] text-[#B45309]' },
-  APPROVED: { label: 'Approved', cls: 'bg-[#EAF8EC] text-[#09AD2A]' },
+  APPROVED: { label: 'Approved', cls: 'bg-[#E5F3F5] text-[#035C6C]' },
   REJECTED: { label: 'Rejected', cls: 'bg-[#FEF2F2] text-[#C81E1E]' },
 };
 
@@ -61,7 +61,7 @@ const newest = (a, b) => new Date(b.requestedAt || b.startDate || 0) - new Date(
 
 function SummaryTile({ icon: Icon, label, value, tone }) {
   const t = {
-    green: 'bg-[#EAF8EC] text-[#09AD2A]',
+    green: 'bg-[#E5F3F5] text-[#035C6C]',
     yellow: 'bg-[#FFFAEB] text-[#C2410C]',
     red: 'bg-[#FEF2F2] text-[#C81E1E]',
   }[tone];
@@ -82,7 +82,7 @@ function LeaveCard({ leave, onDecide, deciding }) {
   const range = leave.endDate && leave.endDate !== leave.startDate ? `${fmtDate(leave.startDate)} – ${fmtDate(leave.endDate)}` : fmtDate(leave.startDate);
   const days = leave.appliedDaysLabel || (leave.totalDays ? `${leave.totalDays} day${Number(leave.totalDays) === 1 ? '' : 's'}` : '');
   return (
-    <li className="rounded-2xl border border-[#D6EFDB] bg-white p-4">
+    <li className="rounded-2xl border border-[#C7E6EA] bg-white p-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="text-[16px] font-extrabold text-[#111111]">{typeLabel(leave.leaveType)}</p>
@@ -127,7 +127,7 @@ function LeaveCard({ leave, onDecide, deciding }) {
 
 function EmptyBox({ icon: Icon, title, text }) {
   return (
-    <div className="flex flex-col items-center rounded-2xl border border-[#D6EFDB] bg-[#F2FBF4] px-4 py-10 text-center">
+    <div className="flex flex-col items-center rounded-2xl border border-[#C7E6EA] bg-[#E5F3F5] px-4 py-10 text-center">
       <Icon className="h-10 w-10" style={{ color: DARK }} aria-hidden="true" />
       <p className="mt-3 text-[17px] font-extrabold text-[#111111]">{title}</p>
       <p className="mt-1 text-[14px] text-[#667085]">{text}</p>
@@ -169,7 +169,7 @@ function ApplyLeaveModal({ open, onClose, onSubmit }) {
     }
   }
 
-  const input = 'mt-1.5 w-full min-w-0 rounded-xl border border-[#ECECEC] bg-white px-3 py-2.5 text-[14px] text-[#111111] focus:border-[#09AD2A] focus:outline-none';
+  const input = 'mt-1.5 w-full min-w-0 rounded-xl border border-[#ECECEC] bg-white px-3 py-2.5 text-[14px] text-[#111111] focus:border-[#035C6C] focus:outline-none';
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#111111]/60 p-4" onClick={onClose} role="presentation">
       <div role="dialog" aria-modal="true" aria-label="Apply for leave" onClick={(e) => e.stopPropagation()} className="max-h-[90dvh] w-full max-w-md overflow-y-auto overscroll-contain rounded-[22px] bg-white p-5 shadow-xl sm:p-6">
@@ -311,7 +311,7 @@ export default function EmployeeLeavePage() {
           type="button"
           onClick={() => router.back()}
           aria-label="Back"
-          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#EAF8EC] text-[#111111] transition hover:bg-[#DCF2E0]', FOCUS_RING)}
+          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#E5F3F5] text-[#111111] transition hover:bg-[#E5F3F5]', FOCUS_RING)}
         >
           <ArrowLeft className="h-5 w-5" aria-hidden="true" />
         </button>
@@ -387,7 +387,7 @@ export default function EmployeeLeavePage() {
               className={cx(
                 'rounded-full border px-5 py-2 text-[14.5px] font-bold transition',
                 FOCUS_RING,
-                filter === f.key ? 'border-transparent text-white' : 'border-[#D6EFDB] bg-white text-[#475467] hover:border-[#09AD2A]',
+                filter === f.key ? 'border-transparent text-white' : 'border-[#C7E6EA] bg-white text-[#475467] hover:border-[#035C6C]',
               )}
               style={filter === f.key ? { backgroundColor: DARK } : undefined}
             >

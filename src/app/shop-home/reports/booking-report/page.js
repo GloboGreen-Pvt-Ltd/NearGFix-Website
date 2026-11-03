@@ -7,7 +7,7 @@
  * (fetchShopBookings(), src/lib/shopDashboard.js) the Pickups/Bookings/
  * Customers pages already use, unfiltered by serviceMode — this is the
  * "every booking, every mode" view. Same structural template as
- * employee/service-report and employee/pickup-report (This Month tiles
+ * employee/job-report and employee/pickup-report (This Month tiles
  * via a month switcher → Recent Created / In Progress previews → a full
  * filterable list) — see those files' header comments for why "this
  * month" is always computed client-side (no server date filter exists).
@@ -30,7 +30,7 @@ import { fetchShopBookings, friendlyBookingStatus } from '@/lib/shopDashboard';
 import { BOOKING_STATUS_BADGE, SERVICE_MODE_LABEL, bookingEstimatedAmount, formatBookingDate } from '@/lib/bookingFormat';
 import { downloadReportPdf } from '@/lib/reportPdf';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 const FULL_LIST_FILTERS = ['All', 'Created', 'Pickup', 'In Progress', 'Completed', 'Cancelled'];
 
 export default function BookingReportPage() {
@@ -126,7 +126,7 @@ export default function BookingReportPage() {
     try {
       await downloadReportPdf({
         title: 'Booking Report',
-        subtitle: `${filter === 'All' ? 'All bookings' : `${filter} bookings`} — GGFIX Partner Dashboard`,
+        subtitle: `${filter === 'All' ? 'All bookings' : `${filter} bookings`} — NearGFix Partner Dashboard`,
         stats: monthStats.map((s) => ({ label: s.label, value: s.value })),
         columns: [
           { header: 'Booking #', key: 'bookingNumber' },
@@ -155,7 +155,7 @@ export default function BookingReportPage() {
               type="button"
               onClick={() => setReloadKey((k) => k + 1)}
               className={cx(
-                'inline-flex items-center gap-1.5 rounded-xl border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#344054] transition hover:border-[#15803D] hover:text-[#15803D]',
+                'inline-flex items-center gap-1.5 rounded-xl border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#344054] transition hover:border-[#024A57] hover:text-[#024A57]',
                 FOCUS_RING,
               )}
             >
@@ -197,7 +197,7 @@ export default function BookingReportPage() {
         <div className="mb-2.5 flex items-center justify-between gap-3">
           <p className="text-sm font-bold text-[#111111]">Recent Created</p>
           {recentCreated.length > 0 ? (
-            <button type="button" onClick={() => goToFilter('Created')} className="text-xs font-bold text-[#15803D] hover:underline">
+            <button type="button" onClick={() => goToFilter('Created')} className="text-xs font-bold text-[#024A57] hover:underline">
               View all
             </button>
           ) : null}
@@ -219,7 +219,7 @@ export default function BookingReportPage() {
         <div className="mb-2.5 flex items-center justify-between gap-3">
           <p className="text-sm font-bold text-[#111111]">In Progress</p>
           {inProgress.length > 0 ? (
-            <button type="button" onClick={() => goToFilter('In Progress')} className="text-xs font-bold text-[#15803D] hover:underline">
+            <button type="button" onClick={() => goToFilter('In Progress')} className="text-xs font-bold text-[#024A57] hover:underline">
               View all
             </button>
           ) : null}
@@ -271,7 +271,7 @@ function BookingRow({ booking, expanded, onToggle }) {
     <div>
       <button type="button" onClick={onToggle} className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition hover:bg-[#F8F8F8] sm:px-5">
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8]">
-          <Smartphone className="h-5 w-5 text-[#15803D]" aria-hidden="true" />
+          <Smartphone className="h-5 w-5 text-[#024A57]" aria-hidden="true" />
         </span>
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-bold text-[#111111]">{booking.issueSummary || booking.deviceDisplayName || 'Service booking'}</p>

@@ -2,7 +2,7 @@
 
 /**
  * BusinessLoginModal — BUSINESS (shop-owner) Login / Signup popup for the
- * Sell with GGFIX page (src/app/sell-with-us). Same look as the customer
+ * Sell with NearGFix page (src/app/sell-with-us). Same look as the customer
  * LoginModal (split green/white card, phone -> OTP), but wired to the
  * existing business auth only — the same calls /shopmanagement's
  * ShopLoginForm makes, nothing duplicated:
@@ -13,7 +13,7 @@
  *   router.replace('/shop-home') — the existing post-login destination
  *
  * Visual: the left panel is the existing promo artwork in /public; the white
- * form panel uses #09AD2A as its only accent. Portalled out of the header into the page's
+ * form panel uses #035C6C as its only accent. Portalled out of the header into the page's
  * root (#sell-with-us-root, which carries the Inter font variable),
  * falling back to <body>.
  */
@@ -159,7 +159,7 @@ export default function BusinessLoginModal({ open, onClose }) {
 
   // Continue / Login: pale-green disabled state, solid green enabled state.
   const BTN =
-    'flex h-[54px] w-full items-center justify-center gap-2 rounded-[12px] bg-[#09AD2A] text-[17px] font-bold text-white shadow-[0_8px_20px_rgba(9,173,42,0.22)] transition hover:bg-[#07921F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-[#DDF3E1] disabled:text-[#8CBF96] disabled:shadow-none';
+    'flex h-[54px] w-full items-center justify-center gap-2 rounded-[12px] bg-[#035C6C] text-[17px] font-bold text-white shadow-[0_8px_20px_rgba(3,92,108,0.22)] transition hover:bg-[#035C6C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-[#DDF3E1] disabled:text-[#8CBF96] disabled:shadow-none';
 
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto p-3 font-[family-name:var(--font-inter)] text-[#1E1E1E] sm:p-6" role="dialog" aria-modal="true" aria-label="Business login">
@@ -180,10 +180,10 @@ export default function BusinessLoginModal({ open, onClose }) {
             1086x1448 — logo, title, devices and checklist are all in the image). Full-bleed:
             no padding, object-cover. From md up the panel takes the image's own 3:4 shape,
             so nothing is cropped; on phones it is a short banner showing the top (logo + title). */}
-        <aside className="relative aspect-[1086/468] max-h-[35dvh] overflow-hidden bg-[#09AD2A] md:aspect-[1086/1448] md:max-h-none">
+        <aside className="relative aspect-[1086/468] max-h-[35dvh] overflow-hidden bg-[#035C6C] md:aspect-[1086/1448] md:max-h-none">
           <Image
             src={PROMO_IMAGE}
-            alt="GGFIX Login Signup"
+            alt="NearGFix Login Signup"
             fill
             priority
             sizes="(min-width: 768px) 450px, 100vw"
@@ -195,8 +195,8 @@ export default function BusinessLoginModal({ open, onClose }) {
         <section className="relative flex flex-col overflow-y-auto bg-white px-6 pb-7 pt-6 sm:px-9 md:px-10 md:pb-10 md:pt-16">
           <div className="w-full md:my-auto">
             {/* Offer banner */}
-            <div className="flex min-h-[80px] items-center gap-3.5 rounded-[14px] bg-[rgba(9,173,42,0.09)] px-4">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#09AD2A] text-white">
+            <div className="flex min-h-[80px] items-center gap-3.5 rounded-[14px] bg-[rgba(3,92,108,0.09)] px-4">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#035C6C] text-white">
                 <Gift className="h-5 w-5" aria-hidden="true" />
               </span>
               <p className="min-w-0 flex-1 text-[15px] font-semibold leading-snug">
@@ -204,7 +204,7 @@ export default function BusinessLoginModal({ open, onClose }) {
                 <br />
                 discounts &amp; offers
               </p>
-              <ChevronRight className="h-5 w-5 shrink-0 text-[#09AD2A]" aria-hidden="true" />
+              <ChevronRight className="h-5 w-5 shrink-0 text-[#035C6C]" aria-hidden="true" />
             </div>
 
             {phase === 'phone' ? (
@@ -212,7 +212,7 @@ export default function BusinessLoginModal({ open, onClose }) {
                 <label htmlFor="ggfix-business-mobile" className="block text-[15px] font-bold">
                   Enter your phone number
                 </label>
-                <div className="mt-2.5 flex h-[52px] items-center rounded-[10px] border border-[#E2E2E2] bg-white transition focus-within:border-[#09AD2A] focus-within:shadow-[0_0_0_3px_rgba(9,173,42,0.10)]">
+                <div className="mt-2.5 flex h-[52px] items-center rounded-[10px] border border-[#E2E2E2] bg-white transition focus-within:border-[#035C6C] focus-within:shadow-[0_0_0_3px_rgba(3,92,108,0.10)]">
                   {/* Business login is India-only (+91), so this is a fixed prefix, not a picker. */}
                   <span className="flex h-full items-center gap-2 border-r border-[#E2E2E2] pl-3.5 pr-3 text-[15px] font-semibold">
                     <IndiaFlag />
@@ -238,15 +238,15 @@ export default function BusinessLoginModal({ open, onClose }) {
                     type="checkbox"
                     checked={agree}
                     onChange={(e) => setAgree(e.target.checked)}
-                    className="h-[17px] w-[17px] shrink-0 cursor-pointer rounded-[4px] accent-[#09AD2A]"
+                    className="h-[17px] w-[17px] shrink-0 cursor-pointer rounded-[4px] accent-[#035C6C]"
                   />
                   <span>
                     I agree to the{' '}
-                    <Link href="/terms/" className="font-semibold text-[#09AD2A] underline underline-offset-2">
+                    <Link href="/terms/" className="font-semibold text-[#035C6C] underline underline-offset-2">
                       Terms &amp; Conditions
                     </Link>{' '}
                     &amp;{' '}
-                    <Link href="/privacy/" className="font-semibold text-[#09AD2A] underline underline-offset-2">
+                    <Link href="/privacy/" className="font-semibold text-[#035C6C] underline underline-offset-2">
                       Privacy Policy
                     </Link>
                   </span>
@@ -269,7 +269,7 @@ export default function BusinessLoginModal({ open, onClose }) {
                     onClick={() => {
                       setPhase('phone');
                     }}
-                    className="font-semibold text-[#09AD2A] underline underline-offset-2"
+                    className="font-semibold text-[#035C6C] underline underline-offset-2"
                   >
                     Edit
                   </button>
@@ -291,7 +291,7 @@ export default function BusinessLoginModal({ open, onClose }) {
                       value={val}
                       onChange={(e) => onOtpChange(i, e.target.value)}
                       onKeyDown={(e) => onOtpKeyDown(i, e)}
-                      className="h-12 w-11 rounded-[10px] border border-[#E2E2E2] bg-white text-center text-lg font-bold transition focus:border-[#09AD2A] focus:shadow-[0_0_0_3px_rgba(9,173,42,0.10)] focus:outline-none sm:h-[52px] sm:w-[52px]"
+                      className="h-12 w-11 rounded-[10px] border border-[#E2E2E2] bg-white text-center text-lg font-bold transition focus:border-[#035C6C] focus:shadow-[0_0_0_3px_rgba(3,92,108,0.10)] focus:outline-none sm:h-[52px] sm:w-[52px]"
                     />
                   ))}
                 </div>
@@ -300,7 +300,7 @@ export default function BusinessLoginModal({ open, onClose }) {
                   {seconds > 0 ? (
                     <span>Resend OTP in {seconds} seconds</span>
                   ) : (
-                    <button type="button" onClick={requestOtp} disabled={busy} className="font-semibold text-[#09AD2A] underline underline-offset-2 disabled:opacity-50">
+                    <button type="button" onClick={requestOtp} disabled={busy} className="font-semibold text-[#035C6C] underline underline-offset-2 disabled:opacity-50">
                       Resend OTP
                     </button>
                   )}

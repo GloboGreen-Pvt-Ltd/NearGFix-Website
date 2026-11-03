@@ -86,10 +86,10 @@ function buildSummary(values) {
 function buildHandoff(values) {
   const rows = buildSummary(values);
   const subject = values.role === 'Shop owner'
-    ? `GGFIX shop enquiry — ${values.shopName.trim() || values.name.trim()}`
-    : `GGFIX enquiry — ${values.role}`;
+    ? `NearGFix shop enquiry — ${values.shopName.trim() || values.name.trim()}`
+    : `NearGFix enquiry — ${values.role}`;
 
-  const body = `${rows.map(([label, value]) => `${label}: ${value}`).join('\n')}\n\nSent from the GGFIX contact form on ${BRAND.website}.`;
+  const body = `${rows.map(([label, value]) => `${label}: ${value}`).join('\n')}\n\nSent from the NearGFix contact form on ${BRAND.website}.`;
 
   return {
     rows,

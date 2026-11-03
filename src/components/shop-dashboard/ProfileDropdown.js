@@ -161,7 +161,7 @@ export default function ProfileDropdown({ shopOwner, compact = false, menuSide =
       >
         <span
           className={cx(
-            'inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#09AD2A] text-sm font-bold text-white',
+            'inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#035C6C] text-sm font-bold text-white',
             compact ? 'h-10 w-10' : 'h-10 w-10 sm:h-11 sm:w-11',
           )}
         >
@@ -204,7 +204,7 @@ export default function ProfileDropdown({ shopOwner, compact = false, menuSide =
           )}
         >
           <div className="flex items-center gap-3 border-b border-[#ECECEC] bg-[#F8F8F8] px-4 py-3">
-            <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#09AD2A] text-sm font-bold text-white">
+            <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#035C6C] text-sm font-bold text-white">
               {avatarUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={avatarUrl} alt="" className="h-full w-full object-cover" />

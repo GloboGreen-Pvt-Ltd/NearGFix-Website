@@ -11,7 +11,7 @@
  * For selling, models flagged `sellActive: false` are left out — that flag is
  * master data's own "can be sold" switch (see /management/models).
  *
- * The Sell on GGFIX home (step 1, the Partner app's OwnerSellHomeScreen) also reads:
+ * The Sell on NearGFix home (step 1, the Partner app's OwnerSellHomeScreen) also reads:
  *
  *   GET /master/banners                                    — the admin's "Sell" banner(s)
  *   GET {MARKETPLACE_BASE}/marketplace/products?type=SELL  — SELL listings, narrowed
@@ -86,7 +86,7 @@ export async function fetchSellModels(brandId, categoryId) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Sell on GGFIX home (step 1)                                                 */
+/* Sell on NearGFix home (step 1)                                                 */
 /* -------------------------------------------------------------------------- */
 
 /** Sell's own category order (the Partner app's Sell screen); any other category follows. */

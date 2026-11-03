@@ -53,7 +53,7 @@ const COPY = {
 };
 
 const ACTION_STYLES = {
-  create: 'bg-emerald-100 text-emerald-700',
+  create: 'bg-brand-100 text-brand-700',
   update: 'bg-blue-100 text-blue-700',
   error: 'bg-red-100 text-red-700',
 };
@@ -63,7 +63,7 @@ const asList = (value) => (Array.isArray(value) ? value : value?.content ?? []);
 function Stat({ label, value, tone = 'slate', active, onClick, hint }) {
   const tones = {
     slate: 'border-admin-border bg-admin-dark text-slate-700',
-    green: 'border-emerald-200 bg-emerald-50 text-emerald-800',
+    green: 'border-brand-200 bg-brand-50 text-brand-800',
     blue: 'border-blue-200 bg-blue-50 text-blue-800',
     red: 'border-red-200 bg-red-50 text-red-800',
     amber: 'border-amber-200 bg-amber-50 text-amber-800',
@@ -305,7 +305,7 @@ export default function SellFlowImportModal({ kind, categories = [], onClose, on
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
       <div className="flex max-h-[90dvh] w-full max-w-4xl flex-col overflow-hidden rounded-xl border border-admin-border bg-admin-card shadow-xl">
         <div className="flex shrink-0 items-center justify-between gap-3 border-b border-admin-border px-4 py-4 sm:px-6">
-          <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900"><FileSpreadsheet size={18} className="text-emerald-600" />{copy.title}</h2>
+          <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900"><FileSpreadsheet size={18} className="text-brand-600" />{copy.title}</h2>
           <button type="button" onClick={close} aria-label="Close" className="text-2xl leading-none text-slate-400 hover:text-slate-700">×</button>
         </div>
 
@@ -393,7 +393,7 @@ export default function SellFlowImportModal({ kind, categories = [], onClose, on
 
           {step === 'done' && (
             <>
-              <div className="flex items-start gap-3 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900"><CheckCircle2 size={20} className="mt-0.5 shrink-0" /><div><p className="font-medium">Import finished</p><p className="text-sm">Created {result?.created || 0}; updated {result?.updated || 0}{result?.cancelled ? ' before cancellation' : ''}.</p></div></div>
+              <div className="flex items-start gap-3 rounded-lg border border-brand-200 bg-brand-50 px-4 py-3 text-brand-900"><CheckCircle2 size={20} className="mt-0.5 shrink-0" /><div><p className="font-medium">Import finished</p><p className="text-sm">Created {result?.created || 0}; updated {result?.updated || 0}{result?.cancelled ? ' before cancellation' : ''}.</p></div></div>
               {failures.length > 0 && (
                 <>
                   <div className="flex flex-wrap items-center justify-between gap-3"><p className="text-sm text-red-700">{failures.length} row{failures.length === 1 ? '' : 's'} could not be imported.</p><button type="button" onClick={() => exportSellFlowErrorReport({ kind, failures }).catch((reportError) => notifyError(reportError?.message || 'Could not build the error report.'))} className="inline-flex items-center gap-1.5 text-sm font-medium text-admin-accent hover:underline"><Download size={15} /> Download error report</button></div>

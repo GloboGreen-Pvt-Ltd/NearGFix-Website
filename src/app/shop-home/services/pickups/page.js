@@ -3,48 +3,63 @@
 /**
  * /shop-home/services/pickups/?tab=<all|requested|accepted|ready>
  *
- * Doorstep pickups (repair bookings with serviceMode === 'PICKUP'),
- * mirroring the shop-owner app's pickups screens. Opened from the nav, and
- * from the dashboard's Business Overview:
+ * Doorstep pickups (repair bookings with serviceMode === 'PICKUP'), built
+ * like the Partner app's Pickup list — its Jobs screen opened with the pickup
+ * tile set (bookingScopes.js PICKUP_SCOPE_ORDER): header with search toggle,
+ * left rail All · Request · Accepted · Ready, pickup cards (JobsScreen
+ * renderPickup) whose tap opens the pickup action sheet; the Ready tile lists
+ * repair-ticket cards, as the app's does. Chrome and cards come from
+ * components/shop-dashboard/BookingTiles.js (shared with the Bookings page).
+ * Opened from the nav, and from the dashboard's Business Overview:
  *   Pickup Queue -> all · Pickup Requests -> requested · Pickup Confirmed -> accepted
  * The selected tab drives the header ("ACCEPTED PICKUPS / 3 Accepted
  * Pickups"), the list and the empty state; it's kept in the URL.
  *
  * Rows, tab membership and counts come from lib/orderStages.js — the same
- * functions the dashboard cards count with. Data loading, cards and chrome
- * are shared with the Bookings page (components/shop-dashboard/OrdersList.js).
+ * functions the dashboard cards count with. Data loading is shared with the
+ * Bookings page (components/shop-dashboard/OrdersList.js useOrderRows).
  *
- * Filters opens the two filters this page has always had: the display
+ * Filters (header) opens the two filters this page has always had: the display
  * status chips (Created reads as "Pending"; Pickup + In Progress read as "In
  * Progress" — display-only regrouping of friendlyBookingStatus) and the
  * pickup-date picker. src/lib/pickupWorkflow.js's accept/start/complete
- * calls stay unused here: those endpoints aren't confirmed to exist.
+ * calls stay unused here: those endpoints aren't confirmed to exist, so the
+ * app sheet's Accepted / pickup-person Assign tiles aren't offered.
  */
 
-import { useEffect, useMemo, useState } from 'react';
-import { ClipboardCheck, ClipboardList, PackageCheck, Truck } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { CheckCircle2, ClipboardCheck, Truck } from 'lucide-react';
 
 import FilterChips from '@/components/shop-dashboard/FilterChips';
 import ErrorBanner from '@/components/shop-dashboard/ErrorBanner';
 import AssignTechnicianModal from '@/components/shop-dashboard/AssignTechnicianModal';
+import { matchesQuery, useOrderRows, withHash } from '@/components/shop-dashboard/OrdersList';
 import {
-  OrderCard,
-  OrdersEmpty,
-  OrdersHeader,
-  OrdersSearch,
-  OrdersShell,
-  OrdersSkeleton,
-  StageTabs,
-  matchesQuery,
-  useOrderRows,
-  withHash,
-} from '@/components/shop-dashboard/OrdersList';
+  BookingTile,
+  BookingTilesGrid,
+  BookingsEmpty,
+  BookingsHeader,
+  BookingsLoader,
+  BookingsSearch,
+  BookingsShell,
+  PickupActionSheet,
+  PickupTile,
+  StageRail,
+} from '@/components/shop-dashboard/BookingTiles';
 import { variantLabel } from '@/lib/deviceImage';
-import { PICKUP_TABS, buildOrderRows, countPickups, readQueryParam, writeQueryParam } from '@/lib/orderStages';
+import { PICKUP_TABS, bookingRef, buildOrderRows, countPickups, readQueryParam, writeQueryParam } from '@/lib/orderStages';
 
-const TAB_ICONS = { all: Truck, requested: ClipboardList, accepted: ClipboardCheck, ready: PackageCheck };
-const TABS = PICKUP_TABS.map((t) => ({ ...t, icon: TAB_ICONS[t.key] }));
+const TABS = PICKUP_TABS;
 const TAB_KEYS = TABS.map((t) => t.key);
+
+// The app's pickup rail (PICKUP_SCOPE_ORDER): tile labels (chipLabel), icons
+// and colours (JobsScreen SCOPE_TONE), on this page's tab keys.
+const RAIL = [
+  { key: 'all', label: 'All', icon: Truck, tone: '#035C6C' },
+  { key: 'requested', label: 'Request', icon: Truck, tone: '#FAA700' },
+  { key: 'accepted', label: 'Accepted', icon: ClipboardCheck, tone: '#0788C9' },
+  { key: 'ready', label: 'Ready', icon: CheckCircle2, tone: '#609138' },
+];
 
 const DISPLAY_FILTERS = ['All', 'Pending', 'In Progress', 'Completed', 'Cancelled'];
 function displayBucket(statusLabel) {
@@ -60,7 +75,11 @@ export default function PickupsPage() {
   const [dateFilter, setDateFilter] = useState('');
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [query, setQuery] = useState('');
+  // The search field is hidden until the header's Search opens it (as in the app).
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [menuFor, setMenuFor] = useState(null);
   const [assigning, setAssigning] = useState(null);
+  const closeMenu = useCallback(() => setMenuFor(null), []);
 
   useEffect(() => {
     setTab(readQueryParam('tab', TAB_KEYS));
@@ -69,6 +88,15 @@ export default function PickupsPage() {
   function selectTab(key) {
     setTab(key);
     writeQueryParam('tab', key);
+  }
+
+  // As in the app, closing the search also clears it.
+  const searchShown = searchOpen || query !== '';
+  function toggleSearch() {
+    if (searchShown) {
+      setQuery('');
+      setSearchOpen(false);
+    } else setSearchOpen(true);
   }
 
   const rows = useMemo(() => buildOrderRows(bookings, tickets), [bookings, tickets]);
@@ -100,6 +128,8 @@ export default function PickupsPage() {
   const filtersActive = filter !== 'All' || dateFilter !== '';
   const narrowed = filtersActive || query.trim() !== '';
   const count = narrowed ? filtered.length : inTab.length;
+  // As the app: the full-page loader only before the first rows arrive.
+  const firstLoad = loading && rows.length === 0;
 
   function clearAll() {
     setFilter('All');
@@ -108,82 +138,114 @@ export default function PickupsPage() {
   }
 
   return (
-    <OrdersShell>
-      <OrdersHeader
-        eyebrow={current.eyebrow}
-        title={loading ? current.eyebrow : current.title(count)}
-        loading={loading}
-        onRefresh={reload}
-        filtersOpen={filtersOpen}
-        filtersActive={filtersActive}
-        onToggleFilters={() => setFiltersOpen((v) => !v)}
-      />
-
+    <BookingsShell
+      header={
+        <BookingsHeader
+          eyebrow={current.eyebrow}
+          title={firstLoad ? current.eyebrow : current.title(count)}
+          loading={loading}
+          onRefresh={reload}
+          searchOpen={searchShown}
+          onToggleSearch={toggleSearch}
+          filtersOpen={filtersOpen}
+          filtersActive={filtersActive}
+          onToggleFilters={() => setFiltersOpen((v) => !v)}
+        />
+      }
+      search={searchShown ? <BookingsSearch value={query} onChange={setQuery} /> : null}
+      rail={<StageRail items={RAIL} value={tab} onChange={selectTab} counts={counts} loading={firstLoad} ariaLabel="Pickup stages" />}
+    >
       {filtersOpen ? (
-        <div className="flex flex-wrap items-end gap-4 rounded-[16px] border border-[#ECECEC] bg-[#F8F8F8] p-4">
+        <div className="mb-3 flex flex-wrap items-end gap-4 rounded-2xl border border-[#E5E7EB] bg-white p-3.5 sm:p-4">
           <div className="min-w-0 flex-1 basis-full sm:basis-0">
-            <p className="mb-2.5 text-[11.5px] font-bold uppercase tracking-wider text-[#666666]">Status</p>
+            <p className="mb-2.5 text-[11px] font-bold uppercase tracking-widest text-[#6B7280]">Status</p>
             <FilterChips options={DISPLAY_FILTERS} value={filter} onChange={setFilter} counts={statusCounts} />
           </div>
-          <label className="flex flex-col gap-1.5 text-[11.5px] font-bold uppercase tracking-wider text-[#666666]">
+          <label className="flex flex-col gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#6B7280]">
             Pickup date
             <input
               type="date"
               value={dateFilter}
               onChange={(e) => setDateFilter(e.target.value)}
-              className="h-10 rounded-xl border border-[#ECECEC] bg-white px-3 text-[13.5px] font-semibold normal-case tracking-normal text-[#111111] focus:border-[#079455] focus:outline-none"
+              className="h-10 rounded-xl border border-[#E5E7EB] bg-white px-3 text-[13.5px] font-semibold normal-case tracking-normal text-[#111111] focus:border-[#035C6C] focus:outline-none"
             />
           </label>
           {filtersActive ? (
-            <button type="button" onClick={() => { setFilter('All'); setDateFilter(''); }} className="h-10 rounded-xl px-3 text-[13.5px] font-bold text-[#067647] hover:bg-[#F3F3F3]">
+            <button
+              type="button"
+              onClick={() => {
+                setFilter('All');
+                setDateFilter('');
+              }}
+              className="h-10 rounded-xl px-3 text-[13.5px] font-bold text-[#035C6C] hover:bg-[#E5F3F5]"
+            >
               Clear
             </button>
           ) : null}
         </div>
       ) : null}
 
-      <OrdersSearch value={query} onChange={setQuery} />
-      <StageTabs tabs={TABS} value={tab} onChange={selectTab} counts={counts} loading={loading} ariaLabel="Pickup stages" />
+      {error ? (
+        <div className="mb-2.5">
+          <ErrorBanner message={error} onRetry={reload} />
+        </div>
+      ) : null}
 
-      {error ? <ErrorBanner message={error} onRetry={reload} /> : null}
-
-      {loading ? (
-        <OrdersSkeleton />
+      {firstLoad ? (
+        <BookingsLoader />
       ) : error ? null : filtered.length === 0 ? (
         narrowed && inTab.length ? (
-          <OrdersEmpty
-            icon={TAB_ICONS[tab]}
+          <BookingsEmpty
             title="No pickups match"
             text="Try a different search term, status or date."
             action={
               <button
                 type="button"
                 onClick={clearAll}
-                className="rounded-xl border border-[#ECECEC] bg-white px-4 py-2 text-[13.5px] font-bold text-[#067647] transition hover:bg-[#F3F3F3]"
+                className="rounded-[10px] border-[1.5px] border-[#035C6C] bg-white px-4 py-2 text-[13px] font-extrabold text-[#035C6C] transition hover:bg-[#E5F3F5]"
               >
                 Clear search &amp; filters
               </button>
             }
           />
         ) : (
-          <OrdersEmpty icon={TAB_ICONS[tab]} title={current.emptyTitle} text={current.emptyText} />
+          <BookingsEmpty title={current.emptyTitle} text={current.emptyText} />
         )
       ) : (
-        <div className="space-y-3">
-          {filtered.map((r) => (
-            <OrderCard key={r.id} row={r} variant={variantLabel(r, options)} onAssign={() => setAssigning(r)} />
-          ))}
-        </div>
+        <BookingTilesGrid>
+          {/* Ready lists repair tickets, so it gets the job card (as the app's Ready tile). */}
+          {filtered.map((r) =>
+            tab === 'ready' ? (
+              <BookingTile
+                key={r.id}
+                row={r}
+                variant={variantLabel(r, options)}
+                onAssign={() => setAssigning(r)}
+                reEstimateHref="/shop-home/services/bookings/"
+              />
+            ) : (
+              <PickupTile key={r.id} row={r} onOpenMenu={() => setMenuFor(r)} />
+            ),
+          )}
+        </BookingTilesGrid>
       )}
 
+      <PickupActionSheet
+        row={menuFor}
+        onClose={closeMenu}
+        onAssign={(r) => {
+          setMenuFor(null);
+          setAssigning(r);
+        }}
+      />
       <AssignTechnicianModal
         open={Boolean(assigning)}
         ticketId={assigning?.ticketRef}
         currentTechnicianId={assigning?.assignedTechnicianId}
-        bookingLabel={assigning ? [withHash(assigning.bookingNumber || assigning.id), assigning.deviceDisplayName || assigning.modelName].filter(Boolean).join(' · ') : ''}
+        bookingLabel={assigning ? [withHash(bookingRef(assigning)), assigning.deviceDisplayName || assigning.modelName].filter(Boolean).join(' · ') : ''}
         onClose={() => setAssigning(null)}
         onAssigned={mergeTicket}
       />
-    </OrdersShell>
+    </BookingsShell>
   );
 }

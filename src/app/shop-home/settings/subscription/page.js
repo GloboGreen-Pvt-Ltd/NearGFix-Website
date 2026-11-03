@@ -226,7 +226,7 @@ function CurrentPlan({ sub, status }) {
   return (
     <Card className="bg-[#F8F8F8]">
       <div className="flex items-start gap-3.5">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-[#15803D]">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-[#024A57]">
           <Crown className="h-6 w-6" aria-hidden="true" />
         </span>
         <div className="min-w-0 flex-1">

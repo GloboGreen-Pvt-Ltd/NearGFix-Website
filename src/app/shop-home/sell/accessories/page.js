@@ -107,7 +107,7 @@ export default function AccessoriesPage() {
                   active ? 'font-bold' : 'font-semibold',
                 )}
               >
-                <span className={cx('flex h-9 w-9 items-center justify-center rounded-full', active ? 'bg-white text-[#079455]' : 'bg-[#F3F3F3] text-[#666666]')} aria-hidden="true">
+                <span className={cx('flex h-9 w-9 items-center justify-center rounded-full', active ? 'bg-white text-[#035C6C]' : 'bg-[#F3F3F3] text-[#666666]')} aria-hidden="true">
                   <Icon className="h-[18px] w-[18px]" />
                 </span>
                 <span className="line-clamp-3">{label}</span>

@@ -199,7 +199,7 @@ function guideRows(columns) {
     ? 'Rows are matched by ID first; then by Series + Model; and if there is no Series column, by Brand + Model. Anything unmatched is created.'
     : 'This sheet has no ID column, so nothing in it can be mistaken for an edit of the wrong row: each row is matched by Series + Model, and created when it is new.';
   return [
-    ['GGFIX \u2014 Models import / export format'],
+    ['NearGFix \u2014 Models import / export format'],
     [],
     ['Column', 'Required', 'What to put in it'],
     ...columns.map((c) => [c.header, ...(COLUMN_HELP[c.key] || ['', ''])]),

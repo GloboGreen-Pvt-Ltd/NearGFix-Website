@@ -1,5 +1,5 @@
 /**
- * shopMobileAuth.js — REAL mobile-number + OTP sign-in for GGFIX Business
+ * shopMobileAuth.js — REAL mobile-number + OTP sign-in for NearGFix Business
  * Login, supporting all three real identifier types the backend recognises:
  *   1. a shop owner's own personal mobile number (users.phone)
  *   2. a shop's own registered mobile number (shops.mobile)

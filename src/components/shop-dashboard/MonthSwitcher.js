@@ -17,7 +17,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 
 export const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -25,7 +25,7 @@ export default function MonthSwitcher({ viewDate, onPrev, onNext, label = 'This 
   return (
     <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
       <p className="text-sm font-bold text-[#111111]">{label}</p>
-      <div className="inline-flex items-center gap-0.5 rounded-full bg-[#15803D] p-1">
+      <div className="inline-flex items-center gap-0.5 rounded-full bg-[#024A57] p-1">
         <button
           type="button"
           onClick={onPrev}

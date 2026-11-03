@@ -40,7 +40,7 @@ import PageHeader from '@/components/shop-dashboard/PageHeader';
 import Icon3D from '@/components/shop-dashboard/Icon3D';
 import { PARTNER_NAV } from '@/lib/partnerNav';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 
 const SERVICES_SECTION = PARTNER_NAV.find((s) => s.key === 'services');
 const EMPLOYEE_SECTION = PARTNER_NAV.find((s) => s.key === 'employee');
@@ -55,7 +55,7 @@ const REPORTS_VISIBLE_ITEMS = REPORTS_VISIBLE_KEYS.map((k) => REPORTS_SECTION.it
 // tinted-card look — same cycling convention the Dashboard's Quick Nav
 // widget already uses for its own tiles.
 const REPORT_CARD_STYLES = [
-  { bg: 'bg-[#F3F3F3]', iconTone: 'green', arrow: 'bg-white/80 text-[#0BA65A] group-hover:bg-white' },
+  { bg: 'bg-[#F3F3F3]', iconTone: 'green', arrow: 'bg-white/80 text-[#035C6C] group-hover:bg-white' },
   { bg: 'bg-[#F8F8F8]', iconTone: 'blue', arrow: 'bg-white/80 text-[#2196F3] group-hover:bg-white' },
   { bg: 'bg-[#F8F8F8]', iconTone: 'violet', arrow: 'bg-white/80 text-[#8B5CF6] group-hover:bg-white' },
   { bg: 'bg-[#F8F8F8]', iconTone: 'teal', arrow: 'bg-white/80 text-[#0D9488] group-hover:bg-white' },
@@ -70,7 +70,7 @@ const PILLS = [
 export default function ReportsLandingPage() {
   return (
     <div className="space-y-6">
-      <PageHeader title="Reports" subtitle="Every report GGFIX tracks for your business, in one place." />
+      <PageHeader title="Reports" subtitle="Every report NearGFix tracks for your business, in one place." />
 
       <div className="inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-full border border-[#ECECEC] bg-white p-1 [scrollbar-width:none]">
         {PILLS.map((pill) => {
@@ -84,7 +84,7 @@ export default function ReportsLandingPage() {
               className={cx(
                 'flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold transition sm:px-4',
                 FOCUS_RING,
-                active ? 'bg-[#15803D] text-white' : 'text-[#344054] hover:bg-[#F8F8F8]',
+                active ? 'bg-[#024A57] text-white' : 'text-[#344054] hover:bg-[#F8F8F8]',
               )}
             >
               <Icon className="h-4 w-4" aria-hidden="true" />

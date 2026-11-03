@@ -84,8 +84,8 @@ import { fetchShopBookings, recentBookings } from '@/lib/shopDashboard';
 import { updateShopLocation } from '@/lib/shopLocations';
 import { notifyError, notifySuccess } from '@/lib/toast';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
-const INPUT_CLS = 'w-full rounded-xl border border-[#D0D5DD] bg-white px-3.5 py-2.5 text-sm text-[#111111] transition focus:border-[#15803D] focus:outline-none focus:ring-[3px] focus:ring-[#ECECEC]';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
+const INPUT_CLS = 'w-full rounded-xl border border-[#D0D5DD] bg-white px-3.5 py-2.5 text-sm text-[#111111] transition focus:border-[#024A57] focus:outline-none focus:ring-[3px] focus:ring-[#ECECEC]';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const TABS = [
@@ -98,13 +98,13 @@ const TABS = [
 ];
 
 const KYC_STATUS_BADGE = {
-  APPROVED: { tone: 'bg-[#F3F3F3] text-[#15803D]', label: 'Verified' },
+  APPROVED: { tone: 'bg-[#F3F3F3] text-[#024A57]', label: 'Verified' },
   REJECTED: { tone: 'bg-red-100 text-red-700', label: 'Rejected' },
   PENDING_REVIEW: { tone: 'bg-sky-100 text-sky-700', label: 'Under Review' },
 };
 
 const STATUS_BADGE = {
-  Created: 'bg-[#F3F3F3] text-[#15803D]',
+  Created: 'bg-[#F3F3F3] text-[#024A57]',
   'In Progress': 'bg-sky-100 text-sky-700',
   Pickup: 'bg-orange-100 text-orange-700',
   Completed: 'bg-violet-100 text-violet-700',
@@ -165,7 +165,7 @@ function AvatarWithUpload({ avatarUrl, name, uploading, onPick }) {
 
   return (
     <span className="relative inline-flex shrink-0">
-      <span className="inline-flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-[#15803D] text-xl font-bold text-white ring-4 ring-white">
+      <span className="inline-flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-[#024A57] text-xl font-bold text-white ring-4 ring-white">
         {validImage ? (
           <img src={avatarUrl} alt={`${name || 'Owner'} avatar`} className="h-full w-full object-cover" onError={() => setFailed(true)} />
         ) : (
@@ -178,7 +178,7 @@ function AvatarWithUpload({ avatarUrl, name, uploading, onPick }) {
         disabled={uploading}
         aria-label={avatarUrl ? 'Change profile photo' : 'Upload profile photo'}
         className={cx(
-          'absolute -bottom-0.5 -right-0.5 inline-flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#15803D] shadow-[0_1px_4px_rgba(16,24,40,0.2)] ring-2 ring-white transition hover:bg-[#F8F8F8]',
+          'absolute -bottom-0.5 -right-0.5 inline-flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#024A57] shadow-[0_1px_4px_rgba(16,24,40,0.2)] ring-2 ring-white transition hover:bg-[#F8F8F8]',
           FOCUS_RING,
         )}
       >
@@ -198,7 +198,7 @@ function FieldShell({ label, editing, onEdit, children }) {
             type="button"
             onClick={onEdit}
             aria-label={`Edit ${label}`}
-            className={cx('inline-flex items-center gap-1 text-xs font-semibold text-[#15803D] hover:underline', FOCUS_RING)}
+            className={cx('inline-flex items-center gap-1 text-xs font-semibold text-[#024A57] hover:underline', FOCUS_RING)}
           >
             <Pencil className="h-3 w-3" aria-hidden="true" />
             Edit
@@ -571,7 +571,7 @@ function AddressSection({ profile, onSaved }) {
           <button
             type="button"
             onClick={startEdit}
-            className={cx('inline-flex items-center gap-1 text-xs font-semibold text-[#15803D] hover:underline', FOCUS_RING)}
+            className={cx('inline-flex items-center gap-1 text-xs font-semibold text-[#024A57] hover:underline', FOCUS_RING)}
           >
             <Pencil className="h-3 w-3" aria-hidden="true" />
             Edit
@@ -660,7 +660,7 @@ function KycUploadCard({ label, hint, url, uploading, onFile }) {
     <div className="flex min-h-[150px] flex-col items-center rounded-xl border border-dashed border-[#D0D5DD] bg-[#F8F8F8] p-3">
       <div className="mb-1 flex w-full items-center justify-between">
         <span className="text-xs font-semibold text-[#111111]">{label}</span>
-        {url && <a href={url} target="_blank" rel="noreferrer" className="text-[11px] font-semibold text-[#15803D] hover:underline">Open</a>}
+        {url && <a href={url} target="_blank" rel="noreferrer" className="text-[11px] font-semibold text-[#024A57] hover:underline">Open</a>}
       </div>
       <span className="mb-2 w-full text-[11px] text-[#666666]">{hint}</span>
       <div className="flex flex-1 w-full items-center justify-center">
@@ -865,7 +865,7 @@ function SubscriptionTab({ ownerId }) {
 
       <div className="flex flex-col gap-4 rounded-2xl border border-[#ECECEC] bg-[#F8F8F8] p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <p className="text-xs font-bold uppercase tracking-wide text-[#15803D]">Current plan</p>
+          <p className="text-xs font-bold uppercase tracking-wide text-[#024A57]">Current plan</p>
           <p className="mt-1 text-xl font-bold text-[#111111]">{planLabel}</p>
           {sub ? (
             <p className="mt-1 text-sm text-[#666666]">
@@ -955,7 +955,7 @@ function QrCodeTab({ mainLocation }) {
               onClick={copyLink}
               className={cx('inline-flex items-center gap-1.5 rounded-xl border border-[#D0D5DD] bg-white px-4 py-2.5 text-sm font-semibold text-[#344054] transition hover:bg-[#F8F8F8]', FOCUS_RING)}
             >
-              {copied ? <CheckCircle2 className="h-4 w-4 text-[#15803D]" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
+              {copied ? <CheckCircle2 className="h-4 w-4 text-[#024A57]" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
               {copied ? 'Link copied' : 'Copy link'}
             </button>
           </div>
@@ -1055,7 +1055,7 @@ function PickupServiceTab({ ownerId, locations, onSaved }) {
           role="switch"
           aria-checked={form.pickupEnabled}
           onClick={() => setField('pickupEnabled', !form.pickupEnabled)}
-          className={cx('relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition', form.pickupEnabled ? 'bg-[#15803D]' : 'bg-[#D0D5DD]', FOCUS_RING)}
+          className={cx('relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition', form.pickupEnabled ? 'bg-[#024A57]' : 'bg-[#D0D5DD]', FOCUS_RING)}
         >
           <span className={cx('inline-block h-5 w-5 transform rounded-full bg-white transition', form.pickupEnabled ? 'translate-x-6' : 'translate-x-1')} />
         </button>
@@ -1109,7 +1109,7 @@ function MyOrdersTab() {
       title="My Orders"
       subtitle="View your orders & history"
       action={
-        <Link href="/shop-home/services/bookings" className="text-sm font-semibold text-[#15803D] hover:underline">
+        <Link href="/shop-home/services/bookings" className="text-sm font-semibold text-[#024A57] hover:underline">
           View all
         </Link>
       }
@@ -1131,7 +1131,7 @@ function MyOrdersTab() {
           {orders.map((order) => (
             <div key={order.id} className="flex items-center gap-3 py-3.5">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8]">
-                <Smartphone className="h-5 w-5 text-[#15803D]" aria-hidden="true" />
+                <Smartphone className="h-5 w-5 text-[#024A57]" aria-hidden="true" />
               </span>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-bold text-[#111111]">{order.issueSummary || 'Service booking'}</p>
@@ -1263,7 +1263,7 @@ export default function AccountSettingsPage() {
               onClick={() => setActiveTab(tab.key)}
               className={cx(
                 'inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap border-b-2 px-3.5 py-2.5 text-sm font-semibold transition',
-                active ? 'border-[#15803D] text-[#15803D]' : 'border-transparent text-[#666666] hover:text-[#111111]',
+                active ? 'border-[#024A57] text-[#024A57]' : 'border-transparent text-[#666666] hover:text-[#111111]',
               )}
             >
               <Icon className="h-4 w-4" aria-hidden="true" />

@@ -113,7 +113,7 @@ function buildGuideSheet(XLSX, columns) {
     ? 'Rows are matched by ID first, then by Category + Main Category + Issue. A matching row updates; anything unmatched is created.'
     : 'This format has no ID column. Rows are matched by Category + Main Category + Issue; anything unmatched is created.';
   const rows = [
-    ['GGFIX - Repair Services import / export format'],
+    ['NearGFix - Repair Services import / export format'],
     [],
     ['Column', 'Required', 'What to put in it'],
     ...columns.map((column) => [column.header, ...(COLUMN_HELP[column.key] || ['', ''])]),

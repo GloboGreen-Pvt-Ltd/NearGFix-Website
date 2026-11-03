@@ -289,7 +289,7 @@ export default function AccountProfilePage() {
             />
             <div className="min-w-0 flex-1">
               <p className="truncate text-lg font-extrabold text-brand-ink">
-                {[form.firstName, form.lastName].filter(Boolean).join(' ') || 'GGFIX Customer'}
+                {[form.firstName, form.lastName].filter(Boolean).join(' ') || 'NearGFix Customer'}
               </p>
               <span className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-2.5 py-1 text-[0.68rem] font-bold uppercase tracking-wide text-brand-700">
                 <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />

@@ -23,7 +23,7 @@ import { fetchShopBookings, fetchShopChats, openEnquiries, pendingPickups } from
 const SEEN_PREFIX = 'ggfix_notifications_seen_at';
 const seenKey = () => `${SEEN_PREFIX}:${readShopOwner()?.shopId || 'none'}`;
 const RECENT_MS = 48 * 60 * 60 * 1000;
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
 
 function readSeen() {
   try {

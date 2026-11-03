@@ -42,7 +42,7 @@ import ErrorBanner from '@/components/shop-dashboard/ErrorBanner';
 import { SkeletonRows, SkeletonStatCards } from '@/components/shop-dashboard/SkeletonBlocks';
 import { fetchShopBookings, fetchTechnicians, fetchTicketsPaged, friendlyBookingStatus } from '@/lib/shopDashboard';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0BA65A] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
 const ROLE_FILTERS = ['All', 'Technician', 'Pickup Person'];
 const COMPLETED_TICKET_STATUSES = new Set(['DELIVERED', 'READY', 'INVOICE_GENERATED', 'INVOICE_READY', 'DELIVERED_PROCESSING']);
 
@@ -53,8 +53,8 @@ const COMPLETED_TICKET_STATUSES = new Set(['DELIVERED', 'READY', 'INVOICE_GENERA
 const PERF_STAT_STYLES = {
   green: {
     card: 'bg-[#F3F3F3]',
-    chip: 'bg-gradient-to-br from-[#22C55E] to-[#0BA65A]',
-    watermark: 'text-[#0BA65A]',
+    chip: 'bg-gradient-to-br from-[#035C6C] to-[#035C6C]',
+    watermark: 'text-[#035C6C]',
   },
   blue: {
     card: 'bg-[#F8F8F8]',
@@ -83,8 +83,8 @@ function PerfStatCard({ icon: Icon, watermark: Watermark, label, value, tone }) 
           <Icon className="h-5 w-5" aria-hidden="true" />
         </span>
         <div className="min-w-0 max-w-full">
-          <p className="truncate text-[20px] font-extrabold leading-tight text-[#10233F] sm:text-[22px]">{value}</p>
-          <p className="mt-0.5 text-[13px] font-semibold text-[#10233F] sm:text-sm">{label}</p>
+          <p className="truncate text-[20px] font-extrabold leading-tight text-[#1C3053] sm:text-[22px]">{value}</p>
+          <p className="mt-0.5 text-[13px] font-semibold text-[#1C3053] sm:text-sm">{label}</p>
         </div>
       </div>
     </div>
@@ -190,18 +190,18 @@ export default function PerformancePage() {
       >
         {/* Decorative performance graphics — trend line, bars, dots, a
             faint chart-card silhouette — low-opacity, purely decorative. */}
-        <svg className="pointer-events-none absolute right-6 top-4 hidden h-[100px] w-[220px] text-[#0BA65A]/25 sm:block" viewBox="0 0 220 100" aria-hidden="true">
+        <svg className="pointer-events-none absolute right-6 top-4 hidden h-[100px] w-[220px] text-[#035C6C]/25 sm:block" viewBox="0 0 220 100" aria-hidden="true">
           <path d="M4 88 L40 60 L74 70 L110 30 L150 40 L196 10" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
           <circle cx="110" cy="30" r="4" fill="currentColor" />
           <circle cx="196" cy="10" r="4" fill="currentColor" />
         </svg>
         <div className="pointer-events-none absolute bottom-4 right-8 hidden items-end gap-2 sm:flex" aria-hidden="true">
           {[26, 40, 54, 34, 66].map((h, i) => (
-            <span key={i} className="w-3 rounded-full bg-[#0BA65A]/20" style={{ height: `${h}px` }} />
+            <span key={i} className="w-3 rounded-full bg-[#035C6C]/20" style={{ height: `${h}px` }} />
           ))}
         </div>
         <span className="pointer-events-none absolute right-10 top-16 hidden h-1.5 w-1.5 rounded-full bg-[#2196F3]/40 sm:block" aria-hidden="true" />
-        <span className="pointer-events-none absolute right-24 top-8 hidden h-1.5 w-1.5 rounded-full bg-[#0BA65A]/50 sm:block" aria-hidden="true" />
+        <span className="pointer-events-none absolute right-24 top-8 hidden h-1.5 w-1.5 rounded-full bg-[#035C6C]/50 sm:block" aria-hidden="true" />
 
         <div className="relative z-[1] flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
@@ -212,17 +212,17 @@ export default function PerformancePage() {
             type="button"
             onClick={() => setReloadKey((k) => k + 1)}
             className={cx(
-              'inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white px-4 text-sm font-semibold text-[#10233F] transition hover:border-[#0BA65A] hover:text-[#0BA65A]',
+              'inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white px-4 text-sm font-semibold text-[#1C3053] transition hover:border-[#035C6C] hover:text-[#035C6C]',
               FOCUS_RING,
             )}
           >
-            <RefreshCw className={cx('h-4 w-4 text-[#0BA65A]', loading && 'animate-spin')} aria-hidden="true" />
+            <RefreshCw className={cx('h-4 w-4 text-[#035C6C]', loading && 'animate-spin')} aria-hidden="true" />
             Refresh
           </button>
         </div>
 
         <div className="relative z-[1] mt-4 flex items-start gap-2.5 rounded-2xl border border-[#ECECEC] bg-[#F8F8F8] px-4 py-3">
-          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0BA65A] text-white">
+          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#035C6C] text-white">
             <Info className="h-3 w-3" aria-hidden="true" />
           </span>
           <p className="text-[12px] leading-relaxed text-[#6D7E94] sm:text-[13px]">
@@ -263,12 +263,12 @@ export default function PerformancePage() {
                 key={r.id}
                 className="flex flex-wrap items-center gap-3 rounded-[16px] border border-[#ECECEC] bg-[#F8F8F8] px-3.5 py-3 sm:flex-nowrap sm:px-4"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3] text-sm font-bold text-[#0BA65A]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3] text-sm font-bold text-[#035C6C]">
                   #{i + 1}
                 </span>
                 <Icon3D icon={r.roleLabel === 'Pickup Person' ? Truck : Wrench} tone={r.roleLabel === 'Pickup Person' ? 'orange' : 'green'} size="md" />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[15px] font-bold text-[#10233F] sm:text-[16px]">{r.name}</p>
+                  <p className="truncate text-[15px] font-bold text-[#1C3053] sm:text-[16px]">{r.name}</p>
                   <p className="truncate text-xs text-[#6D7E94] sm:text-[13px]">
                     {r.roleLabel} · {r.completedCount}/{r.assignedCount} completed{r.avgTimeHours != null ? ` · ~${Math.round(r.avgTimeHours)}h avg` : ''}
                   </p>
@@ -280,7 +280,7 @@ export default function PerformancePage() {
                       style={{ width: `${r.completionRate ?? 0}%`, background: 'linear-gradient(90deg, #11B964, #0A9352)' }}
                     />
                   </div>
-                  <span className="shrink-0 text-base font-bold text-[#10233F] sm:text-[17px]">{r.completionRate != null ? `${r.completionRate}%` : '—'}</span>
+                  <span className="shrink-0 text-base font-bold text-[#1C3053] sm:text-[17px]">{r.completionRate != null ? `${r.completionRate}%` : '—'}</span>
                 </div>
               </div>
             ))}

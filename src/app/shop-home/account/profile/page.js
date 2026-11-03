@@ -127,12 +127,12 @@ export default function ProfilePage() {
 
       {/* ---- Privacy note -------------------------------------------------- */}
       <div className="flex items-start gap-3 rounded-2xl bg-[#F3F3F3] p-4">
-        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#15803D]">
+        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#024A57]">
           <Lock className="h-4 w-4" aria-hidden="true" />
         </span>
         <div>
           <p className="text-sm font-bold text-[#111111]">Your information is safe with us</p>
-          <p className="mt-0.5 text-sm text-[#166534]">
+          <p className="mt-0.5 text-sm text-[#023A44]">
             Your contact details stay private and are only used for service updates.
           </p>
         </div>

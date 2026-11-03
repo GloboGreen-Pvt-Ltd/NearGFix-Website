@@ -35,9 +35,9 @@ const SUMMARY_CARDS = [
     icon: Users,
     watermark: Users,
     tint: 'bg-[#F3F3F3]',
-    iconTone: 'bg-gradient-to-br from-[#18B96A] to-[#0BA65A]',
-    valueColor: 'text-[#10233F]',
-    watermarkColor: 'text-[#0BA65A]',
+    iconTone: 'bg-gradient-to-br from-[#18B96A] to-[#035C6C]',
+    valueColor: 'text-[#1C3053]',
+    watermarkColor: 'text-[#035C6C]',
   },
   {
     key: 'checked-in',
@@ -47,7 +47,7 @@ const SUMMARY_CARDS = [
     watermark: Users,
     tint: 'bg-[#F8F8F8]',
     iconTone: 'bg-gradient-to-br from-[#5EB6FA] to-[#2196F3]',
-    valueColor: 'text-[#10233F]',
+    valueColor: 'text-[#1C3053]',
     watermarkColor: 'text-[#2196F3]',
   },
   {
@@ -58,7 +58,7 @@ const SUMMARY_CARDS = [
     watermark: Users,
     tint: 'bg-[#F8F8F8]',
     iconTone: 'bg-gradient-to-br from-[#FFB35C] to-[#FF9C1A]',
-    valueColor: 'text-[#10233F]',
+    valueColor: 'text-[#1C3053]',
     watermarkColor: 'text-[#FF9C1A]',
   },
   {
@@ -69,7 +69,7 @@ const SUMMARY_CARDS = [
     watermark: Users,
     tint: 'bg-[#F8F8F8]',
     iconTone: 'bg-gradient-to-br from-[#A78BFA] to-[#8A5CF5]',
-    valueColor: 'text-[#10233F]',
+    valueColor: 'text-[#1C3053]',
     watermarkColor: 'text-[#8A5CF5]',
   },
 ];
@@ -117,7 +117,7 @@ export default function ShiftManagementPage() {
       {/* ---- Today panel ------------------------------------------------ */}
       <section className="overflow-hidden rounded-[22px] border border-[#ECECEC] bg-[#F8F8F8]">
         <div className="border-b border-[#ECECEC] px-5 py-4 sm:px-6">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#18B96A] to-[#0BA65A] px-4 py-2 text-sm font-bold text-white">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#18B96A] to-[#035C6C] px-4 py-2 text-sm font-bold text-white">
             <CalendarDays className="h-4 w-4" aria-hidden="true" />
             Today
           </span>
@@ -126,11 +126,11 @@ export default function ShiftManagementPage() {
         <div className="flex flex-col items-center px-5 py-14 text-center">
           <div className="relative flex h-20 w-20 items-center justify-center">
             <span className="pointer-events-none absolute inset-0 rounded-full bg-[#F3F0FE]" aria-hidden="true" />
-            <Leaf className="pointer-events-none absolute -left-2 top-1 h-4 w-4 -rotate-45 text-[#0BA65A]/60" aria-hidden="true" />
-            <Leaf className="pointer-events-none absolute -right-2 bottom-1 h-4 w-4 rotate-[135deg] text-[#0BA65A]/60" aria-hidden="true" />
+            <Leaf className="pointer-events-none absolute -left-2 top-1 h-4 w-4 -rotate-45 text-[#035C6C]/60" aria-hidden="true" />
+            <Leaf className="pointer-events-none absolute -right-2 bottom-1 h-4 w-4 rotate-[135deg] text-[#035C6C]/60" aria-hidden="true" />
             <Clock className="relative h-8 w-8 text-[#8A5CF5]" aria-hidden="true" />
           </div>
-          <p className="mt-4 text-[17px] font-bold text-[#10233F]">Not available yet</p>
+          <p className="mt-4 text-[17px] font-bold text-[#1C3053]">Not available yet</p>
           <p className="mt-1.5 max-w-[430px] text-[13px] leading-relaxed text-[#6D7D94] sm:text-[14px]">
             Shift scheduling isn&apos;t available yet — this backend has no shift/schedule data for employees.
           </p>

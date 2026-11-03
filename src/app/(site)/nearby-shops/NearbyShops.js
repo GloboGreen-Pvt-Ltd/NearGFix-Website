@@ -445,7 +445,7 @@ function CardAction({ href, external, icon: Icon, children, srSuffix }) {
 }
 
 function ShopCard({ shop }) {
-  const name = (shop && shop.name) || 'GGFIX shop';
+  const name = (shop && shop.name) || 'NearGFix shop';
   const address = (shop && shop.address) || null;
   const timings = shopTimings(shop);
   const phone = shopPhone(shop);
@@ -782,10 +782,10 @@ export default function NearbyShops({ className }) {
           <StatePanel
             icon={Store}
             title="No shops are listed yet"
-            body="No GGFIX shops are live on the platform right now. If you run a repair shop, we would love to hear from you."
+            body="No NearGFix shops are live on the platform right now. If you run a repair shop, we would love to hear from you."
           >
             <Button href="/shop" variant="primary" icon="ArrowRight">
-              GGFIX for shops
+              NearGFix for shops
             </Button>
           </StatePanel>
         ) : (
@@ -858,7 +858,7 @@ export default function NearbyShops({ className }) {
                   )}
                 >
                   <Store className="h-4 w-4" aria-hidden="true" />
-                  Show every GGFIX shop instead
+                  Show every NearGFix shop instead
                 </button>
               </p>
             ) : null}

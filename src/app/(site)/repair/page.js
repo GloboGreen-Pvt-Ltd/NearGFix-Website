@@ -17,7 +17,7 @@ import { pageMetadata } from '@/lib/seo';
 export const metadata = pageMetadata({
   title: 'Book Mobile, Laptop & Tablet Repair Near You',
   description:
-    'Choose your phone, tablet, laptop, smartwatch or earbuds, pick the fault, and book a doorstep pickup or in-shop repair with a verified GGFIX shop near you.',
+    'Choose your phone, tablet, laptop, smartwatch or earbuds, pick the fault, and book a doorstep pickup or in-shop repair with a verified NearGFix shop near you.',
   path: '/repair',
 });
 
@@ -34,7 +34,7 @@ export default function RepairPage() {
 
   const detailSections = (
     <>
-      {/* GGFIX app benefits — the same AppBenefitsSection as the home page's
+      {/* NearGFix app benefits — the same AppBenefitsSection as the home page's
           #repair section, so the two can never drift in wording. */}
       <Section tone="white">
         <AppBenefitsSection />
@@ -50,7 +50,7 @@ export default function RepairPage() {
                 Ready to get it fixed?
               </h2>
               <p className="mx-auto mt-4 max-w-prose text-base leading-relaxed text-brand-100 sm:text-lg lg:mx-0">
-                Book the repair in the GGFIX app — pick your device, choose the fault, and a verified
+                Book the repair in the NearGFix app — pick your device, choose the fault, and a verified
                 shop near you takes it from there.
               </p>
               <div className="mt-7 flex justify-center lg:justify-start">
@@ -62,7 +62,7 @@ export default function RepairPage() {
 
             <div className="flex justify-center lg:justify-end">
               <div className="w-full max-w-sm rounded-3xl bg-white/10 p-6 text-center ring-1 ring-white/15">
-                <p className="text-lg font-bold text-white">Get the GGFIX app</p>
+                <p className="text-lg font-bold text-white">Get the NearGFix app</p>
                 <StoreBadges className="mt-4" />
               </div>
             </div>

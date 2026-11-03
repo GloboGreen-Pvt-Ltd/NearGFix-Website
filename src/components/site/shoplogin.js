@@ -130,7 +130,7 @@ function OtpBoxes({ values, onChange, error, disabled, shake }) {
               ? 'border-[#D92D20] bg-red-50 focus:border-[#D92D20] focus:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-100'
               : cx(
                   digit ? 'border-brand-600 bg-white' : 'border-[#D0D5DD] bg-white',
-                  'focus:border-brand-600 focus:bg-[#ECFDF3] focus:outline-none focus:ring-4 focus:ring-brand-100',
+                  'focus:border-brand-600 focus:bg-[#E5F3F5] focus:outline-none focus:ring-4 focus:ring-brand-100',
                 ),
             disabled && 'cursor-not-allowed opacity-60',
           )}
@@ -321,7 +321,7 @@ export default function ShopLogin() {
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute left-1/2 top-0 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-brand-200/30 blur-3xl" />
         <div className="absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-brand-100/40 blur-3xl" />
-        <div className="absolute -left-20 bottom-10 h-56 w-56 rounded-full bg-[#ECFDF3] blur-3xl" />
+        <div className="absolute -left-20 bottom-10 h-56 w-56 rounded-full bg-[#E5F3F5] blur-3xl" />
       </div>
 
       <div className="relative w-full max-w-[440px] animate-fade-up">

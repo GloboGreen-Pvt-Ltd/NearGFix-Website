@@ -347,7 +347,7 @@ export default function DirectoryShopsPage() {
           onClick={(e) => { e.stopPropagation(); toggleActive(r); }}
           className={`rounded-full px-2.5 py-0.5 text-xs font-semibold border ${
             r.isActive
-              ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/25'
+              ? 'bg-brand-500/15 border-brand-500/40 text-brand-300 hover:bg-brand-500/25'
               : 'bg-rose-500/15 border-rose-500/40 text-rose-300 hover:bg-rose-500/25'
           }`}
           title="Click to toggle"
@@ -367,7 +367,7 @@ export default function DirectoryShopsPage() {
             type="button"
             onClick={activateAll}
             disabled={loading}
-            className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
             title="Set Active=true on every inactive shop"
           >
             Activate all
@@ -498,7 +498,7 @@ export default function DirectoryShopsPage() {
                   type="button"
                   onClick={geocodeAddress}
                   disabled={geocoding}
-                  className="rounded-md bg-emerald-600 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
+                  className="rounded-md bg-brand-600 px-3 py-1 text-xs font-semibold text-white hover:bg-brand-700 disabled:opacity-50"
                   title="Look up lat/lng from the address fields (uses OpenStreetMap)"
                 >
                   {geocoding ? 'Locating…' : '📍 Geocode address'}

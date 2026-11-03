@@ -5,15 +5,15 @@ import { cx } from '@/components/site/ui';
  * Dashboard redesign hangs off (see plan: noble-wiggling-deer). A gradient
  * rounded badge with a soft colored shadow and a subtle glossy top-inset
  * highlight, standing in for the flat single-color icon circles this app
- * used before. The green and mint tones are the brand green #09AD2A (solid).
+ * used before. The green and mint tones are the brand green #035C6C (solid).
  */
 // Each `` value is one combined box-shadow (inset glossy highlight +
 // outer colored drop shadow) — two separate `` utility classes
 // on the same element would NOT combine, since each is a full box-shadow
 // value that replaces the other, not a layer that stacks with it.
 const TONES = {
-  green: { grad: 'from-[#09AD2A] to-[#09AD2A]', shadow: '' },
-  mint: { grad: 'from-[#09AD2A] to-[#09AD2A]', shadow: '' },
+  green: { grad: 'from-[#035C6C] to-[#035C6C]', shadow: '' },
+  mint: { grad: 'from-[#035C6C] to-[#035C6C]', shadow: '' },
   blue: { grad: 'from-[#38BDF8] to-[#0284C7]', shadow: '' },
   orange: { grad: 'from-[#FB923C] to-[#EA580C]', shadow: '' },
   violet: { grad: 'from-[#A78BFA] to-[#7C3AED]', shadow: '' },

@@ -11,10 +11,10 @@ import { pageMetadata } from '@/lib/seo';
 // A sign-up form with no content of its own — noindex, but followable so its
 // links still count. /sell-with-us is the page that should rank for sellers.
 export const metadata = pageMetadata({
-  title: 'Start Your Business | GGFIX',
+  title: 'Start Your Business | NearGFix',
   absoluteTitle: true,
   description:
-    'Create your GGFIX business account and start selling products and offering repair services across GGFIX.',
+    'Create your NearGFix business account and start selling products and offering repair services across NearGFix.',
   path: '/business/register',
   noindex: true,
 });

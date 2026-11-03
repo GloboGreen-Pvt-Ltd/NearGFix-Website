@@ -37,7 +37,7 @@ export default function StatCard({ icon: Icon, label, value, trend, tone = 'gree
           <span
             className={cx(
               'inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition',
-              featured ? 'bg-white/15 text-white group-hover:bg-white/25' : 'bg-[#F8F8F8] text-[#98A2B3] group-hover:bg-[#F8F8F8] group-hover:text-[#15803D]',
+              featured ? 'bg-white/15 text-white group-hover:bg-white/25' : 'bg-[#F8F8F8] text-[#98A2B3] group-hover:bg-[#F8F8F8] group-hover:text-[#024A57]',
             )}
           >
             <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -51,7 +51,7 @@ export default function StatCard({ icon: Icon, label, value, trend, tone = 'gree
       <p className={cx('mt-1.5 text-sm font-medium', featured ? 'text-white/75' : 'text-[#666666]')}>{label}</p>
 
       {trend ? (
-        <p className={cx('mt-2.5 flex items-center gap-1 text-xs font-semibold', featured ? 'text-white/90' : 'text-[#15803D]')}>
+        <p className={cx('mt-2.5 flex items-center gap-1 text-xs font-semibold', featured ? 'text-white/90' : 'text-[#024A57]')}>
           <TrendingUp className="h-3 w-3 shrink-0" aria-hidden="true" />
           {trend}
         </p>
@@ -62,7 +62,7 @@ export default function StatCard({ icon: Icon, label, value, trend, tone = 'gree
   const className = cx(
     'group block rounded-3xl p-5 transition',
     featured
-      ? 'bg-gradient-to-br from-[#166534] to-[#14532D]'
+      ? 'bg-gradient-to-br from-[#023A44] to-[#023A44]'
       : 'border border-[#ECECEC] bg-[#F8F8F8]',
     href && !featured && 'hover:-translate-y-0.5 hover:border-[#ECECEC]',
     href && FOCUS_RING,

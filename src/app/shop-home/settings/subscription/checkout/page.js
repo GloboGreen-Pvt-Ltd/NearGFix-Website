@@ -336,7 +336,7 @@ function StepBar({ steps, current }) {
           <span
             className={cx(
               'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold',
-              i < idx ? 'bg-[#15803D] text-white' : i === idx ? 'bg-[#F3BF23] text-[#1E1E1E]' : 'bg-[#F3F3F3] text-[#98A2B3]',
+              i < idx ? 'bg-[#024A57] text-white' : i === idx ? 'bg-[#F3BF23] text-[#1E1E1E]' : 'bg-[#F3F3F3] text-[#98A2B3]',
             )}
             aria-current={i === idx ? 'step' : undefined}
           >
@@ -558,13 +558,13 @@ function ShopsStep({ plan, trial, selected, onChange, onBack, onNext }) {
                   <label
                     className={cx(
                       'flex items-start gap-3 rounded-2xl border px-4 py-3 transition',
-                      checked ? 'border-[#15803D] bg-[#F0FDF4]' : 'border-[#ECECEC] bg-white',
+                      checked ? 'border-[#024A57] bg-[#E5F3F5]' : 'border-[#ECECEC] bg-white',
                       disabled && !checked ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:bg-[#F8F8F8]',
                     )}
                   >
                     <input
                       type="checkbox"
-                      className="mt-1 h-4 w-4 shrink-0 accent-[#15803D]"
+                      className="mt-1 h-4 w-4 shrink-0 accent-[#024A57]"
                       checked={checked}
                       disabled={disabled && !checked}
                       onChange={() => toggle(s.shopId)}
@@ -602,7 +602,7 @@ function ShopsStep({ plan, trial, selected, onChange, onBack, onNext }) {
         </p>
       </div>
       {!trial && estimate && Number(estimate.discountPaise) > 0 ? (
-        <p className="mt-1.5 text-xs text-[#15803D]">You save {formatPaise(estimate.discountPaise)} on additional shops.</p>
+        <p className="mt-1.5 text-xs text-[#024A57]">You save {formatPaise(estimate.discountPaise)} on additional shops.</p>
       ) : null}
 
       <div className="mt-5 grid gap-2 sm:grid-cols-2">
@@ -620,10 +620,10 @@ function ShopsStep({ plan, trial, selected, onChange, onBack, onNext }) {
 function TermsCheckbox({ checked, onChange }) {
   return (
     <label className="flex items-start gap-2.5 text-sm text-[#111111]">
-      <input type="checkbox" className="mt-0.5 h-4 w-4 shrink-0 accent-[#15803D]" checked={checked} onChange={(e) => onChange(e.target.checked)} />
+      <input type="checkbox" className="mt-0.5 h-4 w-4 shrink-0 accent-[#024A57]" checked={checked} onChange={(e) => onChange(e.target.checked)} />
       <span>
         I have read and agree to the{' '}
-        <a href="/terms/" target="_blank" rel="noopener noreferrer" className="font-bold text-[#15803D] underline">
+        <a href="/terms/" target="_blank" rel="noopener noreferrer" className="font-bold text-[#024A57] underline">
           Subscription Terms
         </a>
         .
@@ -735,7 +735,7 @@ function SummaryStep({ plan, shopIds, shopNames, profile, cs, payAvailable, onCh
                 {quote.notice || 'Your current plan ends as soon as this one is activated. Unused time is not credited.'}
               </Notice>
               <label className="flex items-start gap-2.5 text-sm text-[#111111]">
-                <input type="checkbox" className="mt-0.5 h-4 w-4 shrink-0 accent-[#15803D]" checked={replaceAck} onChange={(e) => setReplaceAck(e.target.checked)} />
+                <input type="checkbox" className="mt-0.5 h-4 w-4 shrink-0 accent-[#024A57]" checked={replaceAck} onChange={(e) => setReplaceAck(e.target.checked)} />
                 <span>I understand my current plan will end now with no credit.</span>
               </label>
             </div>
@@ -796,7 +796,7 @@ function TrialConfirmStep({ plan, shopIds, shopNames, onBack, onDone }) {
           {plan.features.map((f, i) => (
             // eslint-disable-next-line react/no-array-index-key -- server display lines
             <li key={i} className="flex items-start gap-2 text-sm text-[#111111]">
-              <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#15803D]" aria-hidden="true" />
+              <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#024A57]" aria-hidden="true" />
               {f}
             </li>
           ))}

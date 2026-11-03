@@ -57,7 +57,7 @@ function DashboardLink({ active, onNavigate }) {
         'relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition',
         FOCUS_RING,
         active
-          ? "bg-[#F3F3F3] text-[#15803D] before:absolute before:-left-2.5 before:top-1/2 before:h-6 before:w-[3px] before:-translate-y-1/2 before:rounded-r-full before:bg-[#15803D] before:content-['']"
+          ? "bg-[#F3F3F3] text-[#024A57] before:absolute before:-left-2.5 before:top-1/2 before:h-6 before:w-[3px] before:-translate-y-1/2 before:rounded-r-full before:bg-[#024A57] before:content-['']"
           : 'text-[#344054] hover:bg-[#F8F8F8]',
       )}
     >
@@ -82,7 +82,7 @@ function NavSection({ section, open, onToggle, activeItemKey, onNavigate, badges
         className={cx(
           'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-bold transition',
           FOCUS_RING,
-          hasActive && !open ? 'text-[#15803D]' : 'text-[#111111] hover:bg-[#F8F8F8]',
+          hasActive && !open ? 'text-[#024A57]' : 'text-[#111111] hover:bg-[#F8F8F8]',
         )}
       >
         <SectionIcon className="h-[18px] w-[18px] shrink-0 text-[#666666]" aria-hidden="true" />
@@ -107,7 +107,7 @@ function NavSection({ section, open, onToggle, activeItemKey, onNavigate, badges
                       'relative flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium transition',
                       FOCUS_RING,
                       active
-                        ? "bg-[#F3F3F3] text-[#15803D] font-semibold before:absolute before:-left-3 before:top-1/2 before:h-5 before:w-[3px] before:-translate-y-1/2 before:rounded-r-full before:bg-[#15803D] before:content-['']"
+                        ? "bg-[#F3F3F3] text-[#024A57] font-semibold before:absolute before:-left-3 before:top-1/2 before:h-5 before:w-[3px] before:-translate-y-1/2 before:rounded-r-full before:bg-[#024A57] before:content-['']"
                         : 'text-[#475467] hover:bg-[#F8F8F8] hover:text-[#111111]',
                     )}
                   >
@@ -137,7 +137,7 @@ function DrawerFooter({ onNavigate, shopOwner }) {
           rel="noopener noreferrer"
           title="Help & Support"
           aria-label="Help & Support (opens in a new tab)"
-          className={cx('flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#666666] transition hover:bg-[#F8F8F8] hover:text-[#15803D]', FOCUS_RING)}
+          className={cx('flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#666666] transition hover:bg-[#F8F8F8] hover:text-[#024A57]', FOCUS_RING)}
         >
           <CircleHelp className="h-[18px] w-[18px]" aria-hidden="true" />
         </a>
@@ -146,7 +146,7 @@ function DrawerFooter({ onNavigate, shopOwner }) {
           onClick={onNavigate}
           title="Settings"
           aria-label="Settings"
-          className={cx('flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#666666] transition hover:bg-[#F8F8F8] hover:text-[#15803D]', FOCUS_RING)}
+          className={cx('flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#666666] transition hover:bg-[#F8F8F8] hover:text-[#024A57]', FOCUS_RING)}
         >
           <SettingsIcon className="h-[18px] w-[18px]" aria-hidden="true" />
         </Link>
@@ -217,8 +217,8 @@ export default function MobileNavDrawer({ mobileOpen, onCloseMobile, shopOwner, 
           <div className="flex min-w-0 flex-1 items-center gap-2.5">
             <Image src={BRAND.logo} alt="" width={30} height={30} className="h-[30px] w-[30px] shrink-0 rounded-xl object-contain" />
             <div className="min-w-0">
-              <p className="truncate text-sm font-extrabold leading-tight text-[#111111]">GGFIX Partner</p>
-              {shopOwner?.shopName ? <p className="truncate text-[0.68rem] font-semibold text-[#15803D]">{shopOwner.shopName}</p> : null}
+              <p className="truncate text-sm font-extrabold leading-tight text-[#111111]">NearGFix Partner</p>
+              {shopOwner?.shopName ? <p className="truncate text-[0.68rem] font-semibold text-[#024A57]">{shopOwner.shopName}</p> : null}
             </div>
           </div>
           <button

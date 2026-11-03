@@ -1,7 +1,7 @@
 /**
- * siteContent.js — the single source of truth for the public GGFIX marketing site.
+ * siteContent.js — the single source of truth for the public NearGFix marketing site.
  *
- * Every string in here is real product copy taken from the shipping GGFIX
+ * Every string in here is real product copy taken from the shipping NearGFix
  * customer app, shop app and subscription model. Pages MUST import from this
  * module rather than hardcoding copy, so facts (prices, limits, contact
  * details) never diverge between pages.
@@ -17,16 +17,16 @@
 /* -------------------------------------------------------------------------- */
 
 export const BRAND = {
-  name: 'GGFIX',
+  name: 'NearGFix',
   company: 'GloboGreen',
   tagline: 'Repair · Buy · Sell — at your fingertips',
   taglineShort: 'Fast. Trusted. Tech Solutions',
   taglineLong: 'Repair, Buy, Sell or Pickup – All in one place!',
-  /* No adoption / social-proof line lives here on purpose. GGFIX has not
+  /* No adoption / social-proof line lives here on purpose. NearGFix has not
      published its apps yet, so any "trusted by N shops across India" claim
      would be unverifiable. Do not add one back without real, citable numbers. */
   description:
-    'GGFIX is a multi-tenant platform for mobile repair shops and their customers — book a repair, get doorstep pickup, sell your old phone to the highest bidder, and run your entire shop from one app.',
+    'NearGFix is a multi-tenant platform for mobile repair shops and their customers — book a repair, get doorstep pickup, sell your old phone to the highest bidder, and run your entire shop from one app.',
   website: 'www.globogreen.in',
   websiteUrl: 'https://www.globogreen.in',
   email: 'support@globogreen.in',
@@ -36,9 +36,9 @@ export const BRAND = {
   whatsapp: '+91 85476 54646',
   whatsappHref: 'https://wa.me/918547654646',
   logo: '/logo.png',
-  logoAlt: 'GGFIX logo',
-  customerAppName: 'GGFIX - Customer',
-  shopAppName: 'GGFIX Shop',
+  logoAlt: 'NearGFix logo',
+  customerAppName: 'NearGFix - Customer',
+  shopAppName: 'NearGFix Shop',
   appsStatus: 'Coming soon to Play Store & App Store',
 };
 
@@ -87,15 +87,14 @@ export const FOOTER_NAV = [
   {
     title: 'Shop owners',
     links: [
-      { href: '/shop', label: 'For Shops' },
+      { href: '/sell-with-us', label: 'For Shops' },
       { href: '/pricing', label: 'Pricing' },
-      { href: '/contact', label: 'Start free trial' },
     ],
   },
   {
     title: 'Company',
     links: [
-      { href: '/about', label: 'About GGFIX' },
+      { href: '/about', label: 'About NearGFix' },
       { href: '/contact', label: 'Contact us' },
       { href: '/faq', label: 'FAQ' },
     ],
@@ -122,7 +121,7 @@ export const FOOTER_NAV = [
 /* -------------------------------------------------------------------------- */
 
 export const HOME_MENU = {
-  eyebrow: 'What GGFIX does',
+  eyebrow: 'What NearGFix does',
   title: 'Three things you can do with your device',
   subtitle:
     'Repair it, sell it or replace it — all against the exact model you own, and all handled by the same verified shops near you.',
@@ -171,9 +170,9 @@ export const HOME_MENU_GROUPS = [
 
 export const NEARBY = {
   eyebrow: 'Nearby Shops',
-  title: 'Find nearby GGFIX shops',
+  title: 'Find nearby NearGFix shops',
   subtitle:
-    'Share your location and we will list the GGFIX shops within 20 km, closest first, with the name, address and whether the shop is open right now.',
+    'Share your location and we will list the NearGFix shops within 20 km, closest first, with the name, address and whether the shop is open right now.',
   radiusKm: 20,
   ctaLabel: 'Use my location',
   ctaLabelRetry: 'Update my location',
@@ -181,10 +180,10 @@ export const NEARBY = {
   permissionHint:
     'Your browser will ask for permission. Your coordinates are stored in this browser to sort shops by distance, and are sent to a third-party geocoding service only to turn them into a place name — see our Privacy Policy.',
   loadingLabel: 'Finding shops near you…',
-  emptyNearbyTitle: 'No GGFIX shops within 20 km yet',
+  emptyNearbyTitle: 'No NearGFix shops within 20 km yet',
   emptyNearbyBody:
     'We are onboarding shops region by region. Browse every shop on the platform below, or contact us and we will tell you when one opens near you.',
-  allShopsTitle: 'All GGFIX shops',
+  allShopsTitle: 'All NearGFix shops',
   allShopsBody:
     'Every shop currently live on the platform. Turn on location to see which of them are within 20 km of you.',
   errorTitle: 'We could not load shops right now',
@@ -192,12 +191,12 @@ export const NEARBY = {
     'The shop directory did not respond. Refresh the page in a moment, or contact us and we will help you find a shop.',
   deniedTitle: 'Location permission was declined',
   deniedBody:
-    'No problem — every GGFIX shop is listed below. You can allow location later to sort them by distance.',
+    'No problem — every NearGFix shop is listed below. You can allow location later to sort them by distance.',
   openLabel: 'Open now',
   closedLabel: 'Closed now',
   /* Set expectations explicitly so the sparse cards read as intentional. */
   dataNote:
-    'Shop listings show name, address, distance and open/closed status only. For services, prices or a phone number, contact the shop through the GGFIX app.',
+    'Shop listings show name, address, distance and open/closed status only. For services, prices or a phone number, contact the shop through the NearGFix app.',
 };
 
 /* -------------------------------------------------------------------------- */
@@ -367,7 +366,7 @@ export const SELL_STEPS = [
 export const SELL_HIGHLIGHT = {
   title: 'Multiple shops bid. You pick the winner.',
   description:
-    'Most resale apps give you one take-it-or-leave-it number. GGFIX sends your device details to nearby shops and lets several of them quote — so you compare real offers and accept the one you like.',
+    'Most resale apps give you one take-it-or-leave-it number. NearGFix sends your device details to nearby shops and lets several of them quote — so you compare real offers and accept the one you like.',
 };
 
 export const BUY_FEATURES = [
@@ -620,7 +619,7 @@ export const TICKET_LIFECYCLE = [
 ];
 
 export const PARTNER_BENEFITS = {
-  title: 'GGfix Partner Benefits',
+  title: 'NearGFix Partner Benefits',
   items: ['Verified shop perks', 'Faster payouts', 'Priority support'],
 };
 
@@ -742,7 +741,7 @@ export const SUPPORT_TOPICS = [
     key: 'warranty',
     title: 'Warranty',
     description:
-      'Questions about the warranty on a completed repair or on a device you bought through GGFIX.',
+      'Questions about the warranty on a completed repair or on a device you bought through NearGFix.',
     icon: 'ShieldCheck',
   },
 ];
@@ -766,8 +765,8 @@ export const SUPPORT_CHANNELS = [
 export const ABOUT = {
   headline: 'One platform for the repair shop and the person walking into it.',
   body: [
-    'GGFIX is built by GloboGreen as a multi-tenant platform for mobile repair shops — the shop side is a full point-of-sale, technician, employee and inventory system, and the customer side is an app that lets anyone book a repair, request a doorstep pickup, sell an old handset or buy a refurbished one.',
-    'Most repair shops run on a paper register and a WhatsApp group. Most customers have no idea what is happening to their phone after they hand it over. GGFIX closes both gaps with the same system: the shop gets a real ticket lifecycle, and the customer gets to watch it move.',
+    'NearGFix is built by GloboGreen as a multi-tenant platform for mobile repair shops — the shop side is a full point-of-sale, technician, employee and inventory system, and the customer side is an app that lets anyone book a repair, request a doorstep pickup, sell an old handset or buy a refurbished one.',
+    'Most repair shops run on a paper register and a WhatsApp group. Most customers have no idea what is happening to their phone after they hand it over. NearGFix closes both gaps with the same system: the shop gets a real ticket lifecycle, and the customer gets to watch it move.',
     'The platform runs on 12 backend services covering authentication, orders, tickets, pickup, marketplace, subscriptions, master device data and more — so a shop that starts with one counter can add shops, staff and a pickup fleet without changing anything about how it works.',
   ],
 };
@@ -852,7 +851,7 @@ export const FAQS = [
   },
   {
     category: 'For customers',
-    question: 'What can I buy on GGFIX?',
+    question: 'What can I buy on NearGFix?',
     answer:
       'The Buy tab has refurbished devices and accessories listed by shops on the platform, organised into categories with full product details and a cart. Your purchases appear under the Buy tab in My Orders.',
   },
@@ -876,7 +875,7 @@ export const FAQS = [
   {
     category: 'For customers',
     question: 'Where do I download the apps?',
-    answer: `The GGFIX customer app and the GGFIX shop app are ${BRAND.appsStatus.toLowerCase()}. Contact us and we will tell you the moment they go live.`,
+    answer: `The NearGFix customer app and the NearGFix shop app are ${BRAND.appsStatus.toLowerCase()}. Contact us and we will tell you the moment they go live.`,
   },
 
   /* ---- shop owners ---- */
@@ -902,7 +901,7 @@ export const FAQS = [
     category: 'For shop owners',
     question: 'How do I pay? Is there online checkout?',
     answer:
-      'There is no self-serve payment gateway on GGFIX. Talk to our team and we will set your plan up for you. Contact details are on the Contact page.',
+      'There is no self-serve payment gateway on NearGFix. Talk to our team and we will set your plan up for you. Contact details are on the Contact page.',
   },
   {
     category: 'For shop owners',
@@ -950,7 +949,7 @@ export const FAQS = [
     category: 'For shop owners',
     question: 'Is my shop data separate from other shops?',
     answer:
-      'GGFIX is multi-tenant — your bookings, customers, staff, inventory and invoices belong to your shop and are only reachable by your own logins. Owners, technicians and customers each authenticate separately and only see what their role allows.',
+      'NearGFix is multi-tenant — your bookings, customers, staff, inventory and invoices belong to your shop and are only reachable by your own logins. Owners, technicians and customers each authenticate separately and only see what their role allows.',
   },
   {
     category: 'For shop owners',
@@ -1197,7 +1196,7 @@ export const sortBanners = (rows) => {
       if (!imageUrl) return null;
       return {
         id: row.id || imageUrl,
-        title: typeof row.title === 'string' && row.title.trim() ? row.title.trim() : 'GGFIX',
+        title: typeof row.title === 'string' && row.title.trim() ? row.title.trim() : 'NearGFix',
         imageUrl,
         sortOrder: Number.isFinite(row.sortOrder) ? row.sortOrder : 0,
       };

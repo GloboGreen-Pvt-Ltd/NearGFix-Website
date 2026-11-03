@@ -97,7 +97,7 @@ function directionLabel(direction) {
 // look, deliberately different from Profit & Loss/Service Report's own
 // card treatments.
 const CASH_CARD_STYLES = {
-  green: { card: 'bg-[#F3F3F3]', chip: 'bg-gradient-to-br from-[#22C55E] to-[#0BA65A]', watermark: 'text-[#0BA65A]' },
+  green: { card: 'bg-[#F3F3F3]', chip: 'bg-gradient-to-br from-[#035C6C] to-[#035C6C]', watermark: 'text-[#035C6C]' },
   orange: { card: 'bg-[#F8F8F8]', chip: 'bg-gradient-to-br from-[#FFB35C] to-[#FF8F2C]', watermark: 'text-[#FF8F2C]' },
   blue: { card: 'bg-[#F8F8F8]', chip: 'bg-gradient-to-br from-[#5EB6FA] to-[#2196F3]', watermark: 'text-[#2196F3]' },
   violet: { card: 'bg-[#F8F8F8]', chip: 'bg-gradient-to-br from-[#A78BFA] to-[#8B5CF6]', watermark: 'text-[#8B5CF6]' },
@@ -145,19 +145,19 @@ function DueDateEditor({ party, onSaved }) {
 
   return (
     <div className="mb-3 flex flex-wrap items-center gap-2 rounded-xl border border-[#ECECEC] bg-white px-3 py-2.5">
-      <CalendarClock className="h-4 w-4 shrink-0 text-[#09AD2A]" aria-hidden="true" />
+      <CalendarClock className="h-4 w-4 shrink-0 text-[#035C6C]" aria-hidden="true" />
       <span className="text-xs font-bold text-[#344054]">Due date</span>
       <input
         type="date"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="h-8 rounded-lg border border-[#D0D5DD] px-2 text-xs text-[#10233F] outline-none focus:border-[#09AD2A]"
+        className="h-8 rounded-lg border border-[#D0D5DD] px-2 text-xs text-[#1C3053] outline-none focus:border-[#035C6C]"
       />
       <button
         type="button"
         onClick={() => save(value)}
         disabled={saving || !value || value === toDateInput(party.dueDate)}
-        className="inline-flex h-8 items-center gap-1 rounded-lg bg-[#09AD2A] px-3 text-xs font-bold text-white transition hover:bg-[#08961F] disabled:opacity-50"
+        className="inline-flex h-8 items-center gap-1 rounded-lg bg-[#035C6C] px-3 text-xs font-bold text-white transition hover:bg-[#035C6C] disabled:opacity-50"
       >
         {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : null}
         Save
@@ -194,14 +194,14 @@ function PartyRow({ party, expanded, onToggle, statement, statementLoading, stat
         <span
           className={cx(
             'flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-extrabold text-white',
-            defaulter ? 'bg-gradient-to-br from-[#F04438] to-[#B42318]' : 'bg-gradient-to-br from-[#22C55E] to-[#0BA65A]',
+            defaulter ? 'bg-gradient-to-br from-[#F04438] to-[#B42318]' : 'bg-gradient-to-br from-[#035C6C] to-[#035C6C]',
           )}
         >
           {initial}
         </span>
         <div className="min-w-0 flex-1">
           <p className="flex min-w-0 items-center gap-2">
-            <span className="truncate text-sm font-bold text-[#10233F]">{party.name}</span>
+            <span className="truncate text-sm font-bold text-[#1C3053]">{party.name}</span>
             {defaulter ? (
               <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#FEE4E2] px-2 py-0.5 text-[0.65rem] font-extrabold uppercase tracking-wide text-[#B42318]">
                 <AlertTriangle className="h-3 w-3" aria-hidden="true" />
@@ -221,8 +221,8 @@ function PartyRow({ party, expanded, onToggle, statement, statementLoading, stat
           )}
         </div>
         <div className="shrink-0 text-right">
-          <p className={cx('text-sm font-extrabold', defaulter ? 'text-[#B42318]' : 'text-[#10233F]')}>{inr(party.balance)}</p>
-          <p className={cx('text-xs font-bold', defaulter ? 'text-[#B42318]' : due ? 'text-[#DC6803]' : 'text-[#0BA65A]')}>
+          <p className={cx('text-sm font-extrabold', defaulter ? 'text-[#B42318]' : 'text-[#1C3053]')}>{inr(party.balance)}</p>
+          <p className={cx('text-xs font-bold', defaulter ? 'text-[#B42318]' : due ? 'text-[#DC6803]' : 'text-[#035C6C]')}>
             {defaulter ? 'Overdue' : due ? 'Due' : 'Settled'}
           </p>
         </div>
@@ -255,11 +255,11 @@ function PartyRow({ party, expanded, onToggle, statement, statementLoading, stat
               {statement.entries.map((entry) => (
                 <div key={entry.id} className="flex items-center justify-between gap-3 rounded-xl bg-white px-3 py-2">
                   <div className="min-w-0">
-                    <p className="text-xs font-bold text-[#10233F]">{directionLabel(entry.direction)}</p>
+                    <p className="text-xs font-bold text-[#1C3053]">{directionLabel(entry.direction)}</p>
                     <p className="text-[0.68rem] text-[#98A2B3]">{formatShortDate(entry.entryDate)}</p>
                   </div>
                   <div className="shrink-0 text-right">
-                    <p className={cx('text-xs font-extrabold', entry.direction === 'RECEIVED' ? 'text-[#0BA65A]' : 'text-[#DC2626]')}>
+                    <p className={cx('text-xs font-extrabold', entry.direction === 'RECEIVED' ? 'text-[#035C6C]' : 'text-[#DC2626]')}>
                       {inr(entry.amount)}
                     </p>
                     <p className="text-[0.68rem] text-[#98A2B3]">Bal. {inr(entry.runningBalance)}</p>
@@ -320,10 +320,10 @@ function AddPartyModal({ partyType, onClose, onAdded }) {
       >
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F3F3F3] text-[#0BA65A]">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F3F3F3] text-[#035C6C]">
               <UserPlus className="h-5 w-5" aria-hidden="true" />
             </span>
-            <h2 id="add-party-title" className="text-[17px] font-extrabold text-[#10233F]">
+            <h2 id="add-party-title" className="text-[17px] font-extrabold text-[#1C3053]">
               Add {noun}
             </h2>
           </div>
@@ -342,13 +342,13 @@ function AddPartyModal({ partyType, onClose, onAdded }) {
           placeholder={`${noun} name`}
           maxLength={120}
           autoFocus
-          className="mt-1.5 h-12 w-full rounded-xl border border-[#D0D5DD] px-3.5 text-[15px] text-[#10233F] outline-none transition focus:border-[#0BA65A] focus:ring-4 focus:ring-[#0BA65A]/10"
+          className="mt-1.5 h-12 w-full rounded-xl border border-[#D0D5DD] px-3.5 text-[15px] text-[#1C3053] outline-none transition focus:border-[#035C6C] focus:ring-4 focus:ring-[#035C6C]/10"
         />
 
         <label className="mt-4 block text-xs font-bold uppercase tracking-wide text-[#666666]" htmlFor="party-phone">
           Mobile number <span className="text-[#DC2626]">*</span>
         </label>
-        <div className="mt-1.5 flex h-12 items-center rounded-xl border border-[#D0D5DD] px-3.5 transition focus-within:border-[#0BA65A] focus-within:ring-4 focus-within:ring-[#0BA65A]/10">
+        <div className="mt-1.5 flex h-12 items-center rounded-xl border border-[#D0D5DD] px-3.5 transition focus-within:border-[#035C6C] focus-within:ring-4 focus-within:ring-[#035C6C]/10">
           <span className="mr-2 text-[15px] font-semibold text-[#666666]">+91</span>
           <input
             id="party-phone"
@@ -360,7 +360,7 @@ function AddPartyModal({ partyType, onClose, onAdded }) {
             inputMode="numeric"
             maxLength={10}
             placeholder="10-digit mobile number"
-            className="min-w-0 flex-1 bg-transparent text-[15px] text-[#10233F] outline-none"
+            className="min-w-0 flex-1 bg-transparent text-[15px] text-[#1C3053] outline-none"
           />
         </div>
         <p className="mt-1.5 text-xs text-[#98A2B3]">If this number already has an account, its name is updated instead.</p>
@@ -373,7 +373,7 @@ function AddPartyModal({ partyType, onClose, onAdded }) {
           type="date"
           value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}
-          className="mt-1.5 h-12 w-full rounded-xl border border-[#D0D5DD] px-3.5 text-[15px] text-[#10233F] outline-none transition focus:border-[#0BA65A] focus:ring-4 focus:ring-[#0BA65A]/10"
+          className="mt-1.5 h-12 w-full rounded-xl border border-[#D0D5DD] px-3.5 text-[15px] text-[#1C3053] outline-none transition focus:border-[#035C6C] focus:ring-4 focus:ring-[#035C6C]/10"
         />
         <p className="mt-1.5 text-xs text-[#98A2B3]">
           Past this date with money still due, the account is marked Defaulter automatically. Without one, that happens after {DEFAULT_CREDIT_DAYS} days with no payment.
@@ -507,11 +507,11 @@ export default function CashBookReportPage() {
               type="button"
               onClick={() => router.back()}
               aria-label="Back"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#344054] transition hover:border-[#0BA65A] hover:text-[#0BA65A]"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#344054] transition hover:border-[#035C6C] hover:text-[#035C6C]"
             >
               <ArrowLeft className="h-4.5 w-4.5" aria-hidden="true" />
             </button>
-            <p className="truncate text-[16px] font-bold text-[#10233F]">Cash Book</p>
+            <p className="truncate text-[16px] font-bold text-[#1C3053]">Cash Book</p>
           </div>
           {/* Real disabled control, not a fake live button — there's no
               cash-book ledger data source anywhere to actually open/export. */}
@@ -520,7 +520,7 @@ export default function CashBookReportPage() {
             disabled
             title="Cash book ledger export isn't available yet."
             aria-label="Ledger (not available yet)"
-            className="flex h-9 w-9 shrink-0 cursor-not-allowed items-center justify-center rounded-full bg-gradient-to-br from-[#22C55E] to-[#0BA65A] text-white opacity-60"
+            className="flex h-9 w-9 shrink-0 cursor-not-allowed items-center justify-center rounded-full bg-gradient-to-br from-[#035C6C] to-[#035C6C] text-white opacity-60"
           >
             <BookOpen className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -544,8 +544,8 @@ export default function CashBookReportPage() {
               className={cx(
                 'rounded-full px-4 py-2 text-xs font-bold transition',
                 tab === t.value
-                  ? 'bg-gradient-to-r from-[#22C55E] to-[#15803D] text-white'
-                  : 'bg-[#F8F8F8] text-[#344054] hover:bg-[#F3F3F3] hover:text-[#15803D]',
+                  ? 'bg-gradient-to-r from-[#035C6C] to-[#024A57] text-white'
+                  : 'bg-[#F8F8F8] text-[#344054] hover:bg-[#F3F3F3] hover:text-[#024A57]',
               )}
             >
               {t.label}
@@ -571,7 +571,7 @@ export default function CashBookReportPage() {
                 confirmed on GET /ledger-parties. */}
             <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-[#F3F3F3] px-4 py-3.5">
               <div className="min-w-0">
-                <p className="text-sm font-bold text-[#10233F]">Net Balance</p>
+                <p className="text-sm font-bold text-[#1C3053]">Net Balance</p>
                 <p className="mt-0.5 flex flex-wrap items-center gap-2 text-xs font-semibold text-[#5C7A6D]">
                   {accountCount} {accountCount === 1 ? 'Account' : 'Accounts'}
                   {defaulterCount ? (
@@ -584,7 +584,7 @@ export default function CashBookReportPage() {
               </div>
               <div className="flex shrink-0 items-center gap-3">
                 <div className="text-right">
-                  <p className="text-lg font-extrabold leading-none text-[#10233F]">{inr(netBalance)}</p>
+                  <p className="text-lg font-extrabold leading-none text-[#1C3053]">{inr(netBalance)}</p>
                   <p className="mt-1 text-xs font-semibold text-[#5C7A6D]">{netBalance === 0 ? 'Settled' : 'Due'}</p>
                 </div>
                 <button
@@ -600,7 +600,7 @@ export default function CashBookReportPage() {
             </div>
 
             <div className="mt-4 flex items-center justify-between gap-3">
-              <p className="text-sm font-bold text-[#10233F]">Accounts</p>
+              <p className="text-sm font-bold text-[#1C3053]">Accounts</p>
               <button
                 type="button"
                 onClick={() => setAdding(true)}

@@ -27,8 +27,8 @@ import { MONTHS, shiftMonth } from '@/components/shop-dashboard/MonthSwitcher';
 import { fetchShopBookings, fetchTechnician, friendlyBookingStatus } from '@/lib/shopDashboard';
 import { formatBookingDate, formatPickupAddress, formatSlotTime } from '@/lib/bookingFormat';
 
-const GREEN = '#09AD2A';
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2';
+const GREEN = '#035C6C';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
 const FILTERS = [
   { key: 'All', label: 'All' },
   { key: 'Completed', label: 'Completed' },
@@ -53,7 +53,7 @@ const withHash = (v) => (v ? `#${String(v).replace(/^#+/, '')}` : '');
 
 function Tile({ icon: Icon, label, value, sub, head }) {
   return (
-    <div className="overflow-hidden rounded-2xl bg-[#F2FBF4]">
+    <div className="overflow-hidden rounded-2xl bg-[#E5F3F5]">
       <p className={cx('flex items-center justify-center gap-1.5 px-2 py-2 text-[14px] font-bold text-white', head)}>
         <Icon className="h-4 w-4" aria-hidden="true" />
         {label}
@@ -84,7 +84,7 @@ function PickupCard({ b }) {
           {slot ? ` · ${slot}` : ''}
         </span>
         {b.customerMobile ? (
-          <a href={`tel:${b.customerMobile}`} className="inline-flex items-center gap-1 font-semibold text-[#09AD2A] hover:underline">
+          <a href={`tel:${b.customerMobile}`} className="inline-flex items-center gap-1 font-semibold text-[#035C6C] hover:underline">
             <Phone className="h-3.5 w-3.5" aria-hidden="true" />
             {b.customerMobile}
           </a>
@@ -108,7 +108,7 @@ function SectionHead({ title, onViewAll }) {
     <div className="mb-3 flex items-center justify-between gap-3">
       <h2 className="text-[19px] font-extrabold text-[#111111]">{title}</h2>
       {onViewAll ? (
-        <button type="button" onClick={onViewAll} className={cx('text-[15px] font-extrabold text-[#09AD2A] hover:underline', FOCUS_RING)}>
+        <button type="button" onClick={onViewAll} className={cx('text-[15px] font-extrabold text-[#035C6C] hover:underline', FOCUS_RING)}>
           View all
         </button>
       ) : null}
@@ -194,7 +194,7 @@ export default function PickupPersonReportPage() {
           type="button"
           onClick={() => router.back()}
           aria-label="Back"
-          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#EAF8EC] text-[#111111] transition hover:bg-[#DCF2E0]', FOCUS_RING)}
+          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#E5F3F5] text-[#111111] transition hover:bg-[#E5F3F5]', FOCUS_RING)}
         >
           <ArrowLeft className="h-5 w-5" aria-hidden="true" />
         </button>
@@ -206,7 +206,7 @@ export default function PickupPersonReportPage() {
           type="button"
           onClick={() => setReloadKey((k) => k + 1)}
           aria-label="Refresh"
-          className={cx('absolute right-0 flex h-10 w-10 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#09AD2A] transition hover:border-[#09AD2A]', FOCUS_RING)}
+          className={cx('absolute right-0 flex h-10 w-10 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#035C6C] transition hover:border-[#035C6C]', FOCUS_RING)}
         >
           <RefreshCw className={cx('h-4 w-4', loading && 'animate-spin')} aria-hidden="true" />
         </button>
@@ -229,10 +229,10 @@ export default function PickupPersonReportPage() {
           </div>
         </div>
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <Tile icon={Bookmark} label="Assigned" value={n(assigned)} sub="Scheduled" head="bg-[#09AD2A]" />
+          <Tile icon={Bookmark} label="Assigned" value={n(assigned)} sub="Scheduled" head="bg-[#035C6C]" />
           <Tile icon={Car} label="In Progress" value={n(inProgress)} sub="On route" head="bg-[#F59E0B]" />
-          <Tile icon={CheckCheck} label="Completed" value={n(completed, 3)} sub="Delivered" head="bg-[#09AD2A]" />
-          <Tile icon={BarChart3} label="Total" value={n(rows, 3)} sub="Overall" head="bg-[#09AD2A]" />
+          <Tile icon={CheckCheck} label="Completed" value={n(completed, 3)} sub="Delivered" head="bg-[#035C6C]" />
+          <Tile icon={BarChart3} label="Total" value={n(rows, 3)} sub="Overall" head="bg-[#035C6C]" />
         </div>
       </section>
 
@@ -280,7 +280,7 @@ export default function PickupPersonReportPage() {
               className={cx(
                 'rounded-full border px-5 py-2 text-[15px] font-bold transition',
                 FOCUS_RING,
-                filter === f.key ? 'border-transparent bg-[#09AD2A] text-white' : 'border-[#ECECEC] bg-white text-[#475467] hover:border-[#09AD2A]',
+                filter === f.key ? 'border-transparent bg-[#035C6C] text-white' : 'border-[#ECECEC] bg-white text-[#475467] hover:border-[#035C6C]',
               )}
             >
               {f.label}

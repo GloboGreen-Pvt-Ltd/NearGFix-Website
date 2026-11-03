@@ -197,7 +197,7 @@ export default function Sidebar({ onLogout, mobileOpen = false, onCloseMobile })
         </div>
         {!collapsed && (
           <div className="min-w-0">
-            <p className="text-sm font-semibold text-white leading-tight">GGFIX Management Portal</p>
+            <p className="text-sm font-semibold text-white leading-tight">NearGFix Management Portal</p>
             <p className="truncate text-[11px] text-slate-400 leading-tight">GloboGreen · Enterprise</p>
           </div>
         )}

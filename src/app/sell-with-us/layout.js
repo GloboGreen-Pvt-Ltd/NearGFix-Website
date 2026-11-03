@@ -10,7 +10,7 @@ import { pageMetadata } from '@/lib/seo';
 // Inter + Raleway come from a plain Google Fonts stylesheet (below), not
 // next/font/google: next/font downloads the font files at BUILD time and its
 // Next 14 loader crashes ("reading '1'") on Google's current font URLs, which
-// broke the production build. Raleway is used only for the GGFIX logo wordmark
+// broke the production build. Raleway is used only for the NearGFix logo wordmark
 // (.ggfix-logo-text).
 const FONT_VARS = {
   '--font-inter': "'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
@@ -20,10 +20,10 @@ const FONT_VARS = {
 // The seller (shop) homepage — /sell is the separate customer page for selling
 // a used phone. `?login=1` variants canonicalise here.
 export const metadata = pageMetadata({
-  title: 'Sell With Us – Grow Your Device Business | GGFIX',
+  title: 'Sell With Us – Grow Your Device Business | NearGFix',
   absoluteTitle: true,
   description:
-    'List devices, reach more customers, manage orders and grow your repair or device business with GGFIX. Register your shop and start with a free trial.',
+    'List devices, reach more customers, manage orders and grow your repair or device business with NearGFix. Register your shop and start with a free trial.',
   path: '/sell-with-us',
 });
 

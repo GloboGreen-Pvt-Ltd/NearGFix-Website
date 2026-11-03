@@ -68,7 +68,7 @@ export default function BuyDetailsPage() {
           title="Pick an item to view"
           description="Open a device or spare part from Buy to see its details here."
           action={
-            <Link href={BUY_HREF.list} className="inline-flex h-11 items-center rounded-xl bg-[#079455] px-5 text-[14px] font-bold text-white transition hover:bg-[#067647]">
+            <Link href={BUY_HREF.list} className="inline-flex h-11 items-center rounded-xl bg-[#035C6C] px-5 text-[14px] font-bold text-white transition hover:bg-[#024A57]">
               Go to Buy
             </Link>
           }
@@ -158,7 +158,7 @@ export default function BuyDetailsPage() {
                   onClick={() => setPhoto(i)}
                   aria-label={`Show photo ${i + 1} of ${photos.length}`}
                   aria-current={src === shown ? 'true' : undefined}
-                  className={cx('h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 bg-white transition', src === shown ? 'border-[#079455]' : 'border-[#ECECEC] hover:border-[#D0D5DD]')}
+                  className={cx('h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 bg-white transition', src === shown ? 'border-[#035C6C]' : 'border-[#ECECEC] hover:border-[#D0D5DD]')}
                 >
                   <SellThumb src={src} fit="cover" className="h-full w-full" iconClassName="h-5 w-5" />
                 </button>
@@ -172,7 +172,7 @@ export default function BuyDetailsPage() {
             <span
               className={cx(
                 'inline-flex rounded-full px-3 py-1 text-[15px] font-extrabold',
-                quote ? 'bg-[#FEF0C7] text-[#B54708]' : 'bg-[#EAF8EC] text-[#067647]',
+                quote ? 'bg-[#FEF0C7] text-[#B54708]' : 'bg-[#E5F3F5] text-[#024A57]',
               )}
             >
               {quote ? 'Awaiting your quote' : priceOf(item) > 0 ? formatRupees(priceOf(item), 2) : 'Price on request'}
@@ -190,7 +190,7 @@ export default function BuyDetailsPage() {
               label="Location"
               action={
                 map ? (
-                  <a href={map} target="_blank" rel="noopener noreferrer" className="mt-1 flex items-center gap-1 text-[12.5px] font-bold text-[#079455] hover:underline">
+                  <a href={map} target="_blank" rel="noopener noreferrer" className="mt-1 flex items-center gap-1 text-[12.5px] font-bold text-[#035C6C] hover:underline">
                     View on map
                     <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                   </a>
@@ -204,11 +204,11 @@ export default function BuyDetailsPage() {
 
           <div className="flex flex-wrap gap-2">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-[#ECECEC] bg-[#F8F8F8] px-3 py-1.5 text-[12.5px] font-bold text-[#344054]">
-              <RotateCcw className="h-3.5 w-3.5 text-[#079455]" aria-hidden="true" />
+              <RotateCcw className="h-3.5 w-3.5 text-[#035C6C]" aria-hidden="true" />
               15 Days Refund*
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-[#ECECEC] bg-[#F8F8F8] px-3 py-1.5 text-[12.5px] font-bold text-[#344054]">
-              <ShieldCheck className="h-3.5 w-3.5 text-[#079455]" aria-hidden="true" />
+              <ShieldCheck className="h-3.5 w-3.5 text-[#035C6C]" aria-hidden="true" />
               Upto 06 Months Warranty*
             </span>
           </div>

@@ -43,10 +43,10 @@ import JsonLd from '@/components/seo/JsonLd';
 import { organizationSchema, pageMetadata, websiteSchema } from '@/lib/seo';
 
 export const metadata = pageMetadata({
-  title: 'Mobile Repair, Buy & Sell Devices Online | GGFIX',
+  title: 'Mobile Repair, Buy & Sell Devices Online | NearGFix',
   absoluteTitle: true,
   description:
-    'GGFIX offers mobile, tablet, laptop, smartwatch and audio device repair services. Book repairs, buy devices or sell your used gadgets easily.',
+    'NearGFix offers mobile, tablet, laptop, smartwatch and audio device repair services. Book repairs, buy devices or sell your used gadgets easily.',
   path: '/',
 });
 
@@ -79,9 +79,9 @@ const ANCHOR_OFFSET = 'scroll-mt-24 lg:scroll-mt-36';
 const HOME_FAQS = [
   {
     topic: 'Getting started',
-    question: 'Do I need the app, or can I use GGFIX on the website?',
+    question: 'Do I need the app, or can I use NearGFix on the website?',
     answer:
-      'Booking a repair, selling a device and buying from shops all happen in the GGFIX customer app — download it, sign in with your phone number and an OTP, and you are ready. The website lets you browse nearby shops and check your account.',
+      'Booking a repair, selling a device and buying from shops all happen in the NearGFix customer app — download it, sign in with your phone number and an OTP, and you are ready. The website lets you browse nearby shops and check your account.',
   },
   {
     topic: 'Repair',
@@ -158,19 +158,19 @@ export default function HomePage() {
       {/* ---------------------------------------------------------------- */}
       {/* 4. Sell — the differentiator                                     */}
       {/* ---------------------------------------------------------------- */}
-      <Section id="sell" tone="soft" className={cx(ANCHOR_OFFSET, 'bg-gradient-to-b from-[#EAF8EC] via-[#F3FBF4] to-white')}>
+      <Section id="sell" tone="soft" className={cx(ANCHOR_OFFSET, 'bg-gradient-to-b from-[#E5F3F5] via-[#F3FBF4] to-white')}>
         <SectionHeading
-          eyebrow="Sell with the GGFIX app"
+          eyebrow="Sell with the NearGFix app"
           title="Sell your old device the smart way"
-          subtitle="List once, let nearby shops compete, and take the best offer — all from the GGFIX app."
+          subtitle="List once, let nearby shops compete, and take the best offer — all from the NearGFix app."
         />
 
         <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { icon: Store, title: 'Many offers, one listing', body: 'List once — nearby shops each send you their own price.', chip: 'from-[#22C55E] to-[#079455]' },
+            { icon: Store, title: 'Many offers, one listing', body: 'List once — nearby shops each send you their own price.', chip: 'from-[#035C6C] to-[#035C6C]' },
             { icon: TrendingUp, title: 'You get the best price', body: 'Compare the offers side by side and pick the highest.', chip: 'from-[#5EA2FF] to-[#1570EF]' },
             { icon: Clock, title: 'List in minutes', body: 'Guided questions cover condition, faults, accessories and photos.', chip: 'from-[#FDB022] to-[#F79009]' },
-            { icon: ShieldCheck, title: 'Verified shops only', body: 'Offers come from verified GGFIX partner shops near you.', chip: 'from-[#A48AFB] to-[#7F56D9]' },
+            { icon: ShieldCheck, title: 'Verified shops only', body: 'Offers come from verified NearGFix partner shops near you.', chip: 'from-[#A48AFB] to-[#7F56D9]' },
             { icon: Truck, title: 'Doorstep pickup', body: 'Accept an offer and the shop can collect the device from you.', chip: 'from-[#2ED3B7] to-[#0E9384]' },
             { icon: Handshake, title: 'No obligation', body: "Don't like the offers? Simply don't accept — nothing to pay.", chip: 'from-[#FD6F8E] to-[#E31B54]' },
             { icon: BellRing, title: 'Track every offer', body: 'Get notified the moment a shop quotes or updates its offer.', chip: 'from-[#F7B500] to-[#DC6803]' },
@@ -178,7 +178,7 @@ export default function HomePage() {
           ].map((item) => (
             <li
               key={item.title}
-              className="group rounded-3xl border border-[#D6EFDB] bg-white p-6 shadow-[0_6px_20px_rgba(9,173,42,0.06)] transition hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(9,173,42,0.14)]"
+              className="group rounded-3xl border border-[#C7E6EA] bg-white p-6 shadow-[0_6px_20px_rgba(3,92,108,0.06)] transition hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(3,92,108,0.14)]"
             >
               <span className={cx('inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br text-white shadow-md transition group-hover:scale-105', item.chip)}>
                 <item.icon className="h-6 w-6" aria-hidden="true" />
@@ -189,7 +189,7 @@ export default function HomePage() {
           ))}
         </ul>
 
-        <div className="mt-10 flex flex-col items-center justify-between gap-5 rounded-3xl border border-[#BFE5C8] bg-white px-6 py-6 text-center shadow-sm sm:flex-row sm:px-8 sm:text-left">
+        <div className="mt-10 flex flex-col items-center justify-between gap-5 rounded-3xl border border-[#C7E6EA] bg-white px-6 py-6 text-center shadow-sm sm:flex-row sm:px-8 sm:text-left">
           <div>
             <p className="text-lg font-extrabold text-brand-ink">Ready to sell? It takes just a few minutes.</p>
             <p className="mt-1 text-sm text-brand-muted">Describe your device → nearby shops quote → accept the best offer.</p>
@@ -207,14 +207,14 @@ export default function HomePage() {
         <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr] lg:gap-14">
           <div>
             <SectionHeading
-              eyebrow="Buy on GGFIX"
+              eyebrow="Buy on NearGFix"
               title="Quality devices from shops you can trust"
               subtitle="Refurbished phones, laptops, accessories and spare parts — sold by verified repair shops near you, at honest local prices."
               align="left"
             />
             <ul className="mt-8 space-y-3">
               {[
-                'Sold by verified GGFIX repair shops near you',
+                'Sold by verified NearGFix repair shops near you',
                 'Real photos, specs and condition on every listing',
                 'Compare prices from different shops in one place',
                 'Every purchase tracked in My Orders, with the shop a call away',
@@ -239,7 +239,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
             {[
-              { icon: Smartphone, title: 'Refurbished phones', text: 'Tested handsets at a fraction of the price.', tone: 'from-[#E9F9EE] to-[#CFF2DA]', chip: 'from-[#22C55E] to-[#079455]' },
+              { icon: Smartphone, title: 'Refurbished phones', text: 'Tested handsets at a fraction of the price.', tone: 'from-[#E5F3F5] to-[#CFF2DA]', chip: 'from-[#035C6C] to-[#035C6C]' },
               { icon: Laptop, title: 'Laptops & tablets', text: 'Work and study devices, checked by experts.', tone: 'from-[#EEF5FF] to-[#D6E7FF]', chip: 'from-[#5EA2FF] to-[#1570EF]' },
               { icon: Headphones, title: 'Accessories', text: 'Chargers, cables, cases, earbuds and more.', tone: 'from-[#FFF6EA] to-[#FFE3BF]', chip: 'from-[#FDB022] to-[#F79009]' },
               { icon: Wrench, title: 'Spare parts', text: 'Screens, batteries and parts for DIY fixes.', tone: 'from-[#F5EFFF] to-[#E4D6FF]', chip: 'from-[#A48AFB] to-[#7F56D9]' },
@@ -301,7 +301,7 @@ export default function HomePage() {
 
             <ul className="mt-8 grid gap-4 sm:grid-cols-2">
               {[
-                { icon: BellRing, title: 'Live status updates', body: 'Get notified at every step — from accepted to ready for pickup.', chip: 'from-[#22C55E] to-[#079455]' },
+                { icon: BellRing, title: 'Live status updates', body: 'Get notified at every step — from accepted to ready for pickup.', chip: 'from-[#035C6C] to-[#035C6C]' },
                 { icon: BadgeCheck, title: 'Approve the price first', body: 'The shop quotes, you approve. No work starts on a surprise bill.', chip: 'from-[#5EA2FF] to-[#1570EF]' },
                 { icon: Receipt, title: 'Receipts & invoices', body: 'Digital receipt and invoice saved with every order.', chip: 'from-[#FDB022] to-[#F79009]' },
                 { icon: Phone, title: 'Talk to the shop', body: 'Call or message the shop handling your device anytime.', chip: 'from-[#A48AFB] to-[#7F56D9]' },
@@ -341,7 +341,7 @@ export default function HomePage() {
       <Section id="faq" tone="page" className={ANCHOR_OFFSET}>
         <SectionHeading
           eyebrow="Questions"
-          title="New to GGFIX? Start here"
+          title="New to NearGFix? Start here"
           subtitle="Quick answers to what first-time customers want to know before they book, sell or buy."
         />
 
@@ -385,19 +385,19 @@ export default function HomePage() {
       <Section tone="white">
         <div className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-brand-600 via-brand-700 to-brand-800 px-6 py-10 text-white shadow-lift sm:px-10 sm:py-12 lg:px-14">
           <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-white/10 blur-2xl" aria-hidden="true" />
-          <div className="pointer-events-none absolute -bottom-28 -left-16 h-72 w-72 rounded-full bg-[#9BF2AE]/10 blur-2xl" aria-hidden="true" />
+          <div className="pointer-events-none absolute -bottom-28 -left-16 h-72 w-72 rounded-full bg-[#C7E6EA]/10 blur-2xl" aria-hidden="true" />
 
           <div className="relative grid items-center gap-10 lg:grid-cols-[1.2fr_1fr]">
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-[#C9F7D3]">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-[#9BF2AE]" aria-hidden="true" />
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-[#C7E6EA]">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-[#C7E6EA]" aria-hidden="true" />
                 {BRAND.appsStatus}
               </span>
               <h2 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
                 Repair, sell and buy — all from one app
               </h2>
               <p className="mt-3 max-w-xl text-base leading-relaxed text-white/80">
-                The GGFIX customer app is almost here. Be the first to know when it launches and book your first repair in a few taps.
+                The NearGFix customer app is almost here. Be the first to know when it launches and book your first repair in a few taps.
               </p>
               <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
                 {['Doorstep pickup from nearby shops', 'Approve the price before work starts', 'Live tracking for every order', 'Best offers when you sell'].map((point) => (
@@ -418,12 +418,12 @@ export default function HomePage() {
 
             <div className="space-y-4">
               <div className="rounded-3xl border border-white/15 bg-white/10 p-5 backdrop-blur-sm">
-                <p className="text-sm font-bold text-white">Get the GGFIX app</p>
+                <p className="text-sm font-bold text-white">Get the NearGFix app</p>
                 <StoreBadges tone="dark" align="left" caption="" className="mt-3" />
               </div>
               <div className="rounded-3xl bg-white p-5 text-brand-ink shadow-soft">
                 <div className="flex items-start gap-3">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#22C55E] to-[#079455] text-white">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#035C6C] to-[#035C6C] text-white">
                     <Store className="h-5 w-5" aria-hidden="true" />
                   </span>
                   <div>
@@ -435,7 +435,7 @@ export default function HomePage() {
                   href={CTA.forShops.href}
                   className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 hover:underline"
                 >
-                  Explore GGFIX for shops
+                  Explore NearGFix for shops
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
               </div>

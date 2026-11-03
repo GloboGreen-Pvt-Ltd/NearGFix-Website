@@ -59,9 +59,9 @@ import {
 
 const INBOX_POLL_MS = 7000;
 const THREAD_POLL_MS = 5000;
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
 const CARD = 'rounded-[22px] border border-[#ECECEC] bg-[#F8F8F8]';
-const OUT_BUBBLE = 'bg-[#09AD2A] text-white';
+const OUT_BUBBLE = 'bg-[#035C6C] text-white';
 const EMOJIS = ['😀', '😊', '😂', '😍', '👍', '🙏', '👌', '🙂', '😉', '😅', '🤝', '👏', '✅', '❤️', '🔧', '📱', '💻', '⌚', '🎧', '📦', '🚚', '⏰', '💰', '❓'];
 
 function clockTime(iso) {
@@ -126,9 +126,9 @@ function Avatar({ url, name, online, size = 'h-11 w-11' }) {
         // eslint-disable-next-line @next/next/no-img-element -- avatar URLs are arbitrary media URLs.
         <img src={src} alt="" onError={() => setBroken(true)} className="h-full w-full rounded-full object-cover" />
       ) : (
-        <span className="flex h-full w-full items-center justify-center rounded-full bg-[#E7F7EA] text-[15px] font-bold text-[#0B6B3A]">{initials(name)}</span>
+        <span className="flex h-full w-full items-center justify-center rounded-full bg-[#E7F7EA] text-[15px] font-bold text-[#024A57]">{initials(name)}</span>
       )}
-      {online ? <span className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-[#09AD2A]" aria-label="online" /> : null}
+      {online ? <span className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-[#035C6C]" aria-label="online" /> : null}
     </span>
   );
 }
@@ -148,7 +148,7 @@ function EmptyState({ icon: Icon, title, text }) {
 export default function EnquiriesPage() {
   return (
     <div className="w-full space-y-5">
-      <PageHeader title="Enquiry" subtitle="Chat with customers who message your shop from the GGFIX app." />
+      <PageHeader title="Enquiry" subtitle="Chat with customers who message your shop from the NearGFix app." />
       <Messages />
     </div>
   );
@@ -221,7 +221,7 @@ function Messages() {
             <MessageCircle className="h-4 w-4 text-[#111111]/70" aria-hidden="true" />
             {loading ? 'Loading…' : `${threads.length} ${threads.length === 1 ? 'chat' : 'chats'}${totalUnread ? ` · ${totalUnread} unread` : ''}`}
           </p>
-          <label className="mt-3 flex h-11 items-center gap-2.5 rounded-full border border-[#ECECEC] bg-white px-4 focus-within:border-[#09AD2A]">
+          <label className="mt-3 flex h-11 items-center gap-2.5 rounded-full border border-[#ECECEC] bg-white px-4 focus-within:border-[#035C6C]">
             <Search className="h-4 w-4 shrink-0 text-[#111111]/60" aria-hidden="true" />
             <input
               type="search"
@@ -276,14 +276,14 @@ function Messages() {
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center gap-2">
                           <span className="min-w-0 flex-1 truncate text-[14.5px] font-semibold text-[#111111]">{t.counterpartName || 'Customer'}</span>
-                          <span className={cx('shrink-0 text-[11px] font-medium', unread ? 'text-[#09AD2A]' : 'text-[#98A2B3]')}>{shortTime(t.lastMessageAt)}</span>
+                          <span className={cx('shrink-0 text-[11px] font-medium', unread ? 'text-[#035C6C]' : 'text-[#98A2B3]')}>{shortTime(t.lastMessageAt)}</span>
                         </span>
                         <span className="mt-0.5 flex items-center gap-2">
-                          <span className={cx('min-w-0 flex-1 truncate text-[13px]', typing ? 'italic text-[#09AD2A]' : unread ? 'font-semibold text-[#111111]' : 'text-[#666666]')}>
+                          <span className={cx('min-w-0 flex-1 truncate text-[13px]', typing ? 'italic text-[#035C6C]' : unread ? 'font-semibold text-[#111111]' : 'text-[#666666]')}>
                             {typing ? 'typing…' : t.lastMessagePreview || 'Tap to start the conversation'}
                           </span>
                           {unread ? (
-                            <span className="flex h-5 min-w-[20px] shrink-0 items-center justify-center rounded-full bg-[#09AD2A] px-1.5 text-[10.5px] font-bold text-white">
+                            <span className="flex h-5 min-w-[20px] shrink-0 items-center justify-center rounded-full bg-[#035C6C] px-1.5 text-[10.5px] font-bold text-white">
                               {unread > 99 ? '99+' : unread}
                             </span>
                           ) : null}
@@ -497,14 +497,14 @@ function ChatThread({ threadId, summary, onBack, onSent }) {
         <Avatar url={head?.counterpartAvatarUrl} name={name} online={head?.counterpartOnline} size="h-12 w-12" />
         <div className="min-w-0 flex-1">
           <p className="truncate text-[17px] font-bold text-[#111111]">{name}</p>
-          <p className={cx('truncate text-[13px]', head?.counterpartTyping ? 'italic text-[#09AD2A]' : 'text-[#666666]')}>{status || phoneLabel(head?.counterpartPhone) || ' '}</p>
+          <p className={cx('truncate text-[13px]', head?.counterpartTyping ? 'italic text-[#035C6C]' : 'text-[#666666]')}>{status || phoneLabel(head?.counterpartPhone) || ' '}</p>
         </div>
         {head?.counterpartPhone ? (
           <a
             href={`tel:${String(head.counterpartPhone).replace(/[^\d+]/g, '')}`}
             aria-label={`Call ${name}`}
             title={phoneLabel(head.counterpartPhone)}
-            className={cx('flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#E7F7EA] text-[#09AD2A] transition hover:bg-[#DCF3E1]', FOCUS_RING)}
+            className={cx('flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#E7F7EA] text-[#035C6C] transition hover:bg-[#DCF3E1]', FOCUS_RING)}
           >
             <Phone className="h-5 w-5" aria-hidden="true" />
           </a>
@@ -518,13 +518,13 @@ function ChatThread({ threadId, summary, onBack, onSent }) {
             title="Messages travel over an encrypted HTTPS connection. They are not end-to-end encrypted."
             className="inline-flex cursor-help items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white px-3.5 py-1.5 text-[12.5px] text-[#666666]"
           >
-            <ShieldCheck className="h-3.5 w-3.5 text-[#09AD2A]" aria-hidden="true" />
+            <ShieldCheck className="h-3.5 w-3.5 text-[#035C6C]" aria-hidden="true" />
             Encrypted via ggfix · Customer chat
           </span>
         </p>
         {loading ? (
           <div className="flex justify-center pt-10">
-            <Loader2 className="h-6 w-6 animate-spin text-[#09AD2A]" aria-hidden="true" />
+            <Loader2 className="h-6 w-6 animate-spin text-[#035C6C]" aria-hidden="true" />
           </div>
         ) : error && !messages.length ? (
           <ErrorBanner message={error} onRetry={refresh} />
@@ -576,7 +576,7 @@ function ChatThread({ threadId, summary, onBack, onSent }) {
               </button>
             </div>
           ) : (
-            <div className="flex h-[52px] min-w-0 flex-1 items-center gap-1 rounded-full border border-[#ECECEC] bg-white pl-2 pr-2 focus-within:border-[#09AD2A]">
+            <div className="flex h-[52px] min-w-0 flex-1 items-center gap-1 rounded-full border border-[#ECECEC] bg-white pl-2 pr-2 focus-within:border-[#035C6C]">
               <button type="button" onClick={() => fileRef.current?.click()} disabled={sending} aria-label="Attach a file" title="Attach photo or PDF" className={iconBtn}>
                 <Paperclip className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -655,7 +655,7 @@ function Bubble({ m }) {
           <audio controls src={url} className="mb-1 max-w-full" />
         ) : null}
         {url && type !== 'IMAGE' && type !== 'AUDIO' ? (
-          <a href={url} target="_blank" rel="noreferrer" className={cx('mb-1 flex items-center gap-1.5 font-semibold underline', mine ? 'text-white' : 'text-[#09AD2A]')}>
+          <a href={url} target="_blank" rel="noreferrer" className={cx('mb-1 flex items-center gap-1.5 font-semibold underline', mine ? 'text-white' : 'text-[#035C6C]')}>
             <FileText className="h-4 w-4" aria-hidden="true" />
             Attachment
           </a>

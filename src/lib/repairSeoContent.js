@@ -3,7 +3,7 @@
  * brand pages). Keyed by the master-data device-category CODE.
  *
  * Rules this copy follows — keep them when editing:
- *   - Only describe what the platform really does: GGFIX connects customers to
+ *   - Only describe what the platform really does: NearGFix connects customers to
  *     partner repair shops within 20 km; pickup is offered by pickup-enabled
  *     shops; the shop quotes and the customer approves before work starts;
  *     progress is tracked live. Each shop sets its own prices and parts.
@@ -15,7 +15,7 @@
  * here — they come from master data at build time (src/lib/repairCatalog.js).
  */
 
-/** The real GGFIX repair journey, shared by every category page. */
+/** The real NearGFix repair journey, shared by every category page. */
 export const REPAIR_STEPS = [
   {
     title: 'Choose your device',
@@ -31,7 +31,7 @@ export const REPAIR_STEPS = [
   {
     title: 'Pick a nearby shop',
     description:
-      'Compare GGFIX partner shops within 20 km. Book a doorstep pickup with a pickup-enabled shop, or take the device in yourself.',
+      'Compare NearGFix partner shops within 20 km. Book a doorstep pickup with a pickup-enabled shop, or take the device in yourself.',
     icon: 'Store',
   },
   {
@@ -55,9 +55,9 @@ export const REPAIR_CATEGORY_CONTENT = {
     h1: 'Mobile Phone Repair Services',
     metaTitle: 'Mobile Phone Repair Near You – Screen & Battery',
     metaDescription:
-      'Get your mobile phone repaired by a GGFIX partner shop near you — screen and battery replacement, charging port, camera, water damage and more.',
+      'Get your mobile phone repaired by a NearGFix partner shop near you — screen and battery replacement, charging port, camera, water damage and more.',
     intro: [
-      'A cracked screen, a battery that dies by lunchtime or a phone that will not charge can stop your day. GGFIX connects you with verified repair shops within 20 km so you can get your smartphone fixed without guessing where to go.',
+      'A cracked screen, a battery that dies by lunchtime or a phone that will not charge can stop your day. NearGFix connects you with verified repair shops within 20 km so you can get your smartphone fixed without guessing where to go.',
       'Choose your phone model, pick the problem, and compare nearby shops. Many offer doorstep pickup, and you approve the price before any work begins — whether it is an iPhone, a Samsung Galaxy or a Vivo, Oppo, Xiaomi, Realme or OnePlus handset.',
     ],
     issues: [
@@ -78,7 +78,7 @@ export const REPAIR_CATEGORY_CONTENT = {
       { title: 'Performance issues', text: 'Lag, freezing or storage that is always full. A shop can check for hardware faults and help with software clean-up where it applies.' },
     ],
     faqs: [
-      { question: 'How much does a mobile screen replacement cost?', answer: 'It depends on your phone model and the replacement part the shop uses. Each GGFIX partner shop sets its own price, and you see the quote and approve it before any work starts.' },
+      { question: 'How much does a mobile screen replacement cost?', answer: 'It depends on your phone model and the replacement part the shop uses. Each NearGFix partner shop sets its own price, and you see the quote and approve it before any work starts.' },
       { question: 'Can my phone be repaired without visiting the shop?', answer: 'Yes, if you choose a pickup-enabled shop. Confirm your address and a time slot, and the shop collects the phone and delivers it back after the repair.' },
       { question: 'Will I lose my data during the repair?', answer: 'Hardware repairs such as a screen, battery or charging port do not normally touch your data, but back up your phone first if you can. Software repairs can require a reset — the shop will tell you before doing it.' },
       { question: 'I do not know what is wrong with my phone. Can I still get help?', answer: 'Yes. Send an enquiry describing the problem and nearby shops can respond. You can message them before deciding on a repair.' },
@@ -93,9 +93,9 @@ export const REPAIR_CATEGORY_CONTENT = {
     h1: 'Tablet Repair Services',
     metaTitle: 'Tablet Repair Services Near You – iPad & Android',
     metaDescription:
-      'Find tablet repair near you with GGFIX — iPad and Android tablet screen, battery, charging port and software repairs by verified partner shops.',
+      'Find tablet repair near you with NearGFix — iPad and Android tablet screen, battery, charging port and software repairs by verified partner shops.',
     intro: [
-      'Tablets do a lot of work — online classes, video calls, streaming and office documents — so a broken screen or a battery that will not hold charge is a real problem. GGFIX helps you find a verified repair shop near you for iPads and Android tablets from Samsung, Lenovo, Xiaomi, Realme and more.',
+      'Tablets do a lot of work — online classes, video calls, streaming and office documents — so a broken screen or a battery that will not hold charge is a real problem. NearGFix helps you find a verified repair shop near you for iPads and Android tablets from Samsung, Lenovo, Xiaomi, Realme and more.',
       'Pick your tablet model and the fault, compare nearby partner shops, and book a doorstep pickup where the shop offers it. You approve the quote before the repair starts and can follow its progress live.',
     ],
     issues: [
@@ -109,7 +109,7 @@ export const REPAIR_CATEGORY_CONTENT = {
       { title: 'Wi-Fi and connectivity', text: 'Wi-Fi or Bluetooth that keeps dropping, or a SIM tablet that will not find a network.' },
     ],
     faqs: [
-      { question: 'Can you repair an iPad as well as Android tablets?', answer: 'GGFIX lists Apple iPads alongside Android brands such as Samsung, Lenovo and Xiaomi. Choose your exact model and you will see the shops near you that can take the repair.' },
+      { question: 'Can you repair an iPad as well as Android tablets?', answer: 'NearGFix lists Apple iPads alongside Android brands such as Samsung, Lenovo and Xiaomi. Choose your exact model and you will see the shops near you that can take the repair.' },
       { question: 'How long does a tablet repair take?', answer: 'It depends on the fault and on whether the shop has the part in stock. The shop gives you an estimate with the quote, and you can track every stage in the app.' },
       { question: 'Is it worth repairing an old tablet?', answer: 'Often yes — a new battery or screen costs far less than a new tablet. You see the shop’s price before agreeing, so you can decide whether the repair makes sense.' },
     ],
@@ -123,9 +123,9 @@ export const REPAIR_CATEGORY_CONTENT = {
     h1: 'Laptop Repair Services',
     metaTitle: 'Laptop Repair Services Near You – Screen & Battery',
     metaDescription:
-      'Laptop repair near you with GGFIX — screen, keyboard, battery, charging, hinge, overheating and software repairs for HP, Dell, Lenovo, Apple and more.',
+      'Laptop repair near you with NearGFix — screen, keyboard, battery, charging, hinge, overheating and software repairs for HP, Dell, Lenovo, Apple and more.',
     intro: [
-      'When your laptop stops working, so does your work or study. GGFIX helps you find a verified laptop repair shop within 20 km for brands such as HP, Dell, Lenovo, Asus, Acer and Apple MacBook.',
+      'When your laptop stops working, so does your work or study. NearGFix helps you find a verified laptop repair shop within 20 km for brands such as HP, Dell, Lenovo, Asus, Acer and Apple MacBook.',
       'Choose your laptop model and the problem, compare nearby partner shops, and approve the quote before work begins. Where the shop offers pickup, it can collect the laptop from your door.',
     ],
     issues: [
@@ -139,7 +139,7 @@ export const REPAIR_CATEGORY_CONTENT = {
       { title: 'Software, virus and OS issues', text: 'Blue screens, a laptop stuck on boot, malware or a corrupted operating system. Data backup and recovery can be discussed with the shop first.' },
     ],
     faqs: [
-      { question: 'Do you repair MacBooks?', answer: 'Apple is among the laptop brands listed on GGFIX. Select your MacBook model to see the repairs available and the partner shops near you.' },
+      { question: 'Do you repair MacBooks?', answer: 'Apple is among the laptop brands listed on NearGFix. Select your MacBook model to see the repairs available and the partner shops near you.' },
       { question: 'Can a shop recover data from a laptop that will not start?', answer: 'Many faults leave the drive intact. Data backup and recovery are listed repair options — describe the problem and the shop will tell you what is possible before you approve anything.' },
       { question: 'Should I repair or upgrade my slow laptop?', answer: 'An SSD or a RAM upgrade often fixes slowness for much less than a new laptop. The shop can check whether your model supports it and quote before doing the work.' },
     ],
@@ -153,9 +153,9 @@ export const REPAIR_CATEGORY_CONTENT = {
     h1: 'Smartwatch Repair Services',
     metaTitle: 'Smartwatch Repair Services Near You',
     metaDescription:
-      'Smartwatch repair near you with GGFIX — screen, battery, charging, strap, sensor and button repairs for Apple Watch, Samsung, Amazfit, boAt, Noise and more.',
+      'Smartwatch repair near you with NearGFix — screen, battery, charging, strap, sensor and button repairs for Apple Watch, Samsung, Amazfit, boAt, Noise and more.',
     intro: [
-      'Smartwatches take knocks every day, and a cracked screen or a battery that will not last the day makes them hard to rely on. GGFIX connects you with partner shops near you that repair watches from Apple, Samsung, Amazfit, boAt, Noise, OnePlus and other brands.',
+      'Smartwatches take knocks every day, and a cracked screen or a battery that will not last the day makes them hard to rely on. NearGFix connects you with partner shops near you that repair watches from Apple, Samsung, Amazfit, boAt, Noise, OnePlus and other brands.',
       'Pick your watch model and the problem, compare shops within 20 km, and approve the price before the repair starts.',
     ],
     issues: [
@@ -183,9 +183,9 @@ export const REPAIR_CATEGORY_CONTENT = {
     h1: 'Earbuds, Headphone & Speaker Repair',
     metaTitle: 'Earbuds, Headphone & Speaker Repair Near You',
     metaDescription:
-      'Repair earbuds, headphones and Bluetooth speakers near you with GGFIX — battery, charging case, sound, Bluetooth and button repairs by partner shops.',
+      'Repair earbuds, headphones and Bluetooth speakers near you with NearGFix — battery, charging case, sound, Bluetooth and button repairs by partner shops.',
     intro: [
-      'Wireless earbuds, headphones and Bluetooth speakers are easy to drop and hard to live without. GGFIX helps you find partner shops near you that repair audio devices from Apple, boAt, JBL, Sony, OnePlus, Noise, Realme and more.',
+      'Wireless earbuds, headphones and Bluetooth speakers are easy to drop and hard to live without. NearGFix helps you find partner shops near you that repair audio devices from Apple, boAt, JBL, Sony, OnePlus, Noise, Realme and more.',
       'Choose your device and the fault, compare shops within 20 km, and approve the quote before anything is opened up.',
     ],
     issues: [

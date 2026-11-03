@@ -61,7 +61,7 @@ const DEFAULT_COLORS = [
 
 const COLOR_SWATCHES = {
   black: '#0f172a', white: '#f8fafc', silver: '#cbd5e1', gold: '#f5d785', rose: '#fbcfe8',
-  blue: '#3b82f6', red: '#ef4444', green: '#10b981', purple: '#a855f7', pink: '#ec4899',
+  blue: '#3b82f6', red: '#ef4444', green: '#035C6C', purple: '#a855f7', pink: '#ec4899',
   graphite: '#4b5563', midnight: '#1e1b4b', starlight: '#faf7f0', alpine: '#3f4754',
 };
 

@@ -115,10 +115,23 @@ export const SERVICE_PHASES = [
  * matching event. Phases with no matching steps at all (e.g. Cancelled, when
  * the booking wasn't) are left out entirely.
  */
+// Second keys for a step the app shows once — listed only when they carry an event.
+const ALIAS_STEPS = { PICKUP_ASSIGNED: 'PICKUP_PERSON_ASSIGNED', PICKED_UP: 'DEVICE_PICKED_UP' };
+
 export function buildTimelineGroups(booking) {
-  const steps = buildTimelineSteps(booking);
+  const all = buildTimelineSteps(booking);
+  const byKey = new Map(all.map((s) => [s.key, s]));
+  const steps = all.filter((s) => {
+    const primary = ALIAS_STEPS[s.key];
+    if (!primary) return true;
+    return s.done && !byKey.get(primary)?.done;
+  });
+  // A walk-in (shop-created) booking never has a pickup leg — as in the app, it starts at "Booking Created by Shop".
+  const hasPickup = steps.some((s) => s.done && SERVICE_PHASES[0].steps.includes(s.key));
+  const shopCreated = Boolean(byKey.get('BOOKING_CREATED_BY_SHOP')?.done);
   const stepByKey = new Map(steps.map((s) => [s.key, s]));
   return SERVICE_PHASES.map((phase) => {
+    if (phase.key === 'PICKUP' && shopCreated && !hasPickup) return null;
     const groupSteps = phase.steps.map((key) => stepByKey.get(key)).filter(Boolean);
     if (!groupSteps.length) return null;
     const doneCount = groupSteps.filter((s) => s.done).length;

@@ -6,9 +6,9 @@ import { INDEXING_ENABLED, SITE_NAME, SITE_URL } from '@/lib/seo';
 export const metadata = {
   // Resolves every relative canonical / og:url / og:image to the production origin.
   metadataBase: new URL(SITE_URL),
-  title: 'GGFIX — Repair · Buy · Sell',
+  title: 'NearGFix — Repair · Buy · Sell',
   description:
-    'GGFIX by GloboGreen — book a mobile repair, get doorstep pickup, sell or buy a device, and run your repair shop end to end.',
+    'NearGFix by GloboGreen — book a mobile repair, get doorstep pickup, sell or buy a device, and run your repair shop end to end.',
   applicationName: SITE_NAME,
   icons: { icon: '/logo.png', apple: '/logo.png' },
   // Indexable by default; dev/preview builds set NEXT_PUBLIC_ALLOW_INDEXING=false.
@@ -25,7 +25,7 @@ export const metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#16A34A',
+  themeColor: '#035C6C',
   // This app is light-themed only — no dark-mode stylesheet exists anywhere.
   // Without this, a device in dark mode (Android especially) has the
   // browser auto-dark-theme native form controls and can shift light

@@ -33,7 +33,7 @@ import MonthSwitcher, { shiftMonth } from '@/components/shop-dashboard/MonthSwit
 import { fetchTechnicians, fetchTicketsPaged } from '@/lib/shopDashboard';
 import { downloadReportPdf } from '@/lib/reportPdf';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 
 function initials(name) {
   const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
@@ -118,7 +118,7 @@ export default function EmployeeReportPage() {
     try {
       await downloadReportPdf({
         title: 'Employee Report',
-        subtitle: `${new Date(viewDate).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })} — GGFIX Partner Dashboard`,
+        subtitle: `${new Date(viewDate).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })} — NearGFix Partner Dashboard`,
         stats: monthStats.map((s) => ({ label: s.label, value: s.value })),
         notes: ['Attendance, leave, and broader productivity metrics are not tracked by this backend — completed-task counts only.'],
         columns: [
@@ -146,7 +146,7 @@ export default function EmployeeReportPage() {
               type="button"
               onClick={() => setReloadKey((k) => k + 1)}
               className={cx(
-                'inline-flex items-center gap-1.5 rounded-xl border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#344054] transition hover:border-[#15803D] hover:text-[#15803D]',
+                'inline-flex items-center gap-1.5 rounded-xl border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#344054] transition hover:border-[#024A57] hover:text-[#024A57]',
                 FOCUS_RING,
               )}
             >
@@ -184,7 +184,7 @@ export default function EmployeeReportPage() {
         )}
       </div>
 
-      <p className="flex items-start gap-1.5 rounded-xl bg-[#F8F8F8] px-3.5 py-2.5 text-xs text-[#15803D]">
+      <p className="flex items-start gap-1.5 rounded-xl bg-[#F8F8F8] px-3.5 py-2.5 text-xs text-[#024A57]">
         <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
         Attendance and leave aren&apos;t tracked here — see{' '}
         <Link href="/shop-home/employee/attendance" className="font-bold underline">Attendance</Link> and{' '}
@@ -202,7 +202,7 @@ export default function EmployeeReportPage() {
             <div className="divide-y divide-[#ECECEC]">
               {roster.map((r) => (
                 <div key={r.id} className="flex items-center gap-3 px-4 py-3.5 sm:px-5">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-sm font-bold text-[#15803D]">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-sm font-bold text-[#024A57]">
                     {initials(r.name)}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -210,7 +210,7 @@ export default function EmployeeReportPage() {
                     <p className="truncate text-xs text-[#666666]">{r.roleLabel}</p>
                   </div>
                   <div className="flex shrink-0 flex-col items-end gap-1 sm:contents">
-                    <span className={cx('shrink-0 rounded-full px-2.5 py-1 text-[0.68rem] font-bold uppercase tracking-wide', r.active ? 'bg-[#F3F3F3] text-[#15803D]' : 'bg-[#F3F3F3] text-[#666666]')}>
+                    <span className={cx('shrink-0 rounded-full px-2.5 py-1 text-[0.68rem] font-bold uppercase tracking-wide', r.active ? 'bg-[#F3F3F3] text-[#024A57]' : 'bg-[#F3F3F3] text-[#666666]')}>
                       {r.active ? 'Active' : 'Inactive'}
                     </span>
                     <span className="shrink-0 text-xs text-[#666666]">

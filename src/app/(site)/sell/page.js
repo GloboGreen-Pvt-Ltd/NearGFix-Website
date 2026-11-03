@@ -7,14 +7,14 @@ import { pageMetadata, serviceSchema } from '@/lib/seo';
 
 /**
  * /sell — landing page for customers selling a used phone or other device.
- * The selling itself happens in the GGFIX customer app; this page explains how
+ * The selling itself happens in the NearGFix customer app; this page explains how
  * it works, using the same SELL_STEPS the app's flow is built from. Linked
  * from the footer and the repair pages; the header's "Sell Device" item still
  * scrolls to the home page section, unchanged.
  */
 
 const DESCRIPTION =
-  'Sell your old mobile, tablet or laptop on GGFIX. List it once, get price offers from verified shops near you, compare them and accept the best one.';
+  'Sell your old mobile, tablet or laptop on NearGFix. List it once, get price offers from verified shops near you, compare them and accept the best one.';
 
 export const metadata = pageMetadata({
   title: 'Sell Your Used Mobile Phone Online',
@@ -38,10 +38,10 @@ const BEFORE_YOU_SELL = [
 ];
 
 const SELL_FAQS = [
-  { question: 'How do I get the best price for my old phone?', answer: 'List it once in the GGFIX Sell flow and several nearby shops send you their own quotations. Compare them side by side and accept the one you like — or none of them.' },
+  { question: 'How do I get the best price for my old phone?', answer: 'List it once in the NearGFix Sell flow and several nearby shops send you their own quotations. Compare them side by side and accept the one you like — or none of them.' },
   { question: 'Do I have to accept an offer?', answer: 'No. If none of the quotations work for you, simply do not accept one. There is nothing to pay for listing your device.' },
   { question: 'Can I sell a phone that does not switch on?', answer: 'Yes. The Sell flow asks whether the device works at all, so shops can quote for dead or damaged devices too — the offer will reflect its condition.' },
-  { question: 'Who buys my device?', answer: 'Verified GGFIX partner shops near you. Each shop that is interested sends its own offer, and you choose which one to accept.' },
+  { question: 'Who buys my device?', answer: 'Verified NearGFix partner shops near you. Each shop that is interested sends its own offer, and you choose which one to accept.' },
 ];
 
 export default function SellPage() {
@@ -62,12 +62,12 @@ export default function SellPage() {
 
       <Section tone="white" padding="tight">
         <div className="max-w-3xl">
-          <Badge icon="Handshake">Sell on GGFIX</Badge>
+          <Badge icon="Handshake">Sell on NearGFix</Badge>
           <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-brand-ink sm:text-4xl lg:text-5xl">
             Sell Your Old Phone for the Best Price
           </h1>
           <p className="mt-4 text-base leading-relaxed text-brand-muted sm:text-lg">
-            Selling a used mobile usually means accepting one take-it-or-leave-it number. On GGFIX you describe your
+            Selling a used mobile usually means accepting one take-it-or-leave-it number. On NearGFix you describe your
             phone, tablet or laptop once, and verified repair shops near you send their own offers. You compare them
             and accept the best — and the shop can collect the device from your door.
           </p>

@@ -7,7 +7,7 @@
  * makes), each with its real logo. A brand opens step 3, Select Model, with
  * the category and brand carried in the URL.
  *
- * Without ?category= this is the Sell on GGFIX home instead (SellHome:
+ * Without ?category= this is the Sell on NearGFix home instead (SellHome:
  * category menu, Sell banner, benefits and the shop's own listings), which is
  * what the sidebar's Sell item and the dashboard's Sell card open. A category
  * there comes back to this page with ?category=.
@@ -68,7 +68,7 @@ export default function SelectBrandPage() {
   if (code === '') {
     return (
       <div className="-m-4 min-h-full bg-white sm:-m-6">
-        <SellStepHeader title="Sell on GGFIX" subtitle="List your device. Reach verified buyers nearby." />
+        <SellStepHeader title="Sell on NearGFix" subtitle="List your device. Reach verified buyers nearby." />
         <SellHome />
       </div>
     );

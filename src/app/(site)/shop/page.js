@@ -49,7 +49,7 @@ import { pageMetadata } from '@/lib/seo';
 export const metadata = pageMetadata({
   title: 'Mobile Repair Shop Management Software',
   description:
-    'Run your repair shop on GGFIX: bookings with IMEI and QR intake, technicians, staff attendance, doorstep pickup, invoices and multi-shop control. Free trial.',
+    'Run your repair shop on NearGFix: bookings with IMEI and QR intake, technicians, staff attendance, doorstep pickup, invoices and multi-shop control. Free trial.',
   path: '/shop',
 });
 
@@ -82,7 +82,7 @@ const TRIAL_POINTS = [
     icon: IndianRupee,
     title: '₹0, and no card required',
     description:
-      'There is no payment gateway on GGFIX at all. You will never be asked for card details to begin, and nothing auto-charges when the trial ends.',
+      'There is no payment gateway on NearGFix at all. You will never be asked for card details to begin, and nothing auto-charges when the trial ends.',
   },
   {
     icon: BadgeCheck,
@@ -234,7 +234,7 @@ export default function ShopPage() {
               title={
                 <>
                   Run your repair shop on{' '}
-                  <span className="text-brand-600">GGFIX</span>
+                  <span className="text-brand-600">NearGFix</span>
                 </>
               }
               subtitle="A multi-tenant SaaS for mobile repair shops — Shopify-like, but built around repairs. Bookings, technicians, employees, doorstep pickup, inventory and invoicing in one app, with a customer app on the other side of every job."
@@ -415,7 +415,7 @@ export default function ShopPage() {
         <SectionHeading
           eyebrow="Everything in one app"
           title="The whole shop, not just a booking form"
-          subtitle="Twelve capability groups shipping in the GGFIX shop app today — from the counter to the payroll report at the end of the month."
+          subtitle="Twelve capability groups shipping in the NearGFix shop app today — from the counter to the payroll report at the end of the month."
         />
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -439,7 +439,7 @@ export default function ShopPage() {
           inverted
           eyebrow="The booking pipeline"
           title="Six statuses. Everyone sees the same one."
-          subtitle="A GGFIX ticket moves through a fixed lifecycle. Your technician updates it, your customer watches it move in their app, and your dashboard counts it — so nobody has to ring the shop to ask where the phone is."
+          subtitle="A NearGFix ticket moves through a fixed lifecycle. Your technician updates it, your customer watches it move in their app, and your dashboard counts it — so nobody has to ring the shop to ask where the phone is."
         />
 
         <ol className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
@@ -493,7 +493,7 @@ export default function ShopPage() {
               </div>
               <h3 className="mt-4 text-lg font-bold text-brand-ink">Identify the device by scan</h3>
               <p className="mt-2 text-sm leading-relaxed text-brand-ink/80">
-                Scan the IMEI or a QR code and GGFIX looks the handset up against its master device
+                Scan the IMEI or a QR code and NearGFix looks the handset up against its master device
                 catalogue, then selects the brand and model for you. No model numbers typed at the
                 counter, no wrong variant on the ticket. If the lookup cannot find it, the manual
                 picker takes over — the booking never gets stuck.
@@ -533,7 +533,7 @@ export default function ShopPage() {
         <SectionHeading
           eyebrow="More than walk-ins"
           title="Work that comes to you"
-          subtitle="A GGFIX shop is listed in the customer app. Repairs, doorstep pickups and sell quotations all arrive from people nearby who were never going to walk past your shutter."
+          subtitle="A NearGFix shop is listed in the customer app. Repairs, doorstep pickups and sell quotations all arrive from people nearby who were never going to walk past your shutter."
         />
 
         <div className="mt-12 grid gap-6 lg:grid-cols-3">
@@ -695,7 +695,7 @@ export default function ShopPage() {
       {/* ---------------------------------------------------------------- */}
       <Section tone="page">
         <CTABand
-          title="Put your shop on GGFIX this week"
+          title="Put your shop on NearGFix this week"
           subtitle={`Register today and the 15-day free trial starts on its own. After that, ${basic.name} is ${basic.price} ${basic.priceNote}. There is no online checkout — talk to us and we will set it up.`}
           primary={CTA.startTrial}
           secondary={CTA.talkToSales}

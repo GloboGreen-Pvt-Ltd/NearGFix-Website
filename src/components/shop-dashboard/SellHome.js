@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * SellHome — the Sell on GGFIX home (/shop-home/sell/select-brand/ with no
+ * SellHome — the Sell on NearGFix home (/shop-home/sell/select-brand/ with no
  * ?category=), ported from the Partner app's OwnerSellHomeScreen, top to
  * bottom:
  *
@@ -71,9 +71,9 @@ const TINTS = {
 const tintFor = (code) => TINTS[String(code || '').toUpperCase()] || '#F3F5F4';
 
 const BENEFITS = [
-  { icon: Gauge, title: 'Quick Listing', sub: 'List in less than 1 minute', tone: 'bg-[#EAF8EC] text-[#09AD2A]' },
+  { icon: Gauge, title: 'Quick Listing', sub: 'List in less than 1 minute', tone: 'bg-[#E5F3F5] text-[#035C6C]' },
   { icon: ShieldCheck, title: 'Trusted Buyers', sub: '100% verified buyers', tone: 'bg-[#FFF3CD] text-[#B45309]' },
-  { icon: ScanSearch, title: 'Best Price', sub: 'Get the best value for your device', tone: 'bg-[#EAF8EC] text-[#09AD2A]' },
+  { icon: ScanSearch, title: 'Best Price', sub: 'Get the best value for your device', tone: 'bg-[#E5F3F5] text-[#035C6C]' },
 ];
 
 // Static promotional copy of the app's fallback hero — not business data.
@@ -86,7 +86,7 @@ const HERO_POINTS = [
 
 const LISTING_LIMIT = 4;
 
-const CHIP = 'group flex w-[68px] shrink-0 snap-start flex-col items-center rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2 sm:w-[84px] lg:w-auto';
+const CHIP = 'group flex w-[68px] shrink-0 snap-start flex-col items-center rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2 sm:w-[84px] lg:w-auto';
 const CHIP_TILE = 'flex h-[60px] w-full items-center justify-center overflow-hidden rounded-2xl transition sm:h-[72px]';
 const CHIP_LABEL = 'mt-1.5 w-full truncate text-center text-[11.5px] sm:text-[12.5px]';
 
@@ -115,7 +115,7 @@ function listingSpecs(p) {
 
 function statusPill(status) {
   const s = String(status || '').trim().toUpperCase();
-  if (!s || s === 'ACTIVE') return { label: 'Active', cls: 'bg-[#EAF8EC] text-[#078F22]' };
+  if (!s || s === 'ACTIVE') return { label: 'Active', cls: 'bg-[#E5F3F5] text-[#035C6C]' };
   if (s === 'SOLD' || s === 'COMPLETED') return { label: 'Sold', cls: 'bg-[#F3F3F3] text-[#111111]' };
   if (s === 'CANCELLED' || s === 'CANCELED') return { label: 'Cancelled', cls: 'bg-[#FEE2E2] text-[#B91C1C]' };
   return { label: s.charAt(0) + s.slice(1).toLowerCase().replace(/_/g, ' '), cls: 'bg-[#F3F3F3] text-[#666666]' };
@@ -167,10 +167,10 @@ function CategoryMenu({ categories, menuImages, onAll }) {
         style={{ gridTemplateColumns: `repeat(${categories.length + 1}, minmax(0, 1fr))` }}
       >
         <button type="button" onClick={onAll} className={CHIP}>
-          <span className={cx(CHIP_TILE, 'border-[1.5px] border-[#09AD2A] bg-[#EAF8EC]')}>
-            <LayoutGrid className="h-5 w-5 text-[#09AD2A] sm:h-6 sm:w-6" aria-hidden="true" />
+          <span className={cx(CHIP_TILE, 'border-[1.5px] border-[#035C6C] bg-[#E5F3F5]')}>
+            <LayoutGrid className="h-5 w-5 text-[#035C6C] sm:h-6 sm:w-6" aria-hidden="true" />
           </span>
-          <span className={cx(CHIP_LABEL, 'font-bold text-[#078F22]')}>All</span>
+          <span className={cx(CHIP_LABEL, 'font-bold text-[#035C6C]')}>All</span>
         </button>
 
         {categories.map((c) => {
@@ -178,15 +178,15 @@ function CategoryMenu({ categories, menuImages, onAll }) {
           const Icon = CATEGORY_ICONS[code] || Smartphone;
           return (
             <Link key={c.code} href={sellBrandHref(c.code)} className={CHIP}>
-              <span className={cx(CHIP_TILE, 'border border-[#ECECEC] group-hover:border-[#09AD2A]/50')} style={{ backgroundColor: tintFor(code) }}>
+              <span className={cx(CHIP_TILE, 'border border-[#ECECEC] group-hover:border-[#035C6C]/50')} style={{ backgroundColor: tintFor(code) }}>
                 <FallbackImage
                   sources={[menuImages[normKey(c.name)] || menuImages[normKey(c.code)], sellCategoryArt(code), resolveMediaUrl(c.imageUrl)]}
                   icon={Icon}
                   className="h-[86%] w-[86%] transition-transform duration-200 motion-safe:group-hover:scale-105"
-                  iconClassName="h-6 w-6 text-[#09AD2A]/70"
+                  iconClassName="h-6 w-6 text-[#035C6C]/70"
                 />
               </span>
-              <span className={cx(CHIP_LABEL, 'font-semibold text-[#111111] group-hover:text-[#078F22]')}>{c.name}</span>
+              <span className={cx(CHIP_LABEL, 'font-semibold text-[#111111] group-hover:text-[#035C6C]')}>{c.name}</span>
             </Link>
           );
         })}
@@ -226,7 +226,7 @@ function SellBanner({ banners, startHref, onBroken }) {
       {/* eslint-disable-next-line @next/next/no-img-element -- admin banner from the media service, not an app asset. */}
       <img
         src={b.src}
-        alt={i === current ? 'Sell on GGFIX' : ''}
+        alt={i === current ? 'Sell on NearGFix' : ''}
         loading={i === 0 ? 'eager' : 'lazy'}
         decoding="async"
         onError={() => onBroken(b.id)}
@@ -239,7 +239,7 @@ function SellBanner({ banners, startHref, onBroken }) {
   return (
     <section aria-label="Sell offers" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
       {startHref ? (
-        <Link href={startHref} aria-label="Start selling" className={cx(frame, 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2')}>
+        <Link href={startHref} aria-label="Start selling" className={cx(frame, 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2')}>
           {slides}
         </Link>
       ) : (
@@ -254,7 +254,7 @@ function SellBanner({ banners, startHref, onBroken }) {
               onClick={() => setIndex(i)}
               aria-label={`Show banner ${i + 1} of ${count}`}
               aria-current={i === current ? 'true' : undefined}
-              className={cx('h-1.5 rounded-full transition-all', i === current ? 'w-[18px] bg-[#09AD2A]' : 'w-1.5 bg-[#ECECEC] hover:bg-[#98A2B3]')}
+              className={cx('h-1.5 rounded-full transition-all', i === current ? 'w-[18px] bg-[#035C6C]' : 'w-1.5 bg-[#ECECEC] hover:bg-[#98A2B3]')}
             />
           ))}
         </div>
@@ -269,23 +269,23 @@ function FallbackHero({ startHref }) {
     <section aria-label="Sell your devices" className="flex overflow-hidden rounded-[20px] border border-[#ECECEC] bg-white">
       <div className="min-w-0 flex-1 p-4 sm:p-6">
         <div className="flex items-center gap-2">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-[#09AD2A] text-[13px] font-extrabold text-white" aria-hidden="true">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-[#035C6C] text-[13px] font-extrabold text-white" aria-hidden="true">
             G
           </span>
           <span className="min-w-0">
-            <span className="block text-[12px] font-extrabold tracking-[0.08em] text-[#09AD2A]">GGFIX</span>
+            <span className="block text-[12px] font-extrabold tracking-[0.08em] text-[#035C6C]">NearGFix</span>
             <span className="block truncate text-[8.5px] tracking-wide text-[#666666]">SMART DEVICES. SMARTER CHOICE.</span>
           </span>
         </div>
         <h2 className="mt-3 text-[19px] font-extrabold leading-tight tracking-tight text-[#111111] sm:text-[24px]">
           Sell Your Devices
-          <span className="block text-[#09AD2A]">Get the Best Value</span>
+          <span className="block text-[#035C6C]">Get the Best Value</span>
         </h2>
         <p className="mt-1 text-[11.5px] text-[#666666] sm:text-[13px]">Quick Evaluation · Instant Offers · Secure Payments</p>
         <ul className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 md:grid-cols-4">
           {HERO_POINTS.map((b) => (
             <li key={b.title} className="flex min-w-0 items-start gap-1.5">
-              <ShieldCheck className="mt-px h-3.5 w-3.5 shrink-0 text-[#09AD2A]" aria-hidden="true" />
+              <ShieldCheck className="mt-px h-3.5 w-3.5 shrink-0 text-[#035C6C]" aria-hidden="true" />
               <span className="min-w-0">
                 <span className="block truncate text-[11px] font-extrabold text-[#111111] sm:text-[12px]">{b.title}</span>
                 <span className="block truncate text-[9.5px] text-[#666666] sm:text-[11px]">{b.sub}</span>
@@ -296,16 +296,16 @@ function FallbackHero({ startHref }) {
         {startHref ? (
           <Link
             href={startHref}
-            className="mt-4 inline-flex items-center gap-2.5 rounded-full bg-[#09AD2A] py-1.5 pl-4 pr-1.5 text-[13px] font-extrabold text-white transition hover:bg-[#078F22] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2"
+            className="mt-4 inline-flex items-center gap-2.5 rounded-full bg-[#035C6C] py-1.5 pl-4 pr-1.5 text-[13px] font-extrabold text-white transition hover:bg-[#035C6C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2"
           >
             Sell Now
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#09AD2A]">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#035C6C]">
               <ChevronRight className="h-4 w-4" aria-hidden="true" />
             </span>
           </Link>
         ) : null}
       </div>
-      <div className="flex w-[96px] shrink-0 flex-col justify-between bg-gradient-to-br from-[#09AD2A] to-[#078F22] p-3 sm:w-[168px] sm:p-4" aria-hidden="true">
+      <div className="flex w-[96px] shrink-0 flex-col justify-between bg-gradient-to-br from-[#035C6C] to-[#035C6C] p-3 sm:w-[168px] sm:p-4" aria-hidden="true">
         <span className="flex h-12 w-12 flex-col items-center justify-center self-end rounded-full bg-white/15 text-white">
           <IndianRupee className="h-3.5 w-3.5" />
           <span className="mt-px text-center text-[6px] font-extrabold leading-tight">
@@ -331,7 +331,7 @@ function FallbackHero({ startHref }) {
 
 function Benefits() {
   return (
-    <section aria-label="Why sell on GGFIX" className="grid grid-cols-3 gap-2 sm:gap-3">
+    <section aria-label="Why sell on NearGFix" className="grid grid-cols-3 gap-2 sm:gap-3">
       {BENEFITS.map(({ icon: Icon, title, sub, tone }) => (
         <div key={title} className="flex min-w-0 flex-col rounded-2xl border border-[#ECECEC] bg-white p-2.5 md:flex-row md:items-center md:gap-3 md:p-3.5">
           <span className={cx('flex h-7 w-7 shrink-0 items-center justify-center rounded-full md:h-10 md:w-10', tone)}>
@@ -366,14 +366,14 @@ function ListingCard({ p, onPreview }) {
           type="button"
           onClick={() => onPreview(p)}
           aria-label={`Preview image of ${name}`}
-          className={cx(box, 'cursor-zoom-in transition hover:bg-[#F3F3F3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A]')}
+          className={cx(box, 'cursor-zoom-in transition hover:bg-[#F3F3F3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C]')}
         >
           {/* eslint-disable-next-line @next/next/no-img-element -- listing / master-data photo, not an app asset. */}
           <img src={p.image} alt="" loading="lazy" decoding="async" onError={() => setBroken(true)} className="h-[86%] w-[86%] object-contain object-center" />
         </button>
       ) : (
         <div className={box}>
-          <Package className="h-8 w-8 text-[#09AD2A]/60" aria-hidden="true" />
+          <Package className="h-8 w-8 text-[#035C6C]/60" aria-hidden="true" />
         </div>
       )}
       <p className="mt-2.5 line-clamp-2 text-[13px] font-bold leading-snug text-[#111111] sm:text-[14px]" title={name}>
@@ -381,7 +381,7 @@ function ListingCard({ p, onPreview }) {
       </p>
       {specs ? <p className="mt-0.5 line-clamp-2 text-[11.5px] leading-snug text-[#666666] sm:text-[12px]">{specs}</p> : null}
       <div className="mt-auto flex items-center justify-between gap-2 pt-2">
-        <span className="truncate text-[15px] font-extrabold text-[#078F22] sm:text-[16px]">{formatPrice(p.price)}</span>
+        <span className="truncate text-[15px] font-extrabold text-[#035C6C] sm:text-[16px]">{formatPrice(p.price)}</span>
         <span className={cx('shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-extrabold', pill.cls)}>{pill.label}</span>
       </div>
     </article>
@@ -398,7 +398,7 @@ function YourListings({ sectionRef, listings, error, onRetry, expanded, onToggle
         <h2 id="sell-listings-title" className="flex items-center gap-2 text-[16px] font-extrabold tracking-tight text-[#111111] sm:text-[18px]">
           Your listed products
           {listings && !error && count ? (
-            <span className="rounded-full bg-[#F3F3F3] px-2 py-0.5 text-[11.5px] font-bold text-[#078F22]">{count}</span>
+            <span className="rounded-full bg-[#F3F3F3] px-2 py-0.5 text-[11.5px] font-bold text-[#035C6C]">{count}</span>
           ) : null}
         </h2>
         {/* Only when there is more than the first row to show. */}
@@ -407,7 +407,7 @@ function YourListings({ sectionRef, listings, error, onRetry, expanded, onToggle
             type="button"
             onClick={onToggle}
             aria-expanded={expanded}
-            className="inline-flex shrink-0 items-center gap-0.5 rounded-lg text-[13px] font-extrabold text-[#078F22] transition hover:text-[#09AD2A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A]"
+            className="inline-flex shrink-0 items-center gap-0.5 rounded-lg text-[13px] font-extrabold text-[#035C6C] transition hover:text-[#035C6C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C]"
           >
             {expanded ? 'Show less' : 'View all'}
             {expanded ? <ChevronUp className="h-4 w-4" aria-hidden="true" /> : <ChevronRight className="h-4 w-4" aria-hidden="true" />}
@@ -434,7 +434,7 @@ function YourListings({ sectionRef, listings, error, onRetry, expanded, onToggle
               startHref ? (
                 <Link
                   href={startHref}
-                  className="inline-flex items-center gap-1 rounded-xl bg-[#09AD2A] px-4 py-2 text-[13px] font-bold text-white transition hover:bg-[#078F22] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2"
+                  className="inline-flex items-center gap-1 rounded-xl bg-[#035C6C] px-4 py-2 text-[13px] font-bold text-white transition hover:bg-[#035C6C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2"
                 >
                   Start listing
                   <ChevronRight className="h-4 w-4" aria-hidden="true" />

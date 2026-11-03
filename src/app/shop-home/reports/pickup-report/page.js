@@ -27,7 +27,7 @@ import { fetchShopBookings, friendlyBookingStatus } from '@/lib/shopDashboard';
 import { BOOKING_STATUS_BADGE, bookingEstimatedAmount, formatBookingDate, formatPickupAddress } from '@/lib/bookingFormat';
 import { downloadReportPdf } from '@/lib/reportPdf';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 const FULL_LIST_FILTERS = [
   { value: 'All', label: 'All' },
   { value: 'Completed', label: 'Completed' },
@@ -146,7 +146,7 @@ export default function PickupReportOverviewPage() {
     try {
       await downloadReportPdf({
         title: 'Pickup Report',
-        subtitle: 'Shop-wide pickup activity — GGFIX Partner Dashboard',
+        subtitle: 'Shop-wide pickup activity — NearGFix Partner Dashboard',
         stats: monthStats.map((s) => ({ label: s.label, value: s.value })),
         columns: [
           { header: 'Pickup Person', key: 'name' },
@@ -172,7 +172,7 @@ export default function PickupReportOverviewPage() {
               type="button"
               onClick={() => setReloadKey((k) => k + 1)}
               className={cx(
-                'inline-flex items-center gap-1.5 rounded-xl border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#344054] transition hover:border-[#15803D] hover:text-[#15803D]',
+                'inline-flex items-center gap-1.5 rounded-xl border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#344054] transition hover:border-[#024A57] hover:text-[#024A57]',
                 FOCUS_RING,
               )}
             >
@@ -212,7 +212,7 @@ export default function PickupReportOverviewPage() {
 
       <div>
         <p className="mb-2.5 flex items-center gap-1.5 text-sm font-bold text-[#111111]">
-          <Users className="h-4 w-4 text-[#15803D]" aria-hidden="true" /> By Pickup Person
+          <Users className="h-4 w-4 text-[#024A57]" aria-hidden="true" /> By Pickup Person
         </p>
         {loading ? (
           <SkeletonRows rows={3} />
@@ -225,7 +225,7 @@ export default function PickupReportOverviewPage() {
                 <p className="min-w-0 truncate text-sm font-bold text-[#111111]">{p.name}</p>
                 <div className="flex shrink-0 flex-wrap items-center justify-end gap-x-4 gap-y-1 text-right text-xs">
                   <span className="text-[#666666]">Total: <span className="font-bold text-[#111111]">{p.total}</span></span>
-                  <span className="text-[#666666]">Completed: <span className="font-bold text-[#15803D]">{p.completed}</span></span>
+                  <span className="text-[#666666]">Completed: <span className="font-bold text-[#024A57]">{p.completed}</span></span>
                 </div>
               </div>
             ))}
@@ -237,7 +237,7 @@ export default function PickupReportOverviewPage() {
         <div className="mb-2.5 flex items-center justify-between gap-3">
           <p className="text-sm font-bold text-[#111111]">Recent Assigned</p>
           {recentAssigned.length > 0 ? (
-            <button type="button" onClick={() => goToFilter('Pending')} className="text-xs font-bold text-[#15803D] hover:underline">
+            <button type="button" onClick={() => goToFilter('Pending')} className="text-xs font-bold text-[#024A57] hover:underline">
               View all
             </button>
           ) : null}
@@ -259,7 +259,7 @@ export default function PickupReportOverviewPage() {
         <div className="mb-2.5 flex items-center justify-between gap-3">
           <p className="text-sm font-bold text-[#111111]">In Progress</p>
           {inProgressList.length > 0 ? (
-            <button type="button" onClick={() => goToFilter('In Progress')} className="text-xs font-bold text-[#15803D] hover:underline">
+            <button type="button" onClick={() => goToFilter('In Progress')} className="text-xs font-bold text-[#024A57] hover:underline">
               View all
             </button>
           ) : null}
@@ -314,7 +314,7 @@ function PickupReportRow({ booking, expanded, onToggle }) {
     <div>
       <button type="button" onClick={onToggle} className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition hover:bg-[#F8F8F8] sm:px-5">
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8]">
-          <Truck className="h-5 w-5 text-[#15803D]" aria-hidden="true" />
+          <Truck className="h-5 w-5 text-[#024A57]" aria-hidden="true" />
         </span>
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-bold text-[#111111]">{booking.customerName || 'Not available'}</p>

@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Sidebar — the GGFIX Partner Dashboard left navigation (DashboardShell).
+ * Sidebar — the NearGFix Partner Dashboard left navigation (DashboardShell).
  *
  * Menu, top to bottom: Dashboard · Services ▾ · Buy · Sell · Employee ▾ ·
  * Customers · Enquiries · Reports ▾ · Settings ▾, then Help & Support.
@@ -26,7 +26,7 @@ import { BRAND } from '@/lib/siteContent';
 import { DASHBOARD_ITEM, PARTNER_NAV, PARTNER_NAV_FLAT, resolveNavContext } from '@/lib/partnerNav';
 import { isOwnerSession } from '@/lib/shopAccess';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
 
 const itemByKey = (key) => PARTNER_NAV_FLAT.find((i) => i.key === key);
 const sectionByKey = (key) => PARTNER_NAV.find((s) => s.key === key);
@@ -34,6 +34,7 @@ const sectionByKey = (key) => PARTNER_NAV.find((s) => s.key === key);
 // Sidebar order: direct links and collapsible sections.
 const MENU = [
   { type: 'dashboard' },
+  { type: 'link', key: 'overview' },
   { type: 'section', key: 'services' },
   { type: 'link', key: 'marketplace' },
   { type: 'link', key: 'sell' },
@@ -45,7 +46,7 @@ const MENU = [
 ];
 
 const ROW = 'relative flex w-full items-center gap-3 rounded-[11px] px-3 py-2.5 text-[14px] font-semibold transition';
-const ROW_ACTIVE = 'bg-[#F3F3F3] text-[#09AD2A]';
+const ROW_ACTIVE = 'bg-[#F3F3F3] text-[#035C6C]';
 const ROW_IDLE = 'text-[#111111] hover:bg-[#F3F3F3]';
 
 function Badge({ count }) {
@@ -63,9 +64,9 @@ function Brand({ collapsed, shopOwner }) {
       <Image src={BRAND.logo} alt="" width={36} height={36} className="h-9 w-9 shrink-0 rounded-full object-contain" />
       {!collapsed ? (
         <span className="min-w-0 leading-tight">
-          <span className="block truncate text-[15px] font-extrabold text-[#111111]">GGFIX Partner</span>
+          <span className="block truncate text-[15px] font-extrabold text-[#111111]">NearGFix Partner</span>
           <span className="block truncate text-[12px] text-[#666666]">Business Dashboard</span>
-          {shopOwner?.shopName ? <span className="mt-0.5 block truncate text-[11px] font-semibold text-[#09AD2A]">{shopOwner.shopName}</span> : null}
+          {shopOwner?.shopName ? <span className="mt-0.5 block truncate text-[11px] font-semibold text-[#035C6C]">{shopOwner.shopName}</span> : null}
         </span>
       ) : null}
     </Link>
@@ -82,7 +83,7 @@ function NavLink({ href, label, icon: Icon, active, collapsed, badge, onNavigate
       aria-current={active ? 'page' : undefined}
       className={cx(ROW, collapsed && 'justify-center px-0', FOCUS_RING, active ? ROW_ACTIVE : ROW_IDLE)}
     >
-      <Icon className={cx('h-[19px] w-[19px] shrink-0', active ? 'text-[#09AD2A]' : 'text-[#666666]')} aria-hidden="true" />
+      <Icon className={cx('h-[19px] w-[19px] shrink-0', active ? 'text-[#035C6C]' : 'text-[#666666]')} aria-hidden="true" />
       {!collapsed ? <span className="truncate">{label}</span> : null}
       {!collapsed ? <Badge count={badge} /> : badge ? <span className="absolute right-3 top-2 h-2 w-2 rounded-full bg-[#F84141]" aria-hidden="true" /> : null}
     </Link>
@@ -97,7 +98,7 @@ function Section({ section, open, onToggle, activeKey, directKeys = [], badges, 
   return (
     <div>
       <button type="button" onClick={onToggle} aria-expanded={open} className={cx(ROW, FOCUS_RING, hasActive && !open ? ROW_ACTIVE : ROW_IDLE)}>
-        <Icon className={cx('h-[19px] w-[19px] shrink-0', hasActive ? 'text-[#09AD2A]' : 'text-[#666666]')} aria-hidden="true" />
+        <Icon className={cx('h-[19px] w-[19px] shrink-0', hasActive ? 'text-[#035C6C]' : 'text-[#666666]')} aria-hidden="true" />
         <span className="flex-1 truncate text-left">{section.label}</span>
         {!open ? <Badge count={sectionBadge} /> : null}
         <ChevronDown className={cx('h-4 w-4 shrink-0 text-[#98A2B3] transition-transform', open && 'rotate-180')} aria-hidden="true" />
@@ -117,10 +118,10 @@ function Section({ section, open, onToggle, activeKey, directKeys = [], badges, 
                     className={cx(
                       'flex items-center gap-2.5 rounded-[10px] px-2.5 py-2 text-[13.5px] font-medium transition',
                       FOCUS_RING,
-                      active ? 'bg-[#F3F3F3] font-semibold text-[#09AD2A]' : 'text-[#475467] hover:bg-[#F3F3F3] hover:text-[#111111]',
+                      active ? 'bg-[#F3F3F3] font-semibold text-[#035C6C]' : 'text-[#475467] hover:bg-[#F3F3F3] hover:text-[#111111]',
                     )}
                   >
-                    <ItemIcon className={cx('h-4 w-4 shrink-0', active ? 'text-[#09AD2A]' : 'text-[#98A2B3]')} aria-hidden="true" />
+                    <ItemIcon className={cx('h-4 w-4 shrink-0', active ? 'text-[#035C6C]' : 'text-[#98A2B3]')} aria-hidden="true" />
                     <span className="truncate">{item.label}</span>
                     <Badge count={badges?.[item.key]} />
                   </Link>
@@ -165,7 +166,7 @@ function RailSection({ section, activeKey, directKeys = [], badges }) {
         aria-expanded={open}
         className={cx(ROW, 'justify-center px-0', FOCUS_RING, hasActive || open ? ROW_ACTIVE : ROW_IDLE)}
       >
-        <Icon className={cx('h-[19px] w-[19px]', hasActive || open ? 'text-[#09AD2A]' : 'text-[#666666]')} aria-hidden="true" />
+        <Icon className={cx('h-[19px] w-[19px]', hasActive || open ? 'text-[#035C6C]' : 'text-[#666666]')} aria-hidden="true" />
         {hasBadge ? <span className="absolute right-3 top-2 h-2 w-2 rounded-full bg-[#F84141]" aria-hidden="true" /> : null}
       </button>
       {open ? (
@@ -182,10 +183,10 @@ function RailSection({ section, activeKey, directKeys = [], badges }) {
                 aria-current={active ? 'page' : undefined}
                 className={cx(
                   'flex items-center gap-2.5 rounded-[10px] px-2.5 py-2 text-[13.5px] font-medium transition',
-                  active ? 'bg-[#F3F3F3] font-semibold text-[#09AD2A]' : 'text-[#475467] hover:bg-[#F3F3F3] hover:text-[#111111]',
+                  active ? 'bg-[#F3F3F3] font-semibold text-[#035C6C]' : 'text-[#475467] hover:bg-[#F3F3F3] hover:text-[#111111]',
                 )}
               >
-                <ItemIcon className={cx('h-4 w-4 shrink-0', active ? 'text-[#09AD2A]' : 'text-[#98A2B3]')} aria-hidden="true" />
+                <ItemIcon className={cx('h-4 w-4 shrink-0', active ? 'text-[#035C6C]' : 'text-[#98A2B3]')} aria-hidden="true" />
                 <span className="truncate">{item.label}</span>
                 <Badge count={badges?.[item.key]} />
               </Link>

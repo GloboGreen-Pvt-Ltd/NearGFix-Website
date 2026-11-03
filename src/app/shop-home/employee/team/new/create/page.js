@@ -2,7 +2,7 @@
 
 /**
  * /shop-home/employee/team/new/create — "Employee Details" create-staff
- * form, matching the real GGFIX Staff mobile app screen of the same name
+ * form, matching the real NearGFix Staff mobile app screen of the same name
  * (screenshot supplied 2026-09): avatar upload, Basic Information, Work
  * Information, Identity Verification, Salary Package, App Login (optional).
  *
@@ -45,9 +45,9 @@ import {
 
 import { cx } from '@/components/site/ui';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 const INPUT_CLS =
-  'w-full rounded-xl border border-[#D0D5DD] bg-white px-3.5 py-2.5 text-sm text-[#111111] placeholder:text-[#98A2B3] transition focus:border-[#15803D] focus:outline-none focus:ring-[3px] focus:ring-[#ECECEC]';
+  'w-full rounded-xl border border-[#D0D5DD] bg-white px-3.5 py-2.5 text-sm text-[#111111] placeholder:text-[#98A2B3] transition focus:border-[#024A57] focus:outline-none focus:ring-[3px] focus:ring-[#ECECEC]';
 
 const ROLE_OPTIONS = ['Technician', 'Pickup Person'];
 
@@ -56,10 +56,10 @@ function SectionCard({ icon: Icon, title, settings, children }) {
     <section className="relative min-w-0 rounded-[22px] border border-[#ECECEC] bg-[#F8F8F8] p-4 sm:p-5">
       <div className="mb-4 flex items-center justify-between gap-3">
         <span className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3] text-[#0A934D]">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3] text-[#035C6C]">
             <Icon className="h-4.5 w-4.5" aria-hidden="true" />
           </span>
-          <span className="text-sm font-extrabold text-[#10213D]">{title}</span>
+          <span className="text-sm font-extrabold text-[#1C3053]">{title}</span>
         </span>
         {settings ? (
           <button
@@ -97,8 +97,8 @@ function UploadBox({ label }) {
       title="Document upload isn't available yet — waiting on a confirmed create-employee endpoint."
       className="flex h-24 w-full cursor-not-allowed flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-[#ECECEC] bg-[#F8F8F8] text-center"
     >
-      <Upload className="h-5 w-5 text-[#0A934D]" aria-hidden="true" />
-      <span className="text-xs font-bold text-[#0A934D]">{label}</span>
+      <Upload className="h-5 w-5 text-[#035C6C]" aria-hidden="true" />
+      <span className="text-xs font-bold text-[#035C6C]">{label}</span>
       <span className="text-[0.65rem] text-[#98A2B3]">JPG, PNG (Max 2MB)</span>
     </button>
   );
@@ -133,11 +133,11 @@ export default function CreateEmployeePage() {
           type="button"
           onClick={() => router.back()}
           aria-label="Back"
-          className={cx('flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#344054] transition hover:border-[#15803D] hover:text-[#15803D]', FOCUS_RING)}
+          className={cx('flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#344054] transition hover:border-[#024A57] hover:text-[#024A57]', FOCUS_RING)}
         >
           <ArrowLeft className="h-4.5 w-4.5" aria-hidden="true" />
         </button>
-        <h1 className="text-xl font-extrabold tracking-tight text-[#10213D]">Employee Details</h1>
+        <h1 className="text-xl font-extrabold tracking-tight text-[#1C3053]">Employee Details</h1>
       </div>
 
       {/* Avatar photo picker — disabled: no confirmed create-employee
@@ -150,12 +150,12 @@ export default function CreateEmployeePage() {
             disabled
             title="Photo upload isn't available yet — waiting on a confirmed create-employee endpoint."
             aria-label="Upload photo (not available yet)"
-            className="absolute -bottom-0.5 -right-0.5 flex h-6 w-6 cursor-not-allowed items-center justify-center rounded-full bg-[#0A934D] text-white ring-2 ring-white"
+            className="absolute -bottom-0.5 -right-0.5 flex h-6 w-6 cursor-not-allowed items-center justify-center rounded-full bg-[#035C6C] text-white ring-2 ring-white"
           >
             <Camera className="h-3 w-3" aria-hidden="true" />
           </button>
         </span>
-        <p className="text-base font-extrabold text-[#10213D]">New Employee</p>
+        <p className="text-base font-extrabold text-[#1C3053]">New Employee</p>
       </div>
 
       {/* Basic Information */}
@@ -202,7 +202,7 @@ export default function CreateEmployeePage() {
         </div>
         <div className="mt-3.5 grid grid-cols-2 gap-3">
           <div className="min-w-0 rounded-xl bg-[#F8F8F8] p-3">
-            <span className="flex items-center gap-1.5 text-xs font-bold text-[#0A934D]">
+            <span className="flex items-center gap-1.5 text-xs font-bold text-[#035C6C]">
               <Clock className="h-3.5 w-3.5" aria-hidden="true" />
               Check In
             </span>
@@ -210,7 +210,7 @@ export default function CreateEmployeePage() {
               type="time"
               value={form.checkIn}
               onChange={set('checkIn')}
-              className="mt-1 w-full min-w-0 border-0 bg-transparent text-base font-extrabold sm:text-lg text-[#0A934D] focus:outline-none"
+              className="mt-1 w-full min-w-0 border-0 bg-transparent text-base font-extrabold sm:text-lg text-[#035C6C] focus:outline-none"
             />
           </div>
           <div className="min-w-0 rounded-xl bg-[#FEF2F2] p-3">
@@ -301,19 +301,19 @@ export default function CreateEmployeePage() {
           </div>
         </Field>
 
-        <label className="mt-3.5 flex items-center gap-2 text-sm font-semibold text-[#10213D]">
+        <label className="mt-3.5 flex items-center gap-2 text-sm font-semibold text-[#1C3053]">
           <input
             type="checkbox"
             checked={form.loginEnabled}
             onChange={(e) => setForm((f) => ({ ...f, loginEnabled: e.target.checked }))}
-            className="h-4 w-4 rounded border-[#D0D5DD] accent-[#0A934D] focus:ring-[#0A934D]"
+            className="h-4 w-4 rounded border-[#D0D5DD] accent-[#035C6C] focus:ring-[#035C6C]"
           />
           Employee login enabled
         </label>
 
-        <p className="mt-2.5 flex items-start gap-1.5 rounded-lg bg-[#F8F8F8] p-2.5 text-xs text-[#0A934D]">
+        <p className="mt-2.5 flex items-start gap-1.5 rounded-lg bg-[#F8F8F8] p-2.5 text-xs text-[#035C6C]">
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-          Employee signs in to the GGFIX Staff App with this mobile number + OTP.
+          Employee signs in to the NearGFix Staff App with this mobile number + OTP.
         </p>
       </SectionCard>
 

@@ -13,16 +13,16 @@ const CONTACT_TILES = [
 ];
 
 const FOCUS_RING =
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#062B14]';
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C3053]';
 
 export default function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative overflow-hidden bg-[#062B14] text-white">
+    <footer className="relative overflow-hidden bg-[#1C3053] text-white">
       {/* Soft glows */}
-      <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[#09AD2A]/20 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute -bottom-40 right-0 h-96 w-96 rounded-full bg-[#9BF2AE]/10 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[#035C6C]/20 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute -bottom-40 right-0 h-96 w-96 rounded-full bg-[#C7E6EA]/10 blur-3xl" aria-hidden="true" />
 
       <Container className="relative pb-6 pt-10">
         {/* Contact strip */}
@@ -34,11 +34,11 @@ export default function SiteFooter() {
               {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
               className={`group flex items-center gap-3 rounded-2xl px-4 py-3 transition hover:bg-white/10 ${FOCUS_RING}`}
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#22C55E] to-[#079455] text-white shadow-md">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#035C6C] to-[#035C6C] text-white shadow-md">
                 <Icon className="h-5 w-5" aria-hidden="true" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-xs font-semibold uppercase tracking-wider text-[#9BF2AE]">{title}</span>
+                <span className="block text-xs font-semibold uppercase tracking-wider text-[#C7E6EA]">{title}</span>
                 <span className="block truncate text-sm font-bold text-white">{label}</span>
               </span>
               <ArrowUpRight className="h-4 w-4 shrink-0 text-white/40 transition group-hover:text-white" aria-hidden="true" />
@@ -60,7 +60,7 @@ export default function SiteFooter() {
               <span className="text-2xl font-extrabold tracking-tight">{BRAND.name}</span>
             </Link>
 
-            <p className="mt-3 block w-fit rounded-full bg-[#09AD2A]/25 px-3 py-1 text-xs font-bold text-[#9BF2AE]">
+            <p className="mt-3 block w-fit rounded-full bg-[#035C6C]/25 px-3 py-1 text-xs font-bold text-[#C7E6EA]">
               {BRAND.tagline}
             </p>
 
@@ -74,7 +74,7 @@ export default function SiteFooter() {
               rel="noopener noreferrer"
               className={`mt-4 inline-flex items-center gap-2 rounded-lg text-sm font-medium text-white/70 transition hover:text-white ${FOCUS_RING}`}
             >
-              <Globe className="h-4 w-4 text-[#9BF2AE]" aria-hidden="true" />
+              <Globe className="h-4 w-4 text-[#C7E6EA]" aria-hidden="true" />
               {BRAND.website}
             </a>
           </div>
@@ -84,7 +84,7 @@ export default function SiteFooter() {
             {FOOTER_NAV.map((column) => (
               <nav key={column.title} aria-label={column.title}>
                 <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#22C55E]" aria-hidden="true" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#035C6C]" aria-hidden="true" />
                   {column.title}
                 </h2>
                 <ul className="mt-4 space-y-2.5">

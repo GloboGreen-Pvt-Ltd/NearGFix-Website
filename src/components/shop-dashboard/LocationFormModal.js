@@ -31,9 +31,9 @@ const WORKING_DAYS_OPTIONS = [
   { value: 'MON_SUN', label: 'Monday – Sunday' },
 ];
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 const INPUT_CLS =
-  'w-full rounded-xl border border-[#D0D5DD] bg-white px-3.5 py-2.5 text-sm text-[#111111] placeholder:text-[#98A2B3] transition focus:border-[#15803D] focus:outline-none focus:ring-[3px] focus:ring-[#ECECEC]';
+  'w-full rounded-xl border border-[#D0D5DD] bg-white px-3.5 py-2.5 text-sm text-[#111111] placeholder:text-[#98A2B3] transition focus:border-[#024A57] focus:outline-none focus:ring-[3px] focus:ring-[#ECECEC]';
 
 function detectTimezone() {
   try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata'; }
@@ -114,7 +114,7 @@ function UploadCard({ label, hint, url, uploading, onFile, accept }) {
     <div className="flex min-h-[150px] flex-col items-center rounded-xl border border-dashed border-[#D0D5DD] bg-[#F8F8F8] p-3">
       <div className="mb-1 flex w-full items-center justify-between">
         <span className="text-xs font-semibold text-[#111111]">{label}</span>
-        {url && <a href={url} target="_blank" rel="noreferrer" className="text-[11px] font-semibold text-[#15803D] hover:underline">Open</a>}
+        {url && <a href={url} target="_blank" rel="noreferrer" className="text-[11px] font-semibold text-[#024A57] hover:underline">Open</a>}
       </div>
       <span className="mb-2 w-full text-[11px] text-[#666666]">{hint}</span>
       <div className="flex flex-1 w-full items-center justify-center">
@@ -321,7 +321,7 @@ export default function LocationFormModal({ ownerId, mode, initial, onClose, onS
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex-1 truncate font-medium">{sug.displayName}</div>
                             {sug.pincode ? (
-                              <span className="shrink-0 rounded bg-[#F3F3F3] px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#15803D]">{sug.pincode}</span>
+                              <span className="shrink-0 rounded bg-[#F3F3F3] px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#024A57]">{sug.pincode}</span>
                             ) : null}
                           </div>
                           <div className="mt-0.5 text-[10px] text-[#666666]">
@@ -341,7 +341,7 @@ export default function LocationFormModal({ ownerId, mode, initial, onClose, onS
                     <div className="px-3 py-3 text-xs text-[#666666]">
                       <div className="font-medium text-[#344054]">No matches found</div>
                       <div className="mt-1 text-[11px]">Try just the area or pincode, or use Find on Google Maps below.</div>
-                      <button type="button" onClick={dismissSuggestions} className="mt-2 text-[10px] font-semibold text-[#15803D] hover:underline">Dismiss</button>
+                      <button type="button" onClick={dismissSuggestions} className="mt-2 text-[10px] font-semibold text-[#024A57] hover:underline">Dismiss</button>
                     </div>
                   )}
                 </div>

@@ -69,7 +69,7 @@ import {
 import { resolveMediaUrl } from '@/lib/deviceImage';
 
 const DASH = '—';
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
 const CARD = 'rounded-[22px] border border-[#ECECEC] bg-white';
 
 const daysInMonth = (d) => new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
@@ -94,8 +94,8 @@ const humanize = (s) =>
     .join(' ');
 
 const STATUS_TONE = {
-  APPROVED: 'bg-[#EAF8EC] text-[#067647]',
-  PAID: 'bg-[#EAF8EC] text-[#067647]',
+  APPROVED: 'bg-[#E5F3F5] text-[#024A57]',
+  PAID: 'bg-[#E5F3F5] text-[#024A57]',
   PENDING: 'bg-[#FFF6E0] text-[#B54708]',
   REJECTED: 'bg-[#FEF2F2] text-[#B42318]',
   CANCELLED: 'bg-[#F3F3F3] text-[#667085]',
@@ -105,7 +105,7 @@ function Avatar({ url, active }) {
   const [broken, setBroken] = useState(false);
   return (
     <span className="relative shrink-0">
-      <span className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-[#EAF8EC] text-[#09AD2A]">
+      <span className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-[#E5F3F5] text-[#035C6C]">
         {url && !broken ? (
           // eslint-disable-next-line @next/next/no-img-element -- employee photo from the media service.
           <img src={url} alt="" onError={() => setBroken(true)} className="h-full w-full object-cover" />
@@ -113,13 +113,13 @@ function Avatar({ url, active }) {
           <User className="h-11 w-11" fill="currentColor" aria-hidden="true" />
         )}
       </span>
-      <span className={cx('absolute bottom-1.5 right-1.5 h-4 w-4 rounded-full border-[3px] border-white', active ? 'bg-[#09AD2A]' : 'bg-[#98A2B3]')} aria-hidden="true" />
+      <span className={cx('absolute bottom-1.5 right-1.5 h-4 w-4 rounded-full border-[3px] border-white', active ? 'bg-[#035C6C]' : 'bg-[#98A2B3]')} aria-hidden="true" />
     </span>
   );
 }
 
 function TimeCard({ icon: Icon, label, value, tone }) {
-  const t = tone === 'red' ? { chip: 'bg-[#FFF6DB] text-[#F5B000]', value: 'text-[#E53935]' } : { chip: 'bg-[#EAF8EC] text-[#09AD2A]', value: 'text-[#09AD2A]' };
+  const t = tone === 'red' ? { chip: 'bg-[#FFF6DB] text-[#F5B000]', value: 'text-[#E53935]' } : { chip: 'bg-[#E5F3F5] text-[#035C6C]', value: 'text-[#035C6C]' };
   return (
     <div className={cx(CARD, 'flex min-w-0 flex-col items-start gap-3 p-4 sm:flex-row sm:items-center sm:gap-4')}>
       <span className={cx('flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl', t.chip)}>
@@ -136,7 +136,7 @@ function TimeCard({ icon: Icon, label, value, tone }) {
 function QuickTile({ icon: Icon, label, href, disabled, title }) {
   const inner = (
     <>
-      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#EAF8EC] text-[#09AD2A]">
+      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#E5F3F5] text-[#035C6C]">
         <Icon className="h-6 w-6" aria-hidden="true" />
       </span>
       <span className="text-[13.5px] font-bold leading-snug text-[#111111]">{label}</span>
@@ -151,15 +151,15 @@ function QuickTile({ icon: Icon, label, href, disabled, title }) {
     );
   }
   return (
-    <Link href={href} className={cx(cls, 'hover:border-[#09AD2A] hover:shadow-sm', FOCUS_RING)}>
+    <Link href={href} className={cx(cls, 'hover:border-[#035C6C] hover:shadow-sm', FOCUS_RING)}>
       {inner}
     </Link>
   );
 }
 
 function StatTile({ icon: Icon, value, label, tone }) {
-  const bg = tone === 'yellow' ? 'bg-[#FFF8E1]' : 'bg-[#EAF8EC]';
-  const ic = tone === 'yellow' ? 'text-[#F5B000]' : 'text-[#09AD2A]';
+  const bg = tone === 'yellow' ? 'bg-[#FFF8E1]' : 'bg-[#E5F3F5]';
+  const ic = tone === 'yellow' ? 'text-[#F5B000]' : 'text-[#035C6C]';
   return (
     <div className={cx('rounded-2xl p-3.5', bg)}>
       <Icon className={cx('h-5 w-5', ic)} aria-hidden="true" />
@@ -172,7 +172,7 @@ function StatTile({ icon: Icon, value, label, tone }) {
 function EmptyRow({ icon: Icon, title, text }) {
   return (
     <div className={cx(CARD, 'flex items-center gap-4 p-4')}>
-      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#EAF8EC] text-[#09AD2A]">
+      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#E5F3F5] text-[#035C6C]">
         <Icon className="h-6 w-6" aria-hidden="true" />
       </span>
       <div className="min-w-0 flex-1 text-center">
@@ -186,7 +186,7 @@ function EmptyRow({ icon: Icon, title, text }) {
 function InfoCell({ icon: Icon, label, value }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#EAF8EC] text-[#09AD2A]">
+      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#E5F3F5] text-[#035C6C]">
         <Icon className="h-5 w-5" aria-hidden="true" />
       </span>
       <div className="min-w-0">
@@ -291,18 +291,18 @@ export default function EmployeeDetailsPage() {
           type="button"
           onClick={() => router.back()}
           aria-label="Back"
-          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#EAF8EC] text-[#111111] transition hover:bg-[#DCF2E0]', FOCUS_RING)}
+          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#E5F3F5] text-[#111111] transition hover:bg-[#E5F3F5]', FOCUS_RING)}
         >
           <ArrowLeft className="h-5 w-5" aria-hidden="true" />
         </button>
         <h1 className="text-[20px] font-extrabold text-[#111111]">Employee Details</h1>
-        <span className="absolute right-0 flex h-11 w-11 items-center justify-center text-[#09AD2A] opacity-60" title="More actions aren’t available yet" aria-hidden="true">
+        <span className="absolute right-0 flex h-11 w-11 items-center justify-center text-[#035C6C] opacity-60" title="More actions aren’t available yet" aria-hidden="true">
           <MoreVertical className="h-5 w-5" />
         </span>
       </div>
 
       {!id ? (
-        <EmptyState icon={AlertTriangle} tone="muted" title="No employee selected" description="Open an employee from Employee Management." />
+        <EmptyState icon={AlertTriangle} tone="muted" title="No employee selected" description="Open an employee from Team." />
       ) : loading ? (
         <div className="space-y-4">
           <div className="h-36 animate-pulse rounded-[22px] bg-[#F3F3F3]" />
@@ -322,12 +322,12 @@ export default function EmployeeDetailsPage() {
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <h2 className="min-w-0 max-w-full truncate text-[22px] font-extrabold text-[#111111] sm:text-[24px]">{tech.name || 'Unnamed'}</h2>
-                <span className={cx('inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[13px] font-bold', active ? 'bg-[#EAF8EC] text-[#09AD2A]' : 'bg-[#F3F3F3] text-[#667085]')}>
-                  <span className={cx('h-2.5 w-2.5 rounded-full', active ? 'bg-[#09AD2A]' : 'bg-[#98A2B3]')} aria-hidden="true" />
+                <span className={cx('inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[13px] font-bold', active ? 'bg-[#E5F3F5] text-[#035C6C]' : 'bg-[#F3F3F3] text-[#667085]')}>
+                  <span className={cx('h-2.5 w-2.5 rounded-full', active ? 'bg-[#035C6C]' : 'bg-[#98A2B3]')} aria-hidden="true" />
                   {active ? 'Active' : 'Inactive'}
                 </span>
               </div>
-              <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[#EAF8EC] px-3 py-1 text-[14px] font-bold text-[#09AD2A]">
+              <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[#E5F3F5] px-3 py-1 text-[14px] font-bold text-[#035C6C]">
                 <Wrench className="h-4 w-4" aria-hidden="true" />
                 {role}
               </span>
@@ -356,24 +356,24 @@ export default function EmployeeDetailsPage() {
             <section className={cx(CARD, 'p-5')}>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <h3 className="text-[18px] font-bold text-[#111111]">This Month</h3>
-                <div className="flex items-center gap-1 rounded-full bg-[#EAF8EC] px-1.5 py-1">
-                  <button type="button" onClick={() => shiftMonth(setViewDate, -1)} aria-label="Previous month" className={cx('rounded-full p-1 text-[#09AD2A] hover:bg-white', FOCUS_RING)}>
+                <div className="flex items-center gap-1 rounded-full bg-[#E5F3F5] px-1.5 py-1">
+                  <button type="button" onClick={() => shiftMonth(setViewDate, -1)} aria-label="Previous month" className={cx('rounded-full p-1 text-[#035C6C] hover:bg-white', FOCUS_RING)}>
                     <ChevronLeft className="h-4 w-4" aria-hidden="true" />
                   </button>
-                  <span className="flex items-center gap-1.5 px-1 text-[15px] font-bold text-[#09AD2A]">
+                  <span className="flex items-center gap-1.5 px-1 text-[15px] font-bold text-[#035C6C]">
                     <CalendarDays className="h-4 w-4" aria-hidden="true" />
                     {MONTHS[viewDate.getMonth()].slice(0, 3)} {viewDate.getFullYear()}
                   </span>
-                  <button type="button" onClick={() => shiftMonth(setViewDate, 1)} aria-label="Next month" className={cx('rounded-full p-1 text-[#09AD2A] hover:bg-white', FOCUS_RING)}>
+                  <button type="button" onClick={() => shiftMonth(setViewDate, 1)} aria-label="Next month" className={cx('rounded-full p-1 text-[#035C6C] hover:bg-white', FOCUS_RING)}>
                     <ChevronRight className="h-4 w-4" aria-hidden="true" />
                   </button>
                 </div>
               </div>
               <div className="mt-5 h-2 overflow-hidden rounded-full bg-[#ECECEC]">
-                <div className="h-full rounded-full bg-[#09AD2A] transition-all" style={{ width: `${pct}%` }} />
+                <div className="h-full rounded-full bg-[#035C6C] transition-all" style={{ width: `${pct}%` }} />
               </div>
               <div className="mt-3 flex items-center justify-between text-[15px]">
-                <span className="font-bold text-[#09AD2A]">{loadingMark(present)} Present</span>
+                <span className="font-bold text-[#035C6C]">{loadingMark(present)} Present</span>
                 <span className="text-[#667085]">
                   {loadingMark(present)}/{totalDays}
                 </span>
@@ -405,7 +405,7 @@ export default function EmployeeDetailsPage() {
                 <div className={cx(CARD, 'divide-y divide-[#ECECEC]')}>
                   {recentAdvances.map((a) => (
                     <div key={a.id} className="flex items-center gap-3 px-4 py-3">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#EAF8EC] text-[#09AD2A]">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E5F3F5] text-[#035C6C]">
                         <Wallet className="h-5 w-5" aria-hidden="true" />
                       </span>
                       <div className="min-w-0 flex-1">
@@ -437,7 +437,7 @@ export default function EmployeeDetailsPage() {
                   <div className={cx(CARD, 'divide-y divide-[#ECECEC]')}>
                     {box.rows.map((l) => (
                       <div key={l.id} className="flex items-center gap-3 px-4 py-3">
-                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#EAF8EC] text-[#09AD2A]">
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E5F3F5] text-[#035C6C]">
                           <box.icon className="h-5 w-5" aria-hidden="true" />
                         </span>
                         <div className="min-w-0 flex-1">

@@ -89,7 +89,7 @@ export default function MasterTechnicianWorkStatusesPage() {
         <span className="rounded bg-admin-dark px-2 py-0.5 text-xs text-slate-800">{r.ticketStatus}</span>
       ) },
     { key: 'isActive', label: 'Active', render: (r) => (
-        <span className={r.isActive ? 'text-emerald-400' : 'text-admin-muted'}>{r.isActive ? 'Yes' : 'No'}</span>
+        <span className={r.isActive ? 'text-brand-400' : 'text-admin-muted'}>{r.isActive ? 'Yes' : 'No'}</span>
       ) },
   ];
 

@@ -3,7 +3,7 @@
 /**
  * RepairFlow — the public "pick your device" wizard for /repair.
  *
- * Mirrors the GGFIX customer app's Select Brand → Select Product screens
+ * Mirrors the NearGFix customer app's Select Brand → Select Product screens
  * (ggfix-customer-app/src/screens/customer/device/Select{Brand,Model}Screen.js)
  * as a WEBSITE flow, so a visitor can drill Category → Brand → Product in the
  * browser. Booking itself still happens in the app (the site has no customer
@@ -208,7 +208,7 @@ function EmptyState({ title, description }) {
         ) : null}
       </div>
       <Button href="/contact" variant="outline" size="sm" icon="ArrowRight">
-        Continue in the GGFIX app
+        Continue in the NearGFix app
       </Button>
     </div>
   );
@@ -449,7 +449,7 @@ export default function RepairFlow() {
   const subheadings = {
     brand: `Choose the brand of your ${categoryName || 'device'}.`,
     product: `Pick the exact model so the shop knows what it is working on.`,
-    summary: 'Book the repair in the GGFIX app, or find a shop near you to take it in.',
+    summary: 'Book the repair in the NearGFix app, or find a shop near you to take it in.',
     service: `Tell us what needs fixing on your ${modelName || 'device'} — pick as many as apply.`,
   };
 
@@ -891,7 +891,7 @@ const COLOR_WORDS = {
   silver: '#c4c8cc', gold: '#d4af37', golden: '#d4af37', rose: '#e8b4b8',
   pink: '#ec4899', red: '#ef4444', crimson: '#dc2626', maroon: '#7f1d1d',
   orange: '#f97316', amber: '#f59e0b', yellow: '#eab308', lime: '#84cc16',
-  green: '#16a34a', emerald: '#10b981', teal: '#14b8a6', cyan: '#06b6d4',
+  green: '#035C6C', emerald: '#035C6C', teal: '#14b8a6', cyan: '#06b6d4',
   aqua: '#22d3ee', sky: '#0ea5e9', blue: '#2563eb', navy: '#1e3a8a',
   indigo: '#4f46e5', violet: '#7c3aed', purple: '#9333ea', lavender: '#b57edc',
   brown: '#92400e', bronze: '#cd7f32', copper: '#b87333', coffee: '#6f4e37',
@@ -900,7 +900,7 @@ const COLOR_WORDS = {
   starry: '#334155', mint: '#7fdca4', turquoise: '#40e0d0', coral: '#ff7f50',
   ivory: '#f2ecdd', cream: '#f5efd6', beige: '#e8dcc4', pearl: '#e6ddcf',
   glowing: '#334155', nebula: '#3b3f7a', cosmic: '#3b3f7a', ocean: '#0369a1',
-  forest: '#166534', sea: '#0891b2',
+  forest: '#023A44', sea: '#0891b2',
 };
 
 /** Resolve a device colour name to a hex, or null when nothing is recognised.
@@ -1031,7 +1031,7 @@ function ServiceStep({ deviceCategoryId, modelName, deviceHref, device }) {
     return (
       <EmptyState
         title="Repair services aren't available here yet"
-        description={`The GGFIX app has the full list of what we can fix on your ${modelName || 'device'}.`}
+        description={`The NearGFix app has the full list of what we can fix on your ${modelName || 'device'}.`}
       />
     );
   }
@@ -1431,7 +1431,7 @@ function ReportStep({
 /* -------------------------------------------------------------------------- */
 /* Mirrors the app's "Service Options" screen: how the customer wants to proceed
  * — doorstep pickup, a service enquiry (chat), or walking in. Every option is a
- * real GGFIX capability; no invented prices or wait times are shown. */
+ * real NearGFix capability; no invented prices or wait times are shown. */
 
 const SERVICE_OPTIONS = [
   {
@@ -1459,7 +1459,7 @@ const SERVICE_OPTIONS = [
     icon: Store,
     title: 'Walk in to a shop',
     badge: null,
-    desc: 'Prefer to visit? Find verified GGFIX shops near you and drop your device in.',
+    desc: 'Prefer to visit? Find verified NearGFix shops near you and drop your device in.',
     features: ['Verified shops', 'Directions & timings', 'Visit directly'],
     href: '/nearby-shops',
     cta: 'Find shops near you',
@@ -1595,7 +1595,7 @@ function ServiceOptionsStep({ modelName, serviceIds, reportHref }) {
           {active.cta}
         </Button>
         <p className="text-xs text-brand-muted">
-          All options use verified GGFIX shops near you.
+          All options use verified NearGFix shops near you.
         </p>
       </div>
     </div>
@@ -2720,7 +2720,7 @@ function ReviewStep({
           </Button>
         </div>
         <p className="mt-3 text-center text-xs text-brand-muted">
-          Live tracking and the shop&apos;s quote arrive in the GGFIX app.
+          Live tracking and the shop&apos;s quote arrive in the NearGFix app.
         </p>
       </div>
     );

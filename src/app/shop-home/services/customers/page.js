@@ -167,9 +167,9 @@ export default function CustomersSearchPage() {
               pushRecent(query);
               setNeedle(norm(query));
             }}
-            className="flex h-12 min-w-0 flex-1 items-center gap-2 rounded-full border border-[#ECECEC] bg-white pl-4 pr-1.5 transition focus-within:border-[#079455]"
+            className="flex h-12 min-w-0 flex-1 items-center gap-2 rounded-full border border-[#ECECEC] bg-white pl-4 pr-1.5 transition focus-within:border-[#035C6C]"
           >
-            <Search className="h-[18px] w-[18px] shrink-0 text-[#087A0A]" aria-hidden="true" />
+            <Search className="h-[18px] w-[18px] shrink-0 text-[#024A57]" aria-hidden="true" />
             <input
               ref={inputRef}
               type="search"
@@ -214,7 +214,7 @@ export default function CustomersSearchPage() {
                 <section>
                   <div className="mb-2 flex items-center justify-between">
                     <p className="text-[11.5px] font-extrabold tracking-[0.08em] text-[#666666]">RECENT</p>
-                    <button type="button" onClick={clearRecents} className="text-[12px] font-extrabold text-[#087A0A] hover:underline">
+                    <button type="button" onClick={clearRecents} className="text-[12px] font-extrabold text-[#024A57] hover:underline">
                       Clear
                     </button>
                   </div>
@@ -224,7 +224,7 @@ export default function CustomersSearchPage() {
                         key={t}
                         type="button"
                         onClick={() => searchFor(t)}
-                        className="inline-flex items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white px-3 py-1.5 text-[13px] text-[#344054] transition hover:border-[#079455] hover:text-[#079455]"
+                        className="inline-flex items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white px-3 py-1.5 text-[13px] text-[#344054] transition hover:border-[#035C6C] hover:text-[#035C6C]"
                       >
                         <Clock className="h-3.5 w-3.5 text-[#8FA08F]" aria-hidden="true" />
                         {t}
@@ -258,9 +258,9 @@ export default function CustomersSearchPage() {
                             tabIndex={0}
                             onClick={() => searchFor(c.phone || c.name)}
                             onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), searchFor(c.phone || c.name))}
-                            className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#ECECEC] bg-white px-3.5 py-3 transition hover:border-[#079455] hover:bg-[#F8F8F8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#079455]"
+                            className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#ECECEC] bg-white px-3.5 py-3 transition hover:border-[#035C6C] hover:bg-[#F8F8F8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C]"
                           >
-                            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#EAF8EC] text-[17px] font-extrabold text-[#087A0A]">
+                            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#E5F3F5] text-[17px] font-extrabold text-[#024A57]">
                               {String(c.name || '?').trim().charAt(0).toUpperCase()}
                             </span>
                             <span className="min-w-0 flex-1">
@@ -275,7 +275,7 @@ export default function CustomersSearchPage() {
                               <a
                                 href={`tel:${c.phone}`}
                                 onClick={(e) => e.stopPropagation()}
-                                className="shrink-0 text-[13px] font-bold text-[#079455] hover:underline"
+                                className="shrink-0 text-[13px] font-bold text-[#035C6C] hover:underline"
                               >
                                 {c.phone}
                               </a>
@@ -291,7 +291,7 @@ export default function CustomersSearchPage() {
                     )
         ) : loading || pending ? (
           <div className="flex justify-center pt-10">
-            <Loader2 className="h-6 w-6 animate-spin text-[#087A0A]" aria-hidden="true" />
+            <Loader2 className="h-6 w-6 animate-spin text-[#024A57]" aria-hidden="true" />
           </div>
         ) : results.length ? (
           <section>
@@ -355,9 +355,9 @@ function ResultCard({ row, onOpen }) {
       <Thumb url={image} />
       <div className="min-w-0 flex-1">
         <div className="flex min-w-0 items-center gap-2">
-          <span className="truncate text-[12px] font-extrabold text-[#087A0A]">{withHash(row.bookingNumber || row.id)}</span>
+          <span className="truncate text-[12px] font-extrabold text-[#024A57]">{withHash(row.bookingNumber || row.id)}</span>
           {status ? (
-            <span className="shrink-0 rounded-full bg-[#F3F3F3] px-2 py-0.5 text-[10.5px] font-extrabold uppercase tracking-wide text-[#067647]">{status}</span>
+            <span className="shrink-0 rounded-full bg-[#F3F3F3] px-2 py-0.5 text-[10.5px] font-extrabold uppercase tracking-wide text-[#024A57]">{status}</span>
           ) : null}
         </div>
         <p className="mt-0.5 truncate text-[15px] font-extrabold text-[#111111]">{deviceNameOf(row)}</p>
@@ -380,7 +380,7 @@ function ResultCard({ row, onOpen }) {
 /* Voice + scan                                                                */
 /* -------------------------------------------------------------------------- */
 
-const ICON_BTN = 'flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3] text-[#087A0A] transition hover:bg-[#F3F3F3] disabled:cursor-not-allowed disabled:opacity-40';
+const ICON_BTN = 'flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3] text-[#024A57] transition hover:bg-[#F3F3F3] disabled:cursor-not-allowed disabled:opacity-40';
 
 function VoiceButton({ onResult }) {
   const [supported, setSupported] = useState(false);
@@ -421,7 +421,7 @@ function VoiceButton({ onResult }) {
       disabled={!supported}
       aria-label={listening ? 'Stop listening' : 'Search by voice'}
       title={supported ? (listening ? 'Listening… tap to stop' : 'Search by voice') : 'Voice search isn’t supported in this browser'}
-      className={cx(ICON_BTN, listening && 'animate-pulse bg-[#087A0A] text-white hover:bg-[#087A0A]')}
+      className={cx(ICON_BTN, listening && 'animate-pulse bg-[#024A57] text-white hover:bg-[#024A57]')}
     >
       <Mic className="h-4 w-4" aria-hidden="true" />
     </button>

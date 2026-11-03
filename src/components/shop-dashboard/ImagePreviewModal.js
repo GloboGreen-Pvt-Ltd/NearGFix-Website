@@ -176,7 +176,7 @@ export default function ImagePreviewModal({ open, src, title, subtitle, onClose 
           type="button"
           onClick={onClose}
           aria-label="Close preview"
-          className="absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#F3F3F3] text-[#344054] transition hover:bg-[#ECECEC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] sm:h-9 sm:w-9"
+          className="absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#F3F3F3] text-[#344054] transition hover:bg-[#ECECEC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] sm:h-9 sm:w-9"
         >
           <X className="h-5 w-5" aria-hidden="true" />
         </button>

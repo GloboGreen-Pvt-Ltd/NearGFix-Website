@@ -96,6 +96,6 @@ export const WORKFLOW_BADGE = {
   ASSIGNED: 'bg-orange-100 text-orange-700',
   PICKUP_STARTED: 'bg-blue-100 text-blue-700',
   PICKED_UP: 'bg-violet-100 text-violet-700',
-  COMPLETED: 'bg-[#DCFCE7] text-[#15803D]',
+  COMPLETED: 'bg-[#E5F3F5] text-[#024A57]',
   CANCELLED: 'bg-red-100 text-red-700',
 };

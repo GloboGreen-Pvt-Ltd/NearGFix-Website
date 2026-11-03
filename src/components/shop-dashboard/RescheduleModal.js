@@ -37,7 +37,7 @@ const fmt = (d) => (d ? d.toLocaleString('en-US', { weekday: 'short', month: 'sh
 function ReadOnlyRow({ icon: Icon, label, value, caption }) {
   return (
     <div className="flex items-start gap-3 rounded-xl border border-[#ECECEC] bg-[#F8F8F8] px-3.5 py-3">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#EAF8EC] text-[#079455]">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#E5F3F5] text-[#035C6C]">
         <Icon className="h-4 w-4" aria-hidden="true" />
       </span>
       <div className="min-w-0">
@@ -50,7 +50,7 @@ function ReadOnlyRow({ icon: Icon, label, value, caption }) {
 }
 
 const INPUT_CLS =
-  'mt-1.5 w-full rounded-xl border border-[#ECECEC] bg-white px-3 py-2.5 text-[14px] font-semibold normal-case tracking-normal text-[#111111] focus:border-[#079455] focus:outline-none focus:ring-4 focus:ring-[#079455]/10 disabled:bg-[#F8F8F8]';
+  'mt-1.5 w-full rounded-xl border border-[#ECECEC] bg-white px-3 py-2.5 text-[14px] font-semibold normal-case tracking-normal text-[#111111] focus:border-[#035C6C] focus:outline-none focus:ring-4 focus:ring-[#035C6C]/10 disabled:bg-[#F8F8F8]';
 
 export default function RescheduleModal({ open, ticketId, bookingLabel, bookedAt, durationHours, onClose, onSaved }) {
   const [current, setCurrent] = useState({ booked: null, delivery: null, estimated: false });
@@ -98,6 +98,7 @@ export default function RescheduleModal({ open, ticketId, bookingLabel, bookedAt
       setErr('Delivery can’t be before the booking date.');
       return;
     }
+    if (!window.confirm(`Move delivery to ${fmt(deliveryAt)}?`)) return;
     setSaving(true);
     setErr('');
     try {
@@ -119,7 +120,7 @@ export default function RescheduleModal({ open, ticketId, bookingLabel, bookedAt
         aria-modal="true"
         aria-label="Re-Schedule"
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[90dvh] w-full max-w-md overflow-y-auto overscroll-contain rounded-[22px] bg-white p-5 shadow-[0_24px_60px_rgba(16,24,40,0.25)] sm:p-6"
+        className="max-h-[90dvh] w-full max-w-md overflow-y-auto overscroll-contain rounded-[22px] lg:max-w-3xl lg:rounded-xl bg-white p-5 shadow-[0_24px_60px_rgba(16,24,40,0.25)] sm:p-6"
       >
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
@@ -131,7 +132,8 @@ export default function RescheduleModal({ open, ticketId, bookingLabel, bookedAt
           </button>
         </div>
 
-        <div className="mt-5 space-y-2.5">
+        <div className="lg:mt-5 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6">
+        <div className="mt-5 space-y-2.5 lg:mt-0">
           <ReadOnlyRow icon={CalendarCheck} label="Booked On" value={fmt(current.booked)} />
           <ReadOnlyRow
             icon={CalendarClock}
@@ -141,7 +143,8 @@ export default function RescheduleModal({ open, ticketId, bookingLabel, bookedAt
           />
         </div>
 
-        <label className="mt-5 block text-[12px] font-bold uppercase tracking-wide text-[#666666]">
+        <div>
+        <label className="mt-5 block lg:mt-0 text-[12px] font-bold uppercase tracking-wide text-[#666666]">
           Updated delivery date &amp; time
           <input
             type="datetime-local"
@@ -152,17 +155,19 @@ export default function RescheduleModal({ open, ticketId, bookingLabel, bookedAt
             className={INPUT_CLS}
           />
         </label>
+        </div>
+        </div>
         {err ? <p className="mt-3 text-[13px] font-semibold text-[#B42318]">{err}</p> : null}
 
-        <div className="mt-6 flex gap-2">
-          <button type="button" onClick={onClose} className="h-11 flex-1 rounded-xl border border-[#ECECEC] bg-white text-[14px] font-bold text-[#344054] hover:bg-[#F8F8F8]">
+        <div className="mt-6 flex gap-2 lg:justify-end">
+          <button type="button" onClick={onClose} className="h-11 flex-1 rounded-xl border lg:w-40 lg:flex-none border-[#ECECEC] bg-white text-[14px] font-bold text-[#344054] hover:bg-[#F8F8F8]">
             Cancel
           </button>
           <button
             type="button"
             onClick={save}
             disabled={saving || loading}
-            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-[#079455] text-[14px] font-bold text-white transition hover:bg-[#067647] disabled:opacity-60"
+            className="inline-flex h-11 flex-1 items-center lg:w-48 lg:flex-none justify-center gap-2 rounded-xl bg-[#035C6C] text-[14px] font-bold text-white transition hover:bg-[#024A57] disabled:opacity-60"
           >
             {saving ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : null}
             {saving ? 'Saving…' : 'Update delivery'}

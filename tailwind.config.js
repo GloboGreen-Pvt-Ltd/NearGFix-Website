@@ -15,29 +15,29 @@ module.exports = {
         admin: {
           dark: '#f1f5f9', // page + input background (light gray)
           card: '#ffffff', // cards / modals / table surfaces (white)
-          panel: '#004c40', // sidebar chrome (dark brand teal)
+          panel: '#1C3053', // sidebar chrome (Partner App brand navy)
           border: '#e2e8f0', // hairline borders
-          accent: '#2563eb', // primary blue — buttons, active nav, links
+          accent: '#035C6C', // Partner App teal — buttons, active nav, links
           muted: '#64748b', // secondary text
         },
 
         // Public marketing site palette (mirrors the GGFIX mobile apps).
-        // Green is the primary brand + action colour.
+        // Teal (Partner App, Nov 2026) is the primary brand + action colour.
         brand: {
-          50: '#F0FDF4',
-          100: '#DCFCE7',
-          200: '#BBF7D0',
-          300: '#86EFAC',
-          400: '#4ADE80',
-          500: '#22C55E',
-          600: '#16A34A',
-          700: '#15803D',
-          800: '#166534',
-          900: '#14532D',
-          DEFAULT: '#16A34A',
-          light: '#22C55E',
-          dark: '#15803D',
-          soft: '#DCFCE7',
+          50: '#E5F3F5',
+          100: '#C7E6EA',
+          200: '#9FD3DA',
+          300: '#6BB8C3',
+          400: '#357D89',
+          500: '#0A6F80',
+          600: '#035C6C',
+          700: '#024A57',
+          800: '#023A44',
+          900: '#012B33',
+          DEFAULT: '#035C6C',
+          light: '#357D89',
+          dark: '#024A57',
+          soft: '#E5F3F5',
           // Neutral/surface tokens used across the marketing pages.
           ink: '#0F172A', // primary body + heading text
           // Secondary text. Must clear AA (4.5:1) on EVERY light surface it is
@@ -56,28 +56,28 @@ module.exports = {
 
         // Orange accent — used sparingly: badges, highlight numbers, one CTA.
         accent: {
-          50: '#FFF7ED',
-          100: '#FFEDD5',
-          200: '#FED7AA',
-          300: '#FDBA74',
-          400: '#FB923C',
-          500: '#FF7A00',
-          600: '#E56A00',
-          700: '#C2410C',
-          800: '#9A3412',
-          900: '#7C2D12',
-          DEFAULT: '#FF7A00',
-          light: '#FF9A3D',
-          dark: '#E56A00',
-          soft: '#FFEDD5',
+          50: '#FFF8E5',
+          100: '#FFEFC2',
+          200: '#FFE08A',
+          300: '#FFD152',
+          400: '#FFBE29',
+          500: '#FAA700',
+          600: '#B87A00',
+          700: '#8C5A00',
+          800: '#6B4500',
+          900: '#4D3200',
+          DEFAULT: '#FAA700',
+          light: '#FFBE29',
+          dark: '#D98F00',
+          soft: '#FFEFC2',
         },
 
         // Status colours shared by both surfaces.
         status: {
-          success: '#16A34A',
-          warning: '#F59E0B',
-          danger: '#EF4444',
-          info: '#0EA5E9',
+          success: '#609138',
+          warning: '#F3BF23',
+          danger: '#F84141',
+          info: '#0788C9',
         },
       },
 
@@ -91,7 +91,7 @@ module.exports = {
       boxShadow: {
         soft: '0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.06)',
         lift: '0 8px 24px rgba(15, 23, 42, 0.10), 0 2px 6px rgba(15, 23, 42, 0.05)',
-        glow: '0 10px 30px rgba(22, 163, 74, 0.18)',
+        glow: '0 10px 30px rgba(3, 92, 108, 0.18)',
       },
 
       maxWidth: {

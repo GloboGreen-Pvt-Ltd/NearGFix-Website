@@ -26,8 +26,8 @@ import { cx } from '@/components/site/ui';
 import { MONTHS, shiftMonth } from '@/components/shop-dashboard/MonthSwitcher';
 import { fetchTechnician, fetchTechnicianAttendance } from '@/lib/shopDashboard';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2';
-const DARK = '#09AD2A';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
+const DARK = '#035C6C';
 const WEEKDAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
 // Status -> calendar dot colour (legend order as in the app).
@@ -155,7 +155,7 @@ export default function EmployeeAttendancePage() {
           type="button"
           onClick={() => router.back()}
           aria-label="Back"
-          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#EAF8EC] text-[#111111] transition hover:bg-[#DCF2E0]', FOCUS_RING)}
+          className={cx('absolute left-0 flex h-11 w-11 items-center justify-center rounded-full bg-[#E5F3F5] text-[#111111] transition hover:bg-[#E5F3F5]', FOCUS_RING)}
         >
           <ArrowLeft className="h-5 w-5" aria-hidden="true" />
         </button>
@@ -212,8 +212,8 @@ export default function EmployeeAttendancePage() {
                     className={cx(
                       'flex h-9 w-9 items-center justify-center rounded-full text-[14px] font-bold sm:h-10 sm:w-10 sm:text-[16px]',
                       sunday ? 'text-[#DC2626]' : 'text-[#111111]',
-                      isToday && 'bg-[#EAF8EC] text-[#09AD2A]',
-                      st === 'present' && !isToday && 'bg-[#09AD2A] text-white',
+                      isToday && 'bg-[#E5F3F5] text-[#035C6C]',
+                      st === 'present' && !isToday && 'bg-[#035C6C] text-white',
                     )}
                   >
                     {d.getDate()}
@@ -232,7 +232,7 @@ export default function EmployeeAttendancePage() {
               </span>
             ))}
             <span className="inline-flex items-center gap-1.5 text-[13px] text-[#344054]">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#09AD2A]" aria-hidden="true" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#035C6C]" aria-hidden="true" />
               Present (filled)
             </span>
           </div>
@@ -274,7 +274,7 @@ export default function EmployeeAttendancePage() {
                     <div className="min-w-0 flex-1 text-[13px] text-[#344054]">
                       <p className="flex flex-wrap items-center gap-x-3">
                         <span className="inline-flex items-center gap-1">
-                          <LogIn className="h-3.5 w-3.5 text-[#09AD2A]" aria-hidden="true" />
+                          <LogIn className="h-3.5 w-3.5 text-[#035C6C]" aria-hidden="true" />
                           {hhmm(r.checkInTime)}
                         </span>
                         <span className="inline-flex items-center gap-1">

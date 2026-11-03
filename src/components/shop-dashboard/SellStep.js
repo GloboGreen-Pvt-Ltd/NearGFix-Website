@@ -4,7 +4,7 @@
  * Shared chrome for the Sell a Device steps (src/app/shop-home/sell/*):
  * SellStepHeader — back arrow · centered title · search icon that expands a
  * client-side filter field (only when onQueryChange is given — the Sell on
- * GGFIX home has nothing to filter); SellTile — the equal-size logo/photo card.
+ * NearGFix home has nothing to filter); SellTile — the equal-size logo/photo card.
  *
  * The listing steps after Select Model also share (the Partner app's
  * sellTheme.js, on the web): SellShell (header + content column + optional
@@ -43,7 +43,7 @@ export function SellStepHeader({ title, subtitle, query, onQueryChange, searchPl
           type="button"
           onClick={() => router.back()}
           aria-label="Back"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#111111] transition hover:bg-[#F3F3F3] hover:text-[#079455]"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#111111] transition hover:bg-[#F3F3F3] hover:text-[#035C6C]"
         >
           <ArrowLeft className="h-5 w-5" aria-hidden="true" />
         </button>
@@ -59,7 +59,7 @@ export function SellStepHeader({ title, subtitle, query, onQueryChange, searchPl
             aria-expanded={open}
             className={cx(
               'inline-flex h-10 w-10 items-center justify-center rounded-full transition',
-              open ? 'bg-[#F3F3F3] text-[#079455]' : 'text-[#111111] hover:bg-[#F3F3F3] hover:text-[#079455]',
+              open ? 'bg-[#F3F3F3] text-[#035C6C]' : 'text-[#111111] hover:bg-[#F3F3F3] hover:text-[#035C6C]',
             )}
           >
             {open ? <X className="h-5 w-5" aria-hidden="true" /> : <Search className="h-5 w-5" aria-hidden="true" />}
@@ -71,7 +71,7 @@ export function SellStepHeader({ title, subtitle, query, onQueryChange, searchPl
       </div>
       {searchable && open ? (
         <div className="px-4 pb-3.5 sm:px-6">
-          <div className="mx-auto flex max-w-xl items-center gap-2 rounded-xl border border-[#ECECEC] bg-[#F8F8F8] px-3.5 py-2.5 focus-within:border-[#079455] focus-within:bg-white">
+          <div className="mx-auto flex max-w-xl items-center gap-2 rounded-xl border border-[#ECECEC] bg-[#F8F8F8] px-3.5 py-2.5 focus-within:border-[#035C6C] focus-within:bg-white">
             <Search className="h-4 w-4 shrink-0 text-[#98A2B3]" aria-hidden="true" />
             <input
               ref={inputRef}
@@ -100,9 +100,9 @@ export function SellTile({ href, imageUrl, name, fallbackIcon: Fallback, imageCl
           // eslint-disable-next-line @next/next/no-img-element -- remote master-data logo/photo, not an app asset Next can optimize.
           <img src={imageUrl} alt="" loading="lazy" onError={() => setBroken(true)} className="h-full w-full object-contain object-center" />
         ) : Fallback ? (
-          <Fallback className="h-8 w-8 text-[#079455]/60" aria-hidden="true" />
+          <Fallback className="h-8 w-8 text-[#035C6C]/60" aria-hidden="true" />
         ) : (
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F3F3F3] text-[18px] font-extrabold text-[#079455]">
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F3F3F3] text-[18px] font-extrabold text-[#035C6C]">
             {String(name || '?').charAt(0).toUpperCase()}
           </span>
         )}
@@ -164,10 +164,10 @@ export function SellButton({ children, onClick, disabled, loading, variant = 'pr
       className={cx(
         'inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl px-5 text-[14.5px] font-extrabold transition disabled:cursor-not-allowed',
         variant === 'outline'
-          ? 'border-[1.5px] border-[#ECECEC] bg-white text-[#111111] hover:border-[#079455] hover:text-[#079455] disabled:opacity-60'
+          ? 'border-[1.5px] border-[#ECECEC] bg-white text-[#111111] hover:border-[#035C6C] hover:text-[#035C6C] disabled:opacity-60'
           : variant === 'danger'
             ? 'bg-[#D92D20] text-white hover:bg-[#B42318] disabled:bg-[#D92D20]/40'
-            : 'bg-[#079455] text-white hover:bg-[#067647] disabled:bg-[#079455]/40',
+            : 'bg-[#035C6C] text-white hover:bg-[#024A57] disabled:bg-[#035C6C]/40',
         className,
       )}
     >
@@ -194,7 +194,7 @@ export function SellCard({ className, children }) {
 export function SellLoading({ label = 'Loading…' }) {
   return (
     <div className="flex flex-col items-center py-16 text-[#666666]">
-      <Loader2 className="h-7 w-7 animate-spin text-[#079455]" aria-hidden="true" />
+      <Loader2 className="h-7 w-7 animate-spin text-[#035C6C]" aria-hidden="true" />
       <p className="mt-2 text-[13px]">{label}</p>
     </div>
   );
@@ -211,7 +211,7 @@ export function SellMissingDraft() {
       action={
         <Link
           href="/shop-home/sell/select-brand/"
-          className="inline-flex h-11 items-center rounded-xl bg-[#079455] px-5 text-[14px] font-bold text-white transition hover:bg-[#067647]"
+          className="inline-flex h-11 items-center rounded-xl bg-[#035C6C] px-5 text-[14px] font-bold text-white transition hover:bg-[#024A57]"
         >
           Start selling
         </Link>
@@ -230,7 +230,7 @@ export function SellThumb({ src, className, fit = 'contain', fallbackIcon: Fallb
         // eslint-disable-next-line @next/next/no-img-element -- catalogue / uploaded photo, not an app asset Next can optimize.
         <img src={src} alt="" onError={() => setBroken(true)} className={cx('h-full w-full', fit === 'cover' ? 'object-cover' : 'object-contain')} />
       ) : (
-        <Fallback className={cx('text-[#079455]', iconClassName)} aria-hidden="true" />
+        <Fallback className={cx('text-[#035C6C]', iconClassName)} aria-hidden="true" />
       )}
     </span>
   );
@@ -238,7 +238,7 @@ export function SellThumb({ src, className, fit = 'contain', fallbackIcon: Fallb
 
 export function CheckDot({ className = 'h-5 w-5' }) {
   return (
-    <span className={cx('flex shrink-0 items-center justify-center rounded-full bg-[#079455] text-white', className)} aria-hidden="true">
+    <span className={cx('flex shrink-0 items-center justify-center rounded-full bg-[#035C6C] text-white', className)} aria-hidden="true">
       <Check className="h-[65%] w-[65%]" strokeWidth={3} />
     </span>
   );
@@ -251,5 +251,5 @@ export function RadioRing({ className = 'h-5 w-5' }) {
 /** Border/fill/text for a selectable option. */
 export const choiceCls = (active) =>
   active
-    ? 'border-[#079455] bg-[#EAF8EC] text-[#067647]'
+    ? 'border-[#035C6C] bg-[#E5F3F5] text-[#024A57]'
     : 'border-[#ECECEC] bg-white text-[#111111] hover:border-[#D0D5DD]';

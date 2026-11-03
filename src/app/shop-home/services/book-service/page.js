@@ -239,6 +239,8 @@ import {
   Phone,
   Play,
   Plus,
+  MessageSquarePlus,
+  UserPlus,
   QrCode,
   Receipt,
   RectangleHorizontal,
@@ -268,9 +270,11 @@ import { cx } from '@/components/site/ui';
 import Icon3D from '@/components/shop-dashboard/Icon3D';
 import { MaterialIcon } from '@/components/site/MaterialIcon';
 import AssignTechnicianModal from '@/components/shop-dashboard/AssignTechnicianModal';
+import { IssueCheckRow, IssueSheet, IssueTile, SelectedIssueRow } from '@/components/shop-dashboard/RepairIssuePieces';
 import { masterApi } from '@/lib/api';
 import { resolveMediaUrl } from '@/lib/deviceImage';
 import { iconForRepairCategory, iconForRepairService } from '@/lib/repairIcons';
+import { bookingRef } from '@/lib/orderStages';
 import { fetchShopBookings, fetchTicket } from '@/lib/shopDashboard';
 import { deriveCustomers } from '@/lib/customerDirectory';
 import { readShopOwner } from '@/lib/shopAuth';
@@ -281,23 +285,23 @@ import { focusField, registerField } from '@/lib/formFocus';
 import { notifyError, notifySuccess } from '@/lib/toast';
 
 const FOCUS_RING =
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09AD2A] focus-visible:ring-offset-2';
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2';
 // Page-local, compact tokens — see file header for why these aren't the
 // shared FIELD_INPUT_CLS/CardShell used elsewhere in the dashboard.
 // 16px text below sm so iOS Safari doesn't auto-zoom on focus.
 const COMPACT_INPUT_CLS =
-  'w-full rounded-xl border border-[#ECECEC] bg-white px-3.5 py-3 text-base text-[#111111] sm:text-sm placeholder:text-[#98A2B3] transition focus:border-[#09AD2A] focus:bg-white focus:outline-none focus:ring-[3px] focus:ring-[#ECECEC] disabled:cursor-not-allowed disabled:bg-[#F3F3F3] disabled:text-[#98A2B3]';
+  'w-full rounded-xl border border-[#ECECEC] bg-white px-3.5 py-3 text-base text-[#111111] sm:text-sm placeholder:text-[#98A2B3] transition focus:border-[#035C6C] focus:bg-white focus:outline-none focus:ring-[3px] focus:ring-[#ECECEC] disabled:cursor-not-allowed disabled:bg-[#F3F3F3] disabled:text-[#98A2B3]';
 // Same box, with room carved out on the left for a leading icon (see
 // IconField, below) — used wherever a field shows one, so the input text
 // never sits underneath the icon.
 const ICON_INPUT_CLS = cx(COMPACT_INPUT_CLS, 'pl-10');
 // Booking Confirmation action rows (Assign Technician / Share Receipt / Barcode Print).
 const CONFIRM_ACTION_CLS = cx(
-  'group flex items-center gap-3 rounded-2xl border border-[#ECECEC] bg-white px-4 py-3 text-left transition hover:border-[#09AD2A]/50 hover:bg-[#F2FBF4]',
+  'group flex items-center gap-3 rounded-2xl border border-[#ECECEC] bg-white px-4 py-3 text-left transition hover:border-[#035C6C]/50 hover:bg-[#E5F3F5]',
   FOCUS_RING,
 );
 const CONFIRM_ACTION_ICON_CLS =
-  'flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F2FBF4] text-[#09AD2A] transition group-hover:bg-white';
+  'flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E5F3F5] text-[#035C6C] transition group-hover:bg-white';
 
 // Per-service Price/Warranty in "Add Issue / Service" (below) — neither has
 // a field on repair-services or the booking payload's `services` array
@@ -327,14 +331,26 @@ const WARRANTY_OPTIONS = ['3', '6', '12'];
 const SECTIONS = [
   { key: 'customer', ms: 'person', short: 'Customer', label: 'Customer Details', subtitle: 'Add customer information', icon: User },
   { key: 'device', ms: 'smartphone', short: 'Device', label: 'Device Details', subtitle: 'Add device information', icon: Smartphone },
-  { key: 'problem', ms: 'build', short: 'Issue / Service', label: 'Add Issue / Service', subtitle: 'Select issue and service', icon: Wrench },
-  { key: 'pickup', ms: 'request_quote', short: 'Price & Estimate', label: 'Service Price & Issue Estimate', subtitle: 'Review and estimate', icon: Receipt },
-  { key: 'deviceInfo', ms: 'info', short: 'Device Info', label: 'Device Information', subtitle: 'Device details and photos', icon: Info },
-  { key: 'deviceSecurity', ms: 'lock', short: 'Security Lock', label: 'Device Security Lock', subtitle: 'Screen lock details', icon: Lock },
-  { key: 'missingParts', ms: 'checklist', short: 'Missing Parts', label: 'Device Missing Parts', subtitle: 'Inspection checklist', icon: ListChecks },
-  { key: 'devicesList', ms: 'assignment', short: 'Devices List', label: 'Service Booking Devices List', subtitle: 'Review and submit', icon: ClipboardList },
+  { key: 'repair', ms: 'build', short: 'Devices & Repair', label: 'Devices & Repair', subtitle: 'Issues, price, photos, lock and missing parts', icon: Wrench },
+  { key: 'devicesList', ms: 'assignment', short: 'Review & Confirm', label: 'Review & Confirm', subtitle: 'Review and submit', icon: ClipboardList },
   { key: 'confirmation', ms: 'check_circle', short: 'Confirmation', label: 'Booking Confirmation', subtitle: 'Booking created', icon: CheckCircle2 },
 ];
+
+// Same flow as the Partner App (ServicePriceEstimate "Devices & Repair"):
+// the old Issue / Service, Price & Estimate, Device Info, Security Lock and
+// Missing Parts tabs are now PARTS of the one Devices & Repair step, with
+// Security Lock and Missing Parts folded. Validators stay keyed by part.
+const STEP_PARTS = { repair: ['problem', 'pickup', 'deviceInfo', 'deviceSecurity', 'missingParts'] };
+const STEP_OF = Object.fromEntries(Object.entries(STEP_PARTS).flatMap(([step, parts]) => parts.map((p) => [p, step])));
+const FOLD_PARTS = ['deviceSecurity', 'missingParts'];
+
+// Repair Issues tile order — the Partner app's RepairIssuesPicker TILE_ORDER:
+// these groups first, the rest after in catalogue order.
+const ISSUE_TILE_ORDER = [/dead|no power/i, /display|screen/i, /battery/i, /motherboard|mainboard|sub-?board/i, /network/i, /security/i];
+const issueTileRank = (name) => {
+  const i = ISSUE_TILE_ORDER.findIndex((re) => re.test(String(name || '')));
+  return i === -1 ? ISSUE_TILE_ORDER.length : i;
+};
 
 const PAYMENT_MODES = ['Cash', 'UPI', 'Card', 'Bank Transfer', 'Pay Later', 'Other'];
 
@@ -382,8 +398,10 @@ const EMPTY_FORM = {
   categoryId: '',
   brandId: '',
   brandName: '',
+  customBrand: false,
   modelId: '',
   modelName: '',
+  customModel: false,
   color: '',
   variant: '',
   imei: '',
@@ -474,8 +492,9 @@ const SECTION_VALIDATORS = {
   },
   device: {
     categoryId: required('Select the device category, brand and model.'),
-    brandId: required('Select the device category, brand and model.'),
-    modelId: required('Select the device category, brand and model.'),
+    // A brand / model typed through "Other" has no id — its name counts.
+    brandId: (value, all) => (value || (all.customBrand && String(all.brandName || '').trim()) ? '' : 'Select the device category, brand and model.'),
+    modelId: (value, all) => (value || (all.customModel && String(all.modelName || '').trim()) ? '' : 'Select the device category, brand and model.'),
   },
   // Keyed on serviceIds (not issueDescription) so it doesn't collide with
   // the pickup step's required Issue Description below — validateAll()
@@ -484,18 +503,16 @@ const SECTION_VALIDATORS = {
   problem: {
     serviceIds: (value, all) =>
       (value || []).length === 0 && !(all.customIssues || []).length && !String(all.issueDescription || '').trim()
-        ? 'Select at least one service type or describe the problem.'
+        ? 'Select at least one repair issue.'
         : '',
   },
   pickup: {
-    issueDescription: required('Issue Description is required'),
     addressLine: (value, all) => (all.needsAddress && !String(value || '').trim() ? 'Fill in the pickup address.' : ''),
     pincode: (value, all) => (all.needsAddress && !String(value || '').trim() ? 'Fill in the pickup address.' : ''),
     city: (value, all) => (all.needsAddress && !String(value || '').trim() ? 'Fill in the pickup address.' : ''),
     state: (value, all) => (all.needsAddress && !String(value || '').trim() ? 'Fill in the pickup address.' : ''),
-    // Device Files — Front + Back required, as in the Partner app; the coverage video is optional.
-    frontImageUrl: required('Add Front Side and Back Side photos to continue.'),
-    backImageUrl: required('Add Front Side and Back Side photos to continue.'),
+    // Device Photo or Video, Issue Description and Device Security are
+    // optional in the Partner app's Devices & Repair screen, so not here either.
     customerApproved: (value) => (value ? '' : 'Customer Booking approval is required — tick the box once the customer agrees.'),
   },
   // No deviceInfo entry: that tab only DISPLAYS the Price & Estimate
@@ -503,7 +520,6 @@ const SECTION_VALIDATORS = {
   // place. The pickup rules above already gate every route forward to it
   // (goNext/handleTabClick), and submit() re-checks them via validateAll().
   deviceSecurity: {
-    deviceSecurityType: required('Please select the device security type.'),
     devicePin: (value, all) => {
       const v = String(value || '');
       if (all.deviceSecurityType === 'PIN' && !/^\d{4,6}$/.test(v)) return 'PIN must contain at least 4 digits.';
@@ -518,12 +534,167 @@ const SECTION_VALIDATORS = {
   // already defaults to "Nil" when nothing is flagged).
 };
 
+/** Every part's rules for one step (a merged step validates all its parts). */
+function schemaFor(stepKey) {
+  return Object.assign({}, ...(STEP_PARTS[stepKey] || [stepKey]).map((k) => SECTION_VALIDATORS[k] || {}));
+}
+
 /** Which tab a given field belongs to, so a failed goNext()/submit can jump the user straight there. */
 function sectionForField(field) {
   const entry = Object.entries(SECTION_VALIDATORS).find(([, schema]) => field in schema);
   return entry ? entry[0] : null;
 }
 
+
+/* ---- Thank-you receipt pieces (the app's ReceiptSection / ReceiptRow) ---- */
+
+function ReceiptSection({ label, last = false, children }) {
+  return (
+    <div className={last ? '' : 'mb-5'}>
+      <p className="flex items-center gap-2 text-[13.5px] font-extrabold text-[#111111]">
+        <span className="h-3.5 w-[3px] shrink-0 rounded-full bg-[#035C6C]" aria-hidden="true" />
+        {label}
+      </p>
+      <div className="mb-2.5 mt-2 h-px bg-[#E5E7EB]" />
+      {children}
+    </div>
+  );
+}
+
+/** Label on the left (fixed column), value on the right — a long value wraps in its own column. */
+function ReceiptRow({ icon: Icon, label, value, bold = false }) {
+  return (
+    <div className="mb-2 flex items-start gap-3">
+      <span className="flex w-36 shrink-0 items-start gap-1.5 text-[12px] font-semibold leading-4 text-[#6B7280] sm:w-44">
+        {Icon ? <Icon className="mt-px h-3.5 w-3.5 shrink-0 text-[#035C6C]" aria-hidden="true" /> : null}
+        <span className="min-w-0 break-words">{label}</span>
+      </span>
+      <span className={cx('min-w-0 flex-1 break-words text-right text-[13px] leading-5 text-[#111111]', bold ? 'font-extrabold' : 'font-bold')}>
+        {value || value === 0 ? value : '—'}
+      </span>
+    </div>
+  );
+}
+
+/* ---- Booking success burst: a check that pops in with confetti, then the Thank-you screen ---- */
+
+const BURST_COLORS = ['#035C6C', '#0788C9', '#609138', '#FAA700', '#F32C26', '#1C3053', '#F4B4B4'];
+const BURST_SHAPES = ['dot', 'bar', 'star', 'arc'];
+const BURST_PIECES = Array.from({ length: 14 }, (_, i) => ({
+  angle: i * (360 / 14) + (i % 2 ? 8 : -6),
+  radius: i % 3 === 0 ? 122 : i % 3 === 1 ? 104 : 112,
+  color: BURST_COLORS[i % BURST_COLORS.length],
+  shape: BURST_SHAPES[i % BURST_SHAPES.length],
+}));
+const BURST_CSS = `
+@keyframes bsPop { 0% { transform: scale(.4); opacity: 0 } 60% { transform: scale(1.08); opacity: 1 } 100% { transform: scale(1) } }
+@keyframes bsDraw { to { stroke-dashoffset: 0 } }
+@keyframes bsBurst {
+  0% { opacity: 0; transform: translate(-50%, -50%) rotate(var(--bs-a)) translateY(-40px) scale(.4) }
+  35% { opacity: 1 }
+  100% { opacity: 1; transform: translate(-50%, -50%) rotate(var(--bs-a)) translateY(calc(-1 * var(--bs-r))) scale(1) }
+}
+@keyframes bsFade { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: none } }
+@media (prefers-reduced-motion: reduce) { .bs-anim { animation: none !important; opacity: 1 !important; stroke-dashoffset: 0 !important } }
+`;
+
+function BurstPiece({ shape, color }) {
+  if (shape === 'bar') return <span className="block h-4 w-1.5 rounded-sm" style={{ backgroundColor: color }} />;
+  if (shape === 'star') return <span className="block h-3 w-3 rotate-45 rounded-[3px]" style={{ backgroundColor: color }} />;
+  if (shape === 'arc') return <span className="block h-3.5 w-3.5 rounded-full border-[3px] border-b-transparent border-l-transparent" style={{ borderTopColor: color, borderRightColor: color }} />;
+  return <span className="block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />;
+}
+
+/** Full-screen success moment (~1.9s, tap to skip); the Thank-you screen is already underneath. */
+function BookingSuccessBurst({ onDone }) {
+  const doneRef = useRef(onDone);
+  doneRef.current = onDone;
+  useEffect(() => {
+    const t = setTimeout(() => doneRef.current(), 1900);
+    return () => clearTimeout(t);
+  }, []);
+  if (typeof document === 'undefined') return null;
+  return createPortal(
+    <div role="status" aria-live="polite" onClick={() => doneRef.current()} className="fixed inset-0 z-[90] flex cursor-pointer flex-col items-center justify-center bg-white">
+      <style>{BURST_CSS}</style>
+      <div className="relative h-[280px] w-[280px]">
+        {BURST_PIECES.map((p, i) => (
+          <span
+            key={i}
+            className="bs-anim absolute left-1/2 top-1/2"
+            style={{ '--bs-a': `${p.angle}deg`, '--bs-r': `${p.radius}px`, animation: `bsBurst 700ms ${180 + i * 22}ms cubic-bezier(.2,.8,.2,1) both` }}
+          >
+            <BurstPiece shape={p.shape} color={p.color} />
+          </span>
+        ))}
+        <div
+          className="bs-anim absolute left-1/2 top-1/2 -ml-[64px] -mt-[64px] flex h-32 w-32 items-center justify-center rounded-full bg-[#035C6C] shadow-[0_12px_32px_rgba(3,92,108,0.28)]"
+          style={{ animation: 'bsPop 520ms cubic-bezier(.2,.9,.3,1.2) both' }}
+        >
+          <svg viewBox="0 0 52 52" className="h-16 w-16" aria-hidden="true">
+            <path
+              className="bs-anim"
+              d="M14 27 L23 36 L39 18"
+              fill="none"
+              stroke="#FFFFFF"
+              strokeWidth="6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ strokeDasharray: 40, strokeDashoffset: 40, animation: 'bsDraw 380ms 380ms ease-out forwards' }}
+            />
+          </svg>
+        </div>
+      </div>
+      <p className="bs-anim -mt-4 text-[18px] font-extrabold text-[#111111]" style={{ animation: 'bsFade 400ms 650ms both' }}>
+        Booking Confirmed
+      </p>
+    </div>,
+    document.body,
+  );
+}
+
+/** A folded part of Devices & Repair: a one-line summary row that opens into the full section. */
+function FoldCard({ id, icon: Icon, title, summary, invalid = false, open, onToggle, children }) {
+  return (
+    <div id={id} className="scroll-mt-28">
+      {open ? (
+        <div className="space-y-2">
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={onToggle}
+              aria-expanded="true"
+              className={cx('inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold text-[#035C6C] hover:bg-[#E5F3F5]', FOCUS_RING)}
+            >
+              Fold {title}
+              <ChevronDown className="h-3.5 w-3.5 rotate-180" aria-hidden="true" />
+            </button>
+          </div>
+          {children}
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded="false"
+          className={cx(
+            'flex w-full items-center gap-3 rounded-[22px] border bg-[#F3F3F3] p-4 text-left transition hover:border-[#C7E6EA] sm:p-5',
+            invalid ? 'border-[#F84141]' : 'border-[#ECECEC]',
+            FOCUS_RING,
+          )}
+        >
+          <Icon3D flat icon={Icon} tone="green" size="md" />
+          <div className="min-w-0 flex-1">
+            <p className="text-[15px] font-bold text-[#111111]">{title}</p>
+            <p className={cx('truncate text-xs', invalid ? 'text-[#F84141]' : 'text-[#666666]')}>{summary}</p>
+          </div>
+          <span className="shrink-0 text-xs font-bold text-[#035C6C]">Edit</span>
+          <ChevronDown className="h-4 w-4 shrink-0 text-[#666666]" aria-hidden="true" />
+        </button>
+      )}
+    </div>
+  );
+}
 
 function Section({ title, subtitle, icon: Icon, action, children, className }) {
   return (
@@ -584,6 +755,88 @@ function initials(name) {
  * always still just edits the plain text value like a normal input; the
  * dropdown is purely an optional shortcut, never required.
  */
+/**
+ * Partner App Customer Details search: find a customer who has booked here
+ * before by mobile number or name (the shop's own bookings directory). A full
+ * 10-digit number with no match is a new customer — "Use" puts it in Mobile.
+ */
+function CustomerSearch({ directory, onPick, onNewNumber }) {
+  const [q, setQ] = useState('');
+  const term = q.trim().toLowerCase();
+  const digits = term.replace(/\D/g, '');
+  const matches =
+    term.length >= 2
+      ? directory
+          .filter((c) => String(c.name || '').toLowerCase().includes(term) || (digits.length >= 3 && String(c.phone || '').replace(/\D/g, '').includes(digits)))
+          .slice(0, 6)
+      : [];
+  return (
+    <div>
+      <label className="flex h-11 items-center gap-2.5 rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] px-3.5 focus-within:border-[#035C6C]">
+        <Search className="h-[18px] w-[18px] shrink-0 text-[#6B7280]" aria-hidden="true" />
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value.slice(0, 40))}
+          placeholder="Search by mobile number or name"
+          aria-label="Search customer by mobile number or name"
+          className="min-w-0 flex-1 bg-transparent text-base text-[#111111] outline-none placeholder:text-[#9CA3AF] sm:text-sm"
+        />
+        {q ? (
+          <button type="button" onClick={() => setQ('')} aria-label="Clear search" className={cx('rounded-full p-0.5 text-[#6B7280]', FOCUS_RING)}>
+            <X className="h-4 w-4" aria-hidden="true" />
+          </button>
+        ) : null}
+      </label>
+
+      {matches.length ? (
+        <div className="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2">
+          {matches.map((c) => (
+            <button
+              key={`${c.phone}-${c.name}`}
+              type="button"
+              onClick={() => {
+                onPick(c);
+                setQ('');
+              }}
+              aria-label={`Use ${c.name || 'customer'}`}
+              className={cx('flex min-h-[52px] items-center gap-2.5 rounded-xl border border-[#C7E6EA] bg-white px-3 text-left transition hover:bg-[#F8FBFB]', FOCUS_RING)}
+            >
+              <span className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full bg-[#E5F3F5]">
+                <User className="h-4 w-4 text-[#035C6C]" aria-hidden="true" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-[13.5px] font-extrabold text-[#111111]">{c.name || 'Customer'}</span>
+                <span className="block truncate text-[12px] text-[#6B7280]">{c.phone}</span>
+              </span>
+              <span className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-[#609138]/15 px-2 py-0.5 text-[10.5px] font-bold text-[#4B7A2B]">
+                <Check className="h-[11px] w-[11px]" strokeWidth={3} aria-hidden="true" />
+                Existing
+              </span>
+            </button>
+          ))}
+        </div>
+      ) : term.length >= 2 ? (
+        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] font-semibold text-[#035C6C]">
+          <UserPlus className="h-3.5 w-3.5" aria-hidden="true" />
+          <span>New customer — enter the details below</span>
+          {/^\d{10}$/.test(term) ? (
+            <button
+              type="button"
+              onClick={() => {
+                onNewNumber(term);
+                setQ('');
+              }}
+              className={cx('rounded-full bg-[#035C6C] px-2.5 py-0.5 text-[11.5px] font-bold text-white', FOCUS_RING)}
+            >
+              Use {term}
+            </button>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function CustomerNameField({ value, onChangeText, directory, onPick }) {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef(null);
@@ -609,7 +862,7 @@ function CustomerNameField({ value, onChangeText, directory, onPick }) {
 
   return (
     <div ref={wrapRef} className="relative">
-      <User className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#09AD2A]" aria-hidden="true" />
+      <User className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#035C6C]" aria-hidden="true" />
       <input
         className={ICON_INPUT_CLS}
         value={value}
@@ -634,7 +887,7 @@ function CustomerNameField({ value, onChangeText, directory, onPick }) {
               }}
               className="flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 text-left text-sm transition hover:bg-[#F8F8F8]"
             >
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[10px] font-bold text-[#09AD2A]">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[10px] font-bold text-[#035C6C]">
                 {initials(c.name)}
               </span>
               <span className="min-w-0 flex-1">
@@ -689,6 +942,141 @@ function Thumb({ url, name, size = 'h-7 w-7' }) {
 }
 
 /** Device Details picker card image: the master-data image (contained), or the name's initials. */
+/* ---- Device Details pieces (Partner App DeviceDetailsScreen method) ---- */
+
+function DeviceField({ label, required = false, optional = false, children }) {
+  return (
+    <div>
+      <p className="mb-2 text-[13.5px] font-bold text-[#111111]">
+        {label}
+        {required ? <span className="text-red-500"> *</span> : null}
+        {optional ? <span className="font-medium text-[#9CA3AF]"> (optional)</span> : null}
+      </p>
+      {children}
+    </div>
+  );
+}
+
+function TickBadge() {
+  return (
+    <span className="absolute right-1.5 top-1.5 z-10 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-[#035C6C] text-white" aria-hidden="true">
+      <Check className="h-[11px] w-[11px]" strokeWidth={3} />
+    </span>
+  );
+}
+
+function OtherIcon() {
+  return (
+    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F3F4F6] text-[#035C6C]">
+      <Plus className="h-5 w-5" aria-hidden="true" />
+    </span>
+  );
+}
+
+/** A picker tile: image/icon over a two-line label; the picked one gets a ✓. */
+function OptionCard({ on, onClick, label, className, children }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={on}
+      onClick={onClick}
+      className={cx(
+        'relative flex min-h-[96px] min-w-0 flex-col items-center justify-center gap-2 rounded-[14px] border px-2 py-3 text-center transition',
+        FOCUS_RING,
+        on ? 'border-[1.5px] border-[#035C6C] bg-[#E5F3F5]' : 'border-[#E5E7EB] bg-white hover:border-[#035C6C]/50',
+        className,
+      )}
+    >
+      {on ? <TickBadge /> : null}
+      {children}
+      <span className={cx('line-clamp-2 break-words text-[12.5px] leading-tight', on ? 'font-bold text-[#024A57]' : 'font-medium text-[#111111]')}>{label}</span>
+    </button>
+  );
+}
+
+/** A colour / storage option tile. */
+function ChipTile({ on, onClick, children }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={on}
+      onClick={onClick}
+      className={cx(
+        'flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-xl border px-2.5 text-[13px] transition',
+        FOCUS_RING,
+        on ? 'border-[1.5px] border-[#035C6C] bg-[#E5F3F5] font-bold text-[#024A57]' : 'border-[#E5E7EB] bg-white font-medium text-[#111111] hover:border-[#035C6C]/50',
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+/** A picked level, folded: image, name, and Change to re-open its list. */
+function PickedCard({ image, title, subtitle, onChange, wide = false }) {
+  return (
+    <div className="flex items-center gap-3 rounded-[14px] border-[1.5px] border-[#035C6C] bg-[#E5F3F5] p-3">
+      <span className={cx('flex shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white', wide ? 'h-14 w-28 px-2' : 'h-14 w-14')}>
+        <PickImage url={image} name={title} className={wide ? 'h-11 w-full' : 'h-12 w-12'} />
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-[15px] font-bold text-[#111111]">{title}</p>
+        {subtitle ? <p className="truncate text-xs text-[#6B7280]">{subtitle}</p> : null}
+      </div>
+      <button
+        type="button"
+        onClick={onChange}
+        className={cx('inline-flex h-9 shrink-0 items-center gap-1 rounded-xl border border-[#C7E6EA] bg-white px-3.5 text-[13px] font-bold text-[#035C6C] transition hover:border-[#035C6C]', FOCUS_RING)}
+      >
+        Change
+      </button>
+    </div>
+  );
+}
+
+/** The "Other" popup: type a value that isn't in the list. */
+function TypeSheet({ sheet, onClose }) {
+  const [value, setValue] = useState(sheet.initial || '');
+  const done = (e) => {
+    e.preventDefault();
+    const t = value.trim();
+    if (!t) return;
+    sheet.onDone(t);
+    onClose();
+  };
+  return createPortal(
+    <div role="dialog" aria-modal="true" aria-label={sheet.title} className="fixed inset-0 z-[80] flex items-end justify-center bg-black/40 p-4 sm:items-center" onClick={onClose}>
+      <form
+        onSubmit={done}
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.key === 'Escape' && onClose()}
+        className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl"
+      >
+        <p className="text-[16px] font-extrabold text-[#111111]">{sheet.title}</p>
+        {/* eslint-disable-next-line jsx-a11y/no-autofocus -- the popup exists only to take this one value. */}
+        <input
+          autoFocus
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder={sheet.placeholder}
+          aria-label={sheet.title}
+          maxLength={60}
+          className="mt-3 h-11 w-full rounded-xl border border-[#E5E7EB] bg-white px-3.5 text-base text-[#111111] outline-none placeholder:text-[#9CA3AF] focus:border-[#035C6C] sm:text-sm"
+        />
+        <div className="mt-4 flex justify-end gap-2">
+          <button type="button" onClick={onClose} className={cx('h-10 rounded-xl border border-[#E5E7EB] px-4 text-sm font-semibold text-[#111111]', FOCUS_RING)}>
+            Cancel
+          </button>
+          <button type="submit" disabled={!value.trim()} className={cx('h-10 rounded-xl bg-[#035C6C] px-5 text-sm font-bold text-white disabled:opacity-50', FOCUS_RING)}>
+            Use
+          </button>
+        </div>
+      </form>
+    </div>,
+    document.body,
+  );
+}
+
 function PickImage({ url, name, className }) {
   const [broken, setBroken] = useState(false);
   useEffect(() => {
@@ -698,7 +1086,7 @@ function PickImage({ url, name, className }) {
     // eslint-disable-next-line @next/next/no-img-element -- master-data category/brand/model images, remote S3 URLs.
     <img src={url} alt="" loading="lazy" onError={() => setBroken(true)} className={cx('object-contain', className)} />
   ) : (
-    <span className={cx('flex items-center justify-center rounded-xl bg-[#F3F3F3] text-sm font-bold text-[#09AD2A]', className)}>{initials(name)}</span>
+    <span className={cx('flex items-center justify-center rounded-xl bg-[#F3F3F3] text-sm font-bold text-[#035C6C]', className)}>{initials(name)}</span>
   );
 }
 
@@ -876,13 +1264,13 @@ function ReadyByPicker({ value, onChange }) {
               className={cx(
                 'mx-auto flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold transition sm:h-8 sm:w-8',
                 selected
-                  ? 'bg-[#09AD2A] text-white'
+                  ? 'bg-[#035C6C] text-white'
                   : disabled
                     ? 'cursor-not-allowed text-[#D0D5DD]'
                     : !inMonth
                       ? 'text-[#98A2B3] hover:bg-[#F8F8F8]'
                       : isToday
-                        ? 'text-[#09AD2A] hover:bg-[#F8F8F8]'
+                        ? 'text-[#035C6C] hover:bg-[#F8F8F8]'
                         : 'text-[#111111] hover:bg-[#F8F8F8]',
               )}
             >
@@ -938,7 +1326,7 @@ function ReadyByPicker({ value, onChange }) {
       </div>
 
       <div className="mt-4 rounded-xl bg-[#F8F8F8] px-4 py-3">
-        <p className="text-sm font-bold text-[#09AD2A]">
+        <p className="text-sm font-bold text-[#035C6C]">
           {DOW_SHORT[value.getDay()]}, {value.getDate()} {MO[value.getMonth()]} – {hour12}:{pad2(minute)} {ampm}
         </p>
         <p className="text-xs text-[#5C8F74]">{relativeFromNow(value, now)}</p>
@@ -1017,7 +1405,7 @@ function DurationSheet({ initialMinutes, onConfirm, onClose }) {
               className={cx(
                 'rounded-xl border px-3 py-2.5 text-sm font-bold transition',
                 mode === 'preset' && initialMinutes === p.minutes
-                  ? 'border-[#09AD2A] bg-[#F8F8F8] text-[#09AD2A]'
+                  ? 'border-[#035C6C] bg-[#F8F8F8] text-[#035C6C]'
                   : 'border-[#ECECEC] text-[#344054] hover:border-[#ECECEC]',
               )}
             >
@@ -1029,7 +1417,7 @@ function DurationSheet({ initialMinutes, onConfirm, onClose }) {
             onClick={() => setMode('custom')}
             className={cx(
               'rounded-xl border px-3 py-2.5 text-sm font-bold transition',
-              mode === 'custom' ? 'border-[#09AD2A] bg-[#F8F8F8] text-[#09AD2A]' : 'border-[#ECECEC] text-[#344054] hover:border-[#ECECEC]',
+              mode === 'custom' ? 'border-[#035C6C] bg-[#F8F8F8] text-[#035C6C]' : 'border-[#ECECEC] text-[#344054] hover:border-[#ECECEC]',
             )}
           >
             Custom
@@ -1222,7 +1610,7 @@ function VoiceNoteCard({ voice, readOnly = false }) {
       ) : (
         <div className="space-y-2">
           <div className="flex items-center gap-3 rounded-xl bg-[#F8F8F8] px-4 py-3">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#09AD2A]">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#035C6C]">
               <Music2 className="h-4 w-4" aria-hidden="true" />
             </span>
             <div className="min-w-0 flex-1">
@@ -1234,7 +1622,7 @@ function VoiceNoteCard({ voice, readOnly = false }) {
             <button
               type="button"
               onClick={togglePlay}
-              className="flex items-center justify-center gap-1.5 rounded-xl border border-[#D0D5DD] bg-white px-3 py-2.5 text-sm font-bold text-[#09AD2A] transition hover:bg-[#F8F8F8]"
+              className="flex items-center justify-center gap-1.5 rounded-xl border border-[#D0D5DD] bg-white px-3 py-2.5 text-sm font-bold text-[#035C6C] transition hover:bg-[#F8F8F8]"
             >
               {isPlaying ? <Pause className="h-4 w-4" aria-hidden="true" /> : <Play className="h-4 w-4" aria-hidden="true" />}
               {isPlaying ? 'Pause' : 'Play'}
@@ -1300,7 +1688,7 @@ function PhotoTile({ slot, url, uploading, invalid, fieldRef, onUpload, onRemove
         }}
       />
       {url ? (
-        <div className="relative h-28 w-full overflow-hidden rounded-2xl border-2 border-[#09AD2A] bg-[#F2FBF4]">
+        <div className="relative h-28 w-full overflow-hidden rounded-2xl border-2 border-[#035C6C] bg-[#E5F3F5]">
           {slot.video ? (
             <>
               {/* #t=0.1 makes the browser paint a frame instead of a blank box. */}
@@ -1322,7 +1710,7 @@ function PhotoTile({ slot, url, uploading, invalid, fieldRef, onUpload, onRemove
           >
             <X className="h-3.5 w-3.5" aria-hidden="true" />
           </button>
-          <span className="absolute bottom-1.5 left-1.5 inline-flex items-center gap-0.5 rounded-full bg-[#09AD2A] px-1.5 py-0.5 text-[9px] font-extrabold uppercase text-white">
+          <span className="absolute bottom-1.5 left-1.5 inline-flex items-center gap-0.5 rounded-full bg-[#035C6C] px-1.5 py-0.5 text-[9px] font-extrabold uppercase text-white">
             <CheckCircle2 className="h-2.5 w-2.5" aria-hidden="true" /> Added
           </span>
         </div>
@@ -1335,20 +1723,20 @@ function PhotoTile({ slot, url, uploading, invalid, fieldRef, onUpload, onRemove
           className={cx(
             'flex h-28 w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed transition disabled:cursor-not-allowed',
             FOCUS_RING,
-            invalid ? 'border-red-300 bg-red-50/40' : 'border-[#D0D5DD] bg-[#F8F8F8] hover:border-[#09AD2A]/60',
+            invalid ? 'border-red-300 bg-red-50/40' : 'border-[#D0D5DD] bg-[#F8F8F8] hover:border-[#035C6C]/60',
           )}
         >
           {uploading ? (
             <>
-              <Loader2 className="h-5 w-5 animate-spin text-[#09AD2A]" aria-hidden="true" />
+              <Loader2 className="h-5 w-5 animate-spin text-[#035C6C]" aria-hidden="true" />
               <span className="mt-2 text-xs font-semibold text-[#98A2B3]">Uploading…</span>
             </>
           ) : (
             <>
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-[#09AD2A] shadow-sm">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-[#035C6C] shadow-sm">
                 <Icon className="h-5 w-5" aria-hidden="true" />
               </span>
-              <span className="mt-2 inline-flex items-center gap-0.5 text-xs font-extrabold text-[#09AD2A]">
+              <span className="mt-2 inline-flex items-center gap-0.5 text-xs font-extrabold text-[#035C6C]">
                 <Plus className="h-3 w-3" aria-hidden="true" /> Add
               </span>
             </>
@@ -1397,7 +1785,7 @@ function IssueCategoryRow({
         <span
           className={cx(
             'flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition',
-            selectedCount > 0 ? 'bg-[#09AD2A] text-white' : 'bg-[#F8F8F8] text-[#09AD2A]',
+            selectedCount > 0 ? 'bg-[#035C6C] text-white' : 'bg-[#F8F8F8] text-[#035C6C]',
           )}
         >
           <Icon className="h-5 w-5" aria-hidden="true" />
@@ -1409,7 +1797,7 @@ function IssueCategoryRow({
           <span className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-[#666666]">
             {services.length} option{services.length === 1 ? '' : 's'}
             {selectedCount > 0 ? (
-              <span className="inline-flex items-center rounded-full bg-[#F8F8F8] px-2 py-0.5 text-[0.68rem] font-bold text-[#09AD2A]">
+              <span className="inline-flex items-center rounded-full bg-[#F8F8F8] px-2 py-0.5 text-[0.68rem] font-bold text-[#035C6C]">
                 {selectedCount} selected
               </span>
             ) : null}
@@ -1433,15 +1821,15 @@ function IssueCategoryRow({
                       key={s.id}
                       className={cx(
                         'overflow-hidden rounded-xl border transition',
-                        checked ? 'border-[#09AD2A] bg-[#F8F8F8]' : 'border-[#ECECEC] bg-white hover:border-[#ECECEC]',
+                        checked ? 'border-[#035C6C] bg-[#F8F8F8]' : 'border-[#ECECEC] bg-white hover:border-[#ECECEC]',
                       )}
                     >
                       <div className="flex items-center justify-between gap-3 px-3.5 py-2.5">
-                        <span className={cx('flex min-w-0 items-center gap-2.5 text-sm font-semibold', checked ? 'text-[#09AD2A]' : 'text-[#344054]')}>
+                        <span className={cx('flex min-w-0 items-center gap-2.5 text-sm font-semibold', checked ? 'text-[#035C6C]' : 'text-[#344054]')}>
                           <span
                             className={cx(
                               'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition',
-                              checked ? 'bg-[#09AD2A] text-white' : 'bg-[#F3F3F3] text-[#09AD2A]',
+                              checked ? 'bg-[#035C6C] text-white' : 'bg-[#F3F3F3] text-[#035C6C]',
                             )}
                           >
                             <ServiceIcon className="h-4 w-4" aria-hidden="true" />
@@ -1457,7 +1845,7 @@ function IssueCategoryRow({
                             'inline-flex shrink-0 items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold transition',
                             checked
                               ? 'border border-[#D0D5DD] bg-white text-[#666666] hover:border-red-300 hover:bg-red-50 hover:text-red-600'
-                              : 'bg-[#09AD2A] text-white hover:bg-[#078F22]',
+                              : 'bg-[#035C6C] text-white hover:bg-[#035C6C]',
                             FOCUS_RING,
                           )}
                         >
@@ -1507,7 +1895,7 @@ function IssueCategoryRow({
                                       aria-pressed={active}
                                       className={cx(
                                         'h-10 rounded-full border px-3.5 text-xs font-bold transition',
-                                        active ? 'border-[#09AD2A] bg-[#09AD2A] text-white' : 'border-[#D0D5DD] bg-white text-[#344054] hover:border-[#ECECEC]',
+                                        active ? 'border-[#035C6C] bg-[#035C6C] text-white' : 'border-[#D0D5DD] bg-white text-[#344054] hover:border-[#ECECEC]',
                                       )}
                                     >
                                       {months} Months
@@ -1560,7 +1948,26 @@ export default function BookServicePage() {
     };
   }, []);
 
-  const [activeSection, setActiveSection] = useState('customer');
+  const [activeSection, setActiveStep] = useState('customer');
+  // Folded parts of Devices & Repair (Security Lock, Missing Parts).
+  const [openFolds, setOpenFolds] = useState({});
+  // Accepts a step OR a part key (validation jumps, "Add Service"): lands on
+  // the part's step, unfolds it if folded, and scrolls to it.
+  const setActiveSection = (key) => {
+    if (FOLD_PARTS.includes(key)) setOpenFolds((o) => ({ ...o, [key]: true }));
+    setActiveStep(STEP_OF[key] || key);
+    if (STEP_OF[key] && typeof window !== 'undefined') {
+      window.requestAnimationFrame(() => document.getElementById(`bs-part-${key}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    }
+  };
+  // A rule failed inside a closed fold: open it, then focus once it renders.
+  const revealFoldedError = (field) => {
+    const part = sectionForField(field);
+    if (!FOLD_PARTS.includes(part) || openFolds[part]) return false;
+    setActiveSection(part);
+    setPendingFocusField(field);
+    return true;
+  };
   // Moved up from just above the JSX return (where it originally lived,
   // right before sectionContent) so section consts defined further down —
   // e.g. deviceSecuritySection's Continue button — can call goNext(). Pure
@@ -1579,6 +1986,10 @@ export default function BookServicePage() {
     const { errors, firstErrorField, isValid } = validateSection(activeSection);
     if (!isValid) {
       setFieldErrors((prev) => ({ ...prev, ...errors }));
+      if (revealFoldedError(firstErrorField)) {
+        notifyError(errors[firstErrorField]);
+        return;
+      }
       // A rule with no on-screen field (e.g. "select a service") shows as a toast.
       if (!fieldRefs.current?.[firstErrorField]) notifyError(errors[firstErrorField]);
       focusField(fieldRefs, firstErrorField);
@@ -1586,7 +1997,7 @@ export default function BookServicePage() {
     }
     setFieldErrors((prev) => {
       const next = { ...prev };
-      Object.keys(SECTION_VALIDATORS[activeSection] || {}).forEach((key) => {
+      Object.keys(schemaFor(activeSection)).forEach((key) => {
         delete next[key];
       });
       return next;
@@ -1619,8 +2030,11 @@ export default function BookServicePage() {
       if (!isValid) {
         setFieldErrors((prev) => ({ ...prev, ...errors }));
         if (sectionKey === activeSection) {
-          if (!fieldRefs.current?.[firstErrorField]) notifyError(errors[firstErrorField]);
-          focusField(fieldRefs, firstErrorField);
+          if (revealFoldedError(firstErrorField)) notifyError(errors[firstErrorField]);
+          else {
+            if (!fieldRefs.current?.[firstErrorField]) notifyError(errors[firstErrorField]);
+            focusField(fieldRefs, firstErrorField);
+          }
         } else {
           setActiveSection(sectionKey);
           setPendingFocusField(firstErrorField);
@@ -1631,7 +2045,7 @@ export default function BookServicePage() {
     setFieldErrors((prev) => {
       const next = { ...prev };
       for (let i = activeIndex; i < targetIndex; i += 1) {
-        Object.keys(SECTION_VALIDATORS[SECTIONS[i].key] || {}).forEach((key) => {
+        Object.keys(schemaFor(SECTIONS[i].key)).forEach((key) => {
           delete next[key];
         });
       }
@@ -1644,7 +2058,7 @@ export default function BookServicePage() {
     // to submit instead.
     if (targetKey === 'confirmation' && !confirmed) {
       setActiveSection('devicesList');
-      notifyError('Submit the booking from Devices List to continue');
+      notifyError('Submit the booking from Review & Confirm to continue');
       return;
     }
     setActiveSection(targetKey);
@@ -1691,6 +2105,8 @@ export default function BookServicePage() {
   }, []);
 
   const customerDirectory = useMemo(() => deriveCustomers(directoryBookings), [directoryBookings]);
+  // Partner App "More Details (Optional)" fold: Email + address.
+  const [moreDetailsOpen, setMoreDetailsOpen] = useState(false);
 
   const pickExistingCustomer = (customer) => {
     const address = addressFieldsFrom(customer.addressBooking);
@@ -1810,16 +2226,15 @@ export default function BookServicePage() {
   // Device Details visual picker: brand search, model search, series chips
   // (real series from GET /master/brands/{id}/series, matched to models by
   // model.seriesId) and a "show more" limit for long model grids.
-  // Which picker level is on screen. null = follow the selections (the next
-  // unanswered level); a level name = the user stepped back to it.
+  // Partner App method: Category → Brand → Model → Colour / Storage stacked
+  // on one screen. A picked level folds to a card; its Change button re-opens
+  // that level's list (deviceView). An unpicked level always shows its list.
   const [deviceView, setDeviceView] = useState(null);
-  const autoDeviceStep = form.modelId ? 'done' : form.brandId ? 'model' : form.categoryCode ? 'brand' : 'category';
-  const deviceStep =
-    (deviceView === 'brand' && form.categoryCode) || (deviceView === 'model' && form.brandId) || (deviceView === 'done' && form.modelId) || deviceView === 'category'
-      ? deviceView
-      : autoDeviceStep;
-  const DEVICE_STEP_ORDER = ['category', 'brand', 'model', 'done'];
-  const deviceStepBack = () => setDeviceView(DEVICE_STEP_ORDER[Math.max(0, DEVICE_STEP_ORDER.indexOf(deviceStep) - 1)]);
+  // "Other" popup: { title, placeholder, initial, onDone(text) }.
+  const [typeSheet, setTypeSheet] = useState(null);
+  const catPicked = Boolean(form.categoryCode);
+  const brandPicked = Boolean(form.brandId || (form.customBrand && form.brandName));
+  const modelPicked = Boolean(form.modelId || (form.customModel && form.modelName));
   const [brandQuery, setBrandQuery] = useState('');
   const [modelQuery, setModelQuery] = useState('');
   const [seriesFilter, setSeriesFilter] = useState('');
@@ -1972,14 +2387,36 @@ export default function BookServicePage() {
     resetPreviewZoom();
     setPreviewModelId(next.id);
   };
-  const selectModel = (model) => {
-    if (form.modelId === model.id) {
-      setDeviceView('done');
-      return;
-    }
-    setDeviceView(null);
-    setForm((fm) => ({ ...fm, modelId: model.id || '', modelName: model.name || '', color: '', variant: '' }));
+  // Picking a tile closes that level's list; picking the same tile just closes it.
+  const clearDeviceErrors = () =>
     setFieldErrors((prev) => (prev.categoryId || prev.brandId || prev.modelId ? { ...prev, categoryId: undefined, brandId: undefined, modelId: undefined } : prev));
+  const pickCategory = (cat) => {
+    setDeviceView(null);
+    if (form.categoryCode === cat.id) return;
+    setForm((fm) => ({ ...fm, categoryCode: cat.id || '', categoryId: cat.categoryId || '', brandId: '', brandName: '', customBrand: false, modelId: '', modelName: '', customModel: false, color: '', variant: '' }));
+    clearDeviceErrors();
+  };
+  const pickBrand = (brand) => {
+    setDeviceView(null);
+    if (form.brandId === brand.id) return;
+    setForm((fm) => ({ ...fm, brandId: brand.id || '', brandName: brand.name || '', customBrand: false, modelId: '', modelName: '', customModel: false, color: '', variant: '' }));
+    clearDeviceErrors();
+  };
+  const pickOtherBrand = (name) => {
+    setDeviceView(null);
+    setForm((fm) => ({ ...fm, brandId: '', brandName: name, customBrand: true, modelId: '', modelName: '', customModel: false, color: '', variant: '' }));
+    clearDeviceErrors();
+  };
+  const selectModel = (model) => {
+    setDeviceView(null);
+    if (form.modelId === model.id) return;
+    setForm((fm) => ({ ...fm, modelId: model.id || '', modelName: model.name || '', customModel: false, color: '', variant: '' }));
+    clearDeviceErrors();
+  };
+  const pickOtherModel = (name) => {
+    setDeviceView(null);
+    setForm((fm) => ({ ...fm, modelId: '', modelName: name, customModel: true, color: '', variant: '' }));
+    clearDeviceErrors();
   };
   const closeDevicePreview = () => {
     setDevicePreviewVisible(false);
@@ -2167,6 +2604,18 @@ export default function BookServicePage() {
   const setDraftServicePrice = (id, value) => setDraftServicePrices((p) => ({ ...p, [id]: value }));
   const setDraftServiceWarrantyMonths = (id, months) =>
     setDraftServiceWarranty((w) => ({ ...w, [id]: w[id] === months ? '' : months }));
+  // Partner RepairIssuesPicker (chargePerService): each issue row is
+  // Price | Service Charge | Warranty. Price + Service Charge both add to the
+  // estimate (summed into form.serviceCharge, below); warranty stays a note.
+  const [draftServiceCharges, setDraftServiceCharges] = useState({});
+  // Per-issue note (the app's withNotes); saved as "Issue: note" lines in issueDescription.
+  const [draftServiceNotes, setDraftServiceNotes] = useState({});
+  const setDraftServiceCharge = (id, value) => setDraftServiceCharges((c) => ({ ...c, [id]: value }));
+  const lineAmount = (id) => (Number(draftServicePrices[id]) || 0) + (Number(draftServiceCharges[id]) || 0);
+  const [issueQuery, setIssueQuery] = useState('');
+  const [issueSheetId, setIssueSheetId] = useState(null);
+  const [voiceOpen, setVoiceOpen] = useState(false);
+  const [showAllIssueGroups, setShowAllIssueGroups] = useState(false);
 
   // "Others" — a custom issue not in the service catalog, as in the Partner
   // app's DeviceServicesScreen: issue → condition category → price → Add
@@ -2189,12 +2638,19 @@ export default function BookServicePage() {
     if (Number(customIssueDraft.price) > 0) setDraftServicePrice(id, customIssueDraft.price);
     setCustomIssueDraft(EMPTY_CUSTOM_ISSUE);
   };
+  // "Other Issue" tile / no-match search row: a typed issue, no catalogue id.
+  const addOtherIssue = (name) => {
+    customIssueSeq.current += 1;
+    const id = `custom-${customIssueSeq.current}`;
+    setForm((f) => ({ ...f, customIssues: [...f.customIssues, { id, name, categoryId: null, code: 'OTHER', isCustom: true }] }));
+  };
   const removeCustomIssue = (id) => setForm((f) => ({ ...f, customIssues: f.customIssues.filter((c) => c.id !== id) }));
   // Remove buttons on the chips / Bill Details take either kind of line.
   const removeChosenService = (s) => (s.isCustom ? removeCustomIssue(s.id) : toggleService(s.id));
   const draftServicesSubtotal = useMemo(
-    () => chosenServices.reduce((sum, s) => sum + (Number(draftServicePrices[s.id]) || 0), 0),
-    [chosenServices, draftServicePrices],
+    () => chosenServices.reduce((sum, s) => sum + lineAmount(s.id), 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- lineAmount reads exactly these two maps.
+    [chosenServices, draftServicePrices, draftServiceCharges],
   );
 
   // Sums every entered per-service Price into the real, submitted
@@ -2250,6 +2706,8 @@ export default function BookServicePage() {
   // typed PIN or password would be.
   const [showSecret, setShowSecret] = useState(false);
   const [patternDots, setPatternDots] = useState([]);
+  // Pointer position (in 3×3 grid units) while dragging — the pattern pad's live line.
+  const [patternTail, setPatternTail] = useState(null);
   // Not state — toggled synchronously inside a single pointer gesture, a
   // re-render-triggering setState would lag one event behind the actual
   // drag. Pointer capture (set in onPointerDown, below) is what keeps
@@ -2320,13 +2778,17 @@ export default function BookServicePage() {
   function setPartStatus(key, status) {
     setMissingParts((prev) => ({ ...prev, [key]: prev[key] === status ? null : status }));
   }
+  const [missingPartDetails, setMissingPartDetails] = useState({});
   const flaggedPartsCount = useMemo(() => Object.values(missingParts).filter(Boolean).length, [missingParts]);
   const missingPartsSummary = useMemo(
     () =>
       MISSING_PART_ITEMS.filter((item) => missingParts[item.key])
-        .map((item) => `${item.title}: ${missingParts[item.key] === 'missing' ? 'Missing' : 'Damaged'}`)
+        .map((item) => {
+          const detail = String(missingPartDetails[item.key] || '').trim();
+          return `${item.title}: ${missingParts[item.key] === 'missing' ? 'Missing' : 'Damaged'}${detail ? ` (${detail})` : ''}`;
+        })
         .join(', '),
-    [missingParts],
+    [missingParts, missingPartDetails],
   );
 
   // Device Photos — real uploads via uploadShopDevicePhoto() (src/lib/
@@ -2474,7 +2936,9 @@ export default function BookServicePage() {
         categoryId: category?.id || '',
         brandId: ticket.brandId || '',
         brandName: ticket.brandName || model?.brandName || '',
+        customBrand: !ticket.brandId,
         modelId: ticket.modelId || '',
+        customModel: !ticket.modelId,
         modelName: model?.name || String(ticket.deviceDisplayName || '').split(' · ')[0] || '',
         color: ticket.color || '',
         variant: ticketVariant(ticket),
@@ -2537,9 +3001,26 @@ export default function BookServicePage() {
         isPrimary: queued.length === 0,
         deviceSecurityLock: form.deviceSecurityType,
         deviceMissingParts: missingPartsSummary,
+        // Snapshot for the Thank-you receipt: issue → price, its service charge, warranty, note.
+        lines: chosenServices.map((x) => ({
+          name: x.name,
+          note: String(draftServiceNotes[x.id] || '').trim(),
+          price: Number(draftServicePrices[x.id]) || 0,
+          charge: Number(draftServiceCharges[x.id]) || 0,
+          warranty: String(draftServiceWarranty[x.id] || '').trim(),
+        })),
+        variant: [form.variant, form.color].filter(Boolean).join(', '),
+        imei: form.imei.trim(),
       },
     ];
   }, [
+    draftServicePrices,
+    draftServiceCharges,
+    draftServiceWarranty,
+    draftServiceNotes,
+    form.variant,
+    form.color,
+    form.imei,
     queuedDevices,
     form.brandName,
     form.modelName,
@@ -2557,6 +3038,8 @@ export default function BookServicePage() {
   const [fieldErrors, setFieldErrors] = useState({});
   const fieldRefs = useRef({});
   const [confirmed, setConfirmed] = useState(null);
+  // Success burst shown for a moment after a booking is created, before the Thank-you screen.
+  const [celebrating, setCelebrating] = useState(false);
   // Assign Technician on the confirmation: which booking the modal is for,
   // whether the per-device picker is open, and who got assigned (by ticketId).
   const [assignTarget, setAssignTarget] = useState(null);
@@ -2580,8 +3063,8 @@ export default function BookServicePage() {
   // from SECTION_VALIDATORS so goNext() and submit() share one source of
   // truth instead of two hand-written copies of the same rules.
   const validateSection = (sectionKey) => {
-    const schema = SECTION_VALIDATORS[sectionKey];
-    if (!schema) return { errors: {}, firstErrorField: null, isValid: true };
+    const schema = schemaFor(sectionKey);
+    if (!Object.keys(schema).length) return { errors: {}, firstErrorField: null, isValid: true };
     return validateForm(schema, { ...form, needsAddress, customerApproved });
   };
 
@@ -2597,9 +3080,9 @@ export default function BookServicePage() {
     customerAltMobile: form.customerAltMobile.trim() || undefined,
     customerEmail: form.customerEmail.trim() || undefined,
     categoryId: form.categoryId,
-    brandId: form.brandId,
+    brandId: form.brandId || null,
     brandName: form.brandName,
-    modelId: form.modelId,
+    modelId: form.modelId || null,
     modelName: form.modelName,
     color: form.color || undefined,
     ramStorage: form.variant || undefined,
@@ -2610,7 +3093,13 @@ export default function BookServicePage() {
     paymentMode: paymentMode || undefined,
     services: chosenServices.map((s) => ({ repairServiceId: s.isCustom ? null : s.id, serviceCode: s.code, serviceName: s.name })),
     issueSummary: chosenServices.map((s) => s.name).join(', ') || form.issueDescription.slice(0, 120),
-    issueDescription: form.issueDescription.trim() || undefined,
+    issueDescription:
+      chosenServices
+        .map((x) => (String(draftServiceNotes[x.id] || '').trim() ? `${x.name}: ${String(draftServiceNotes[x.id]).trim()}` : ''))
+        .filter(Boolean)
+        .join('\n') ||
+      form.issueDescription.trim() ||
+      undefined,
     deviceCondition: form.deviceCondition || undefined,
     frontImageUrl: form.frontImageUrl || undefined,
     backImageUrl: form.backImageUrl || undefined,
@@ -2669,12 +3158,12 @@ export default function BookServicePage() {
           id: s.isCustom ? null : s.id,
           code: s.code || null,
           label: s.name || 'Service',
-          amount: Number(draftServicePrices[s.id]) || 0,
+          amount: lineAmount(s.id),
           warranty: draftServiceWarranty[s.id] || null,
         }));
         await updateShopTicket(editTicket, buildPayload(), items);
         notifySuccess('Re-estimate saved');
-        router.push('/shop-home/services/requote/?tab=reestimated');
+        router.push('/shop-home/services/bookings/?stage=reestimated');
       } catch (e) {
         notifyError(e.message ? `Unable to save re-estimate: ${e.message}` : 'Unable to save re-estimate. Please try again.');
       } finally {
@@ -2705,11 +3194,18 @@ export default function BookServicePage() {
         }
       }
       setQueuedDevices([]);
-      setConfirmed({ ...created[0], bookingNumber: created.map((c) => c.bookingNumber).filter(Boolean).join(', '), allBookings: created });
+      setConfirmed({
+        ...created[0],
+        bookingNumber: created.map((c) => bookingRef(c)).filter(Boolean).join(', '),
+        allBookings: created,
+        // Every device's details + price lines as entered (the API doesn't echo per-line prices).
+        receiptDevices: bookingDevices,
+      });
       // Booking Confirmation is now its own tab (9th/last), not a separate
       // full-page takeover — this is the one place that navigates there,
       // and only after a real successful response, never speculatively.
       setActiveSection('confirmation');
+      setCelebrating(true);
       notifySuccess('Booking created');
     } catch (e) {
       if (process.env.NODE_ENV !== 'production') console.error('[Booking] ERROR:', e.status, e.message, e.body); // eslint-disable-line no-console
@@ -2737,19 +3233,22 @@ export default function BookServicePage() {
     setQueuedDevices((prev) => [...prev, { payload: buildPayload(), display: bookingDevices[bookingDevices.length - 1] }]);
     setForm((f) => ({
       ...f,
-      categoryCode: '', categoryId: '', brandId: '', brandName: '', modelId: '', modelName: '',
+      categoryCode: '', categoryId: '', brandId: '', brandName: '', customBrand: false, modelId: '', modelName: '', customModel: false,
       color: '', variant: '', imei: '', deviceSecurityType: '', devicePin: '',
       serviceCategoryId: '', serviceIds: [], customIssues: [], issueDescription: '', deviceCondition: '',
       frontImageUrl: '', backImageUrl: '', videoUrl: '',
       inspectionCharge: '', serviceCharge: '', partsCharge: '', pickupCharge: '', discount: '', taxPercent: '',
     }));
     setMissingParts(Object.fromEntries(MISSING_PART_ITEMS.map((item) => [item.key, null])));
+    setMissingPartDetails({});
     setPatternDots([]);
     setShowSecret(false);
     setCustomerApproved(false);
     // Per-device drafts too, so the next device never inherits this one's
     // prices (they'd be re-summed into its Service Charge) or voice note.
     setDraftServicePrices({});
+    setDraftServiceCharges({});
+    setDraftServiceNotes({});
     setDraftServiceWarranty({});
     setCustomIssueDraft(EMPTY_CUSTOM_ISSUE);
     voiceNote.clear();
@@ -2783,6 +3282,8 @@ export default function BookServicePage() {
     // Reset is the one intentional clear — normal Back/Next keeps all of
     // these (they're page state, not per-step), so they're cleared here too.
     setDraftServicePrices({});
+    setDraftServiceCharges({});
+    setDraftServiceNotes({});
     setDraftServiceWarranty({});
     setCustomIssueDraft(EMPTY_CUSTOM_ISSUE);
     setExpandedIssueCategories([]);
@@ -2806,63 +3307,8 @@ export default function BookServicePage() {
 
   /* ---- Section content (rendered once, shown for whichever is active) ---- */
 
-  const customerSection = (
-    <Section title="Customer Details" subtitle="Enter customer contact information" icon={User}>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <FormField label="Customer Name" required error={fieldErrors.customerName} fieldRef={registerField(fieldRefs, 'customerName')}>
-          <CustomerNameField
-            value={form.customerName}
-            onChangeText={(v) => {
-              set('customerName', v);
-              if (fieldErrors.customerName) setFieldErrors((prev) => ({ ...prev, customerName: undefined }));
-            }}
-            directory={customerDirectory}
-            onPick={pickExistingCustomer}
-          />
-          <p className="mt-1 text-[0.68rem] text-[#98A2B3]">Start typing to see customers who&apos;ve booked with you before.</p>
-        </FormField>
-        <FormField label="Mobile Number" required error={fieldErrors.customerMobile} fieldRef={registerField(fieldRefs, 'customerMobile')}>
-          <IconField icon={Phone}>
-            <input
-              className={ICON_INPUT_CLS}
-              value={form.customerMobile}
-              onChange={(e) => {
-                set('customerMobile', e.target.value.replace(/\D/g, '').slice(0, 10));
-                if (fieldErrors.customerMobile) setFieldErrors((prev) => ({ ...prev, customerMobile: undefined }));
-              }}
-              placeholder="10-digit mobile number"
-              inputMode="numeric"
-              maxLength={10}
-            />
-          </IconField>
-        </FormField>
-        <FormField label="Alternate Mobile" error={fieldErrors.customerAltMobile} fieldRef={registerField(fieldRefs, 'customerAltMobile')}>
-          <IconField icon={Phone}>
-            <input
-              className={ICON_INPUT_CLS}
-              value={form.customerAltMobile}
-              onChange={(e) => {
-                set('customerAltMobile', e.target.value.replace(/\D/g, '').slice(0, 10));
-                if (fieldErrors.customerAltMobile) setFieldErrors((prev) => ({ ...prev, customerAltMobile: undefined }));
-              }}
-              inputMode="numeric"
-              maxLength={10}
-              placeholder="Optional"
-            />
-          </IconField>
-        </FormField>
-        <FormField label="Email">
-          <IconField icon={Mail}>
-            <input type="email" className={ICON_INPUT_CLS} value={form.customerEmail} onChange={(e) => set('customerEmail', e.target.value)} placeholder="Optional" />
-          </IconField>
-        </FormField>
-      </div>
-    </Section>
-  );
-
-  const addressSection = (
-    <Section title="Address" subtitle="Enter customer address details" icon={MapPin}>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+  const addressFields = (
+    <>
         <FormField label="State" required={needsAddress} error={fieldErrors.state} fieldRef={registerField(fieldRefs, 'state')}>
           <IconField icon={MapPin}>
             <input
@@ -2921,14 +3367,106 @@ export default function BookServicePage() {
             />
           </IconField>
         </FormField>
+    </>
+  );
+
+  // Partner App CustomerDetailsScreen: search an existing customer by mobile
+  // or name, then Name · Mobile · Alternative Mobile, and a folded "More
+  // Details (Optional)" with Email and the address.
+  const moreDetailsFilled = ['customerEmail', 'state', 'district', 'city', 'landmark', 'addressLine', 'pincode'].filter((k) => String(form[k] || '').trim()).length;
+  const moreDetailsShown = moreDetailsOpen || Boolean(fieldErrors.state || fieldErrors.city || fieldErrors.addressLine || fieldErrors.pincode);
+  const customerSection = (
+    <Section title="Customer Details" subtitle="Search an existing customer, or enter a new one" icon={User}>
+      <CustomerSearch
+        directory={customerDirectory}
+        onPick={pickExistingCustomer}
+        onNewNumber={(n) => {
+          set('customerMobile', n);
+          if (fieldErrors.customerMobile) setFieldErrors((prev) => ({ ...prev, customerMobile: undefined }));
+        }}
+      />
+
+      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <FormField label="Customer Name" required error={fieldErrors.customerName} fieldRef={registerField(fieldRefs, 'customerName')}>
+          <IconField icon={User}>
+            <input
+              className={ICON_INPUT_CLS}
+              value={form.customerName}
+              onChange={(e) => {
+                set('customerName', e.target.value);
+                if (fieldErrors.customerName) setFieldErrors((prev) => ({ ...prev, customerName: undefined }));
+              }}
+              placeholder="Customer name"
+              autoCapitalize="words"
+            />
+          </IconField>
+        </FormField>
+        <FormField label="Mobile Number" required error={fieldErrors.customerMobile} fieldRef={registerField(fieldRefs, 'customerMobile')}>
+          <IconField icon={Phone}>
+            <input
+              className={ICON_INPUT_CLS}
+              value={form.customerMobile}
+              onChange={(e) => {
+                set('customerMobile', e.target.value.replace(/\D/g, '').slice(0, 10));
+                if (fieldErrors.customerMobile) setFieldErrors((prev) => ({ ...prev, customerMobile: undefined }));
+              }}
+              placeholder="10-digit mobile number"
+              inputMode="numeric"
+              maxLength={10}
+            />
+          </IconField>
+        </FormField>
+        <FormField label="Alternative Mobile Number" error={fieldErrors.customerAltMobile} fieldRef={registerField(fieldRefs, 'customerAltMobile')}>
+          <IconField icon={Phone}>
+            <input
+              className={ICON_INPUT_CLS}
+              value={form.customerAltMobile}
+              onChange={(e) => {
+                set('customerAltMobile', e.target.value.replace(/\D/g, '').slice(0, 10));
+                if (fieldErrors.customerAltMobile) setFieldErrors((prev) => ({ ...prev, customerAltMobile: undefined }));
+              }}
+              inputMode="numeric"
+              maxLength={10}
+              placeholder="Optional"
+            />
+          </IconField>
+        </FormField>
       </div>
-      {!needsAddress ? (
-        <p className="mt-2.5 text-[0.7rem] text-[#98A2B3]">
-          Only required for Pickup or Doorstep Service — set on the Pickup / Service Location tab.
-        </p>
-      ) : null}
+
+      <div className="mt-4 overflow-hidden rounded-[14px] border border-[#E5E7EB]">
+        <button
+          type="button"
+          onClick={() => setMoreDetailsOpen((v) => !v)}
+          aria-expanded={moreDetailsShown}
+          className={cx('flex min-h-[48px] w-full items-center gap-2 bg-[#F9FAFB] px-3.5 text-left', FOCUS_RING)}
+        >
+          <span className="flex-1 text-[13.5px] font-bold text-[#111111]">
+            More Details <span className="font-normal text-[#6B7280]">(Optional)</span>
+          </span>
+          {moreDetailsFilled ? (
+            <span className="rounded-full bg-[#E5F3F5] px-2 py-0.5 text-[10.5px] font-extrabold text-[#035C6C]">{moreDetailsFilled} added</span>
+          ) : null}
+          <ChevronDown className={cx('h-[18px] w-[18px] text-[#111111] transition', moreDetailsShown && 'rotate-180')} aria-hidden="true" />
+        </button>
+        {moreDetailsShown ? (
+          <div className="bg-white p-3.5">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <FormField label="Email">
+                <IconField icon={Mail}>
+                  <input type="email" className={ICON_INPUT_CLS} value={form.customerEmail} onChange={(e) => set('customerEmail', e.target.value)} placeholder="Email address" />
+                </IconField>
+              </FormField>
+              {addressFields}
+            </div>
+            {!needsAddress ? (
+              <p className="mt-2.5 text-[0.7rem] text-[#98A2B3]">Address is only required for Pickup or Doorstep Service.</p>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
     </Section>
   );
+
 
   const deviceSectionError = fieldErrors.categoryId || fieldErrors.brandId || fieldErrors.modelId;
   const deviceSection = (
@@ -2947,243 +3485,182 @@ export default function BookServicePage() {
         }}
         className="space-y-7"
       >
-        {/* Category › Brand › Model trail + Back (hidden on the first level) */}
-        {deviceStep !== 'category' ? (
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={deviceStepBack}
-              className={cx('inline-flex h-9 items-center gap-1.5 rounded-full border border-[#E5E7EB] bg-white px-3.5 text-[13px] font-semibold text-[#111111] transition hover:border-[#09AD2A] hover:text-[#09AD2A]', FOCUS_RING)}
-            >
-              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              Back
-            </button>
-            <nav aria-label="Device selection" className="flex min-w-0 flex-wrap items-center gap-1 text-[13.5px]">
-              {[
-                { key: 'category', label: categoryOptions.find((c) => c.id === form.categoryCode)?.name || 'Category' },
-                form.categoryCode ? { key: 'brand', label: form.brandName || 'Brand' } : null,
-                form.brandId ? { key: 'model', label: form.modelName || 'Model' } : null,
-              ]
-                .filter(Boolean)
-                .map((crumb, idx, arr) => {
-                  const current = crumb.key === deviceStep || (deviceStep === 'done' && idx === arr.length - 1);
-                  return (
-                    <span key={crumb.key} className="flex items-center gap-1">
-                      {idx > 0 ? <ChevronRight className="h-3.5 w-3.5 text-[#98A2B3]" aria-hidden="true" /> : null}
-                      <button
-                        type="button"
-                        onClick={() => setDeviceView(crumb.key)}
-                        aria-current={current ? 'step' : undefined}
-                        className={cx('rounded-md px-1.5 py-0.5 font-semibold transition hover:text-[#09AD2A]', current ? 'text-[#0B6B3A]' : 'text-[#666666]', FOCUS_RING)}
-                      >
-                        {crumb.label}
-                      </button>
-                    </span>
-                  );
-                })}
-            </nav>
-          </div>
-        ) : null}
+        {/* Partner App method (DeviceDetailsScreen): each level is a tile grid;
+            once picked it folds to a card with Change. Brand and Model end
+            with an "Other" tile for a name that isn't in the catalogue. */}
 
-        {/* STEP 1 — Device category */}
-        {deviceStep === 'category' ? (
-          <div>
-            <h3 className="text-[15px] font-bold text-[#111111]">
-              Choose Device Category <span className="text-red-500">*</span>
-            </h3>
-            {categoriesLoading ? (
-              <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-                {[0, 1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-[112px] animate-pulse rounded-2xl border border-[#E5E7EB] bg-white" />
+        {/* Category */}
+        <DeviceField label="Category" required>
+          {catPicked && deviceView !== 'category' ? (
+            <PickedCard
+              image={categoryOptions.find((c) => c.id === form.categoryCode)?.imageUrl}
+              title={categoryOptions.find((c) => c.id === form.categoryCode)?.name || 'Category'}
+              onChange={() => setDeviceView('category')}
+            />
+          ) : categoriesLoading ? (
+            <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 lg:grid-cols-6">
+                {[0,1,2,3,4,5].map((i) => (
+                  <div key={i} className="h-[96px] animate-pulse rounded-[14px] border border-[#E5E7EB] bg-white" />
                 ))}
               </div>
-            ) : categoriesError ? (
-              <p className="mt-2 flex flex-wrap items-center gap-x-1.5 text-[0.75rem] text-red-600">
+          ) : categoriesError ? (
+            <p className="flex flex-wrap items-center gap-x-1.5 text-[0.75rem] text-red-600">
                 <AlertTriangle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {categoriesError}
                 <button type="button" onClick={() => setCategoriesRetry((k) => k + 1)} className="font-bold underline underline-offset-2">
                   Retry
                 </button>
               </p>
-            ) : categoryOptions.length === 0 ? (
-              <p className="mt-2 text-sm text-[#98A2B3]">No categories available.</p>
-            ) : (
-              <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-                {categoryOptions.map((cat) => {
-                  const on = form.categoryCode === cat.id;
-                  return (
-                    <button
-                      key={cat.id}
-                      type="button"
-                      aria-pressed={on}
-                      onClick={() => {
-                        if (on) {
-                        setDeviceView('brand');
-                        return;
-                      }
-                      setDeviceView(null);
-                        setForm((fm) => ({ ...fm, categoryCode: cat.id || '', categoryId: cat.categoryId || '', brandId: '', brandName: '', modelId: '', modelName: '', color: '', variant: '' }));
-                        setFieldErrors((prev) => (prev.categoryId || prev.brandId || prev.modelId ? { ...prev, categoryId: undefined, brandId: undefined, modelId: undefined } : prev));
-                      }}
-                      className={cx(
-                        'flex min-w-0 flex-col items-center gap-2 rounded-2xl border p-3 text-center transition',
-                        FOCUS_RING,
-                        on ? 'border-[#09AD2A] bg-[#F2FBF4] ring-1 ring-[#09AD2A]' : 'border-[#E5E7EB] bg-white hover:border-[#09AD2A]/50',
-                      )}
-                    >
-                      <PickImage url={cat.imageUrl} name={cat.name} className="h-14 w-14" />
-                      <span className={cx('line-clamp-2 break-words text-[13.5px] font-semibold', on ? 'text-[#0B6B3A]' : 'text-[#111111]')}>{cat.name}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        ) : null}
-
-        {/* STEP 2 — Brand */}
-        {deviceStep === 'brand' ? (
-          <div>
-            <div className="flex flex-wrap items-end justify-between gap-3">
-              <div>
-                <h3 className="text-[15px] font-bold text-[#111111]">
-                  Select a brand <span className="text-red-500">*</span>
-                </h3>
-                <p className="mt-0.5 text-[13px] text-[#666666]">Choose the brand of your {categoryOptions.find((c) => c.id === form.categoryCode)?.name || 'device'}.</p>
-              </div>
-              <label className="flex h-10 w-full items-center gap-2 rounded-full border border-[#E5E7EB] bg-white px-3.5 focus-within:border-[#09AD2A] sm:w-64">
-                <Search className="h-4 w-4 shrink-0 text-[#98A2B3]" aria-hidden="true" />
-                <input value={brandQuery} onChange={(e) => setBrandQuery(e.target.value)} placeholder="Search brand" aria-label="Search brand" className="min-w-0 flex-1 bg-transparent text-base text-[#111111] outline-none placeholder:text-[#98A2B3] sm:text-sm" />
-              </label>
+          ) : categoryOptions.length === 0 ? (
+            <p className="text-sm text-[#98A2B3]">No categories available.</p>
+          ) : (
+            <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 lg:grid-cols-6">
+              {categoryOptions.map((cat) => (
+                <OptionCard key={cat.id} on={form.categoryCode === cat.id} label={cat.name} onClick={() => pickCategory(cat)}>
+                  <PickImage url={cat.imageUrl} name={cat.name} className="h-12 w-12" />
+                </OptionCard>
+              ))}
             </div>
-            {brandsLoading ? (
-              <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
-                  <div key={i} className="h-[104px] animate-pulse rounded-2xl border border-[#E5E7EB] bg-white" />
+          )}
+        </DeviceField>
+
+        {/* Brand — logo tiles + Other */}
+        {catPicked ? (
+          <DeviceField label="Brand" required>
+            {brandPicked && deviceView !== 'brand' ? (
+              <PickedCard
+                image={selectedBrand?.imageUrl}
+                wide
+                title={form.brandName || 'Brand'}
+                subtitle={form.customBrand ? 'Not in list' : null}
+                onChange={() => setDeviceView('brand')}
+              />
+            ) : brandsLoading ? (
+              <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 lg:grid-cols-6">
+                {[0,1,2,3,4,5,6,7,8,9,10,11].map((i) => (
+                  <div key={i} className="h-[96px] animate-pulse rounded-[14px] border border-[#E5E7EB] bg-white" />
                 ))}
               </div>
             ) : brandsError ? (
-              <p className="mt-2 flex flex-wrap items-center gap-x-1.5 text-[0.75rem] text-red-600">
+              <p className="flex flex-wrap items-center gap-x-1.5 text-[0.75rem] text-red-600">
                 <AlertTriangle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {brandsError}
                 <button type="button" onClick={() => setBrandsRetry((k) => k + 1)} className="font-bold underline underline-offset-2">
                   Retry
                 </button>
               </p>
-            ) : visibleBrands.length === 0 ? (
-              <p className="mt-3 text-sm text-[#98A2B3]">{brandQuery ? 'No brand matches your search.' : 'No brands available for this category.'}</p>
             ) : (
-              <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-                {visibleBrands.map((brand) => {
-                  const on = form.brandId === brand.id;
-                  return (
-                    <button
-                      key={brand.id}
-                      type="button"
-                      aria-pressed={on}
-                      onClick={() => {
-                        if (on) {
-                          setDeviceView('model');
-                          return;
-                        }
-                        setDeviceView(null);
-                        setForm((fm) => ({ ...fm, brandId: brand.id || '', brandName: brand.name || '', modelId: '', modelName: '', color: '', variant: '' }));
-                        setFieldErrors((prev) => (prev.categoryId || prev.brandId || prev.modelId ? { ...prev, categoryId: undefined, brandId: undefined, modelId: undefined } : prev));
-                      }}
-                      className={cx(
-                        'flex min-w-0 flex-col items-center gap-2 rounded-2xl border px-3 py-4 text-center transition',
-                        FOCUS_RING,
-                        on ? 'border-[#09AD2A] bg-[#F2FBF4] ring-1 ring-[#09AD2A]' : 'border-[#E5E7EB] bg-white hover:border-[#09AD2A]/50',
-                      )}
-                    >
-                      <PickImage url={brand.imageUrl} name={brand.name} className="h-12 w-28 max-w-full" />
-                      <span className={cx('line-clamp-2 break-words text-[13.5px] font-semibold', on ? 'text-[#0B6B3A]' : 'text-[#111111]')}>{brand.name}</span>
-                    </button>
-                  );
-                })}
-              </div>
+              <>
+                <label className="mb-3 flex h-10 w-full items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-3.5 focus-within:border-[#035C6C] sm:w-72">
+                  <Search className="h-4 w-4 shrink-0 text-[#98A2B3]" aria-hidden="true" />
+                  <input value={brandQuery} onChange={(e) => setBrandQuery(e.target.value)} placeholder="Search brand" aria-label="Search brand" className="min-w-0 flex-1 bg-transparent text-base text-[#111111] outline-none placeholder:text-[#98A2B3] sm:text-sm" />
+                </label>
+                <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 lg:grid-cols-6">
+                  {visibleBrands.map((brand) => (
+                    <OptionCard key={brand.id} on={form.brandId === brand.id} label={brand.name} className="min-h-[124px]" onClick={() => pickBrand(brand)}>
+                      <PickImage url={brand.imageUrl} name={brand.name} className="h-16 w-full max-w-[128px]" />
+                    </OptionCard>
+                  ))}
+                  <OptionCard
+                    on={form.customBrand}
+                    label={form.customBrand ? form.brandName : 'Other'}
+                    onClick={() =>
+                      setTypeSheet({
+                        title: 'Other Brand',
+                        placeholder: 'Type the brand name',
+                        initial: form.customBrand ? form.brandName : brandQuery.trim(),
+                        onDone: pickOtherBrand,
+                      })
+                    }
+                  >
+                    <OtherIcon />
+                  </OptionCard>
+                </div>
+                {brandQuery.trim() && !visibleBrands.length ? (
+                  <p className="mt-2 text-xs text-[#6B7280]">No brand matches “{brandQuery.trim()}” — tap Other to type it.</p>
+                ) : null}
+              </>
             )}
-          </div>
+          </DeviceField>
         ) : null}
 
-        {/* STEP 3 — Model / product */}
-        {deviceStep === 'model' ? (
-          <div>
-            <div className="flex flex-wrap items-end justify-between gap-3">
-              <div>
-                <h3 className="text-[15px] font-bold text-[#111111]">
-                  Select your {form.brandName || 'device'} product <span className="text-red-500">*</span>
-                </h3>
-                <p className="mt-0.5 text-[13px] text-[#666666]">Pick the exact model so the shop knows what it is working on.</p>
-              </div>
-              <label className="flex h-10 w-full items-center gap-2 rounded-full border border-[#E5E7EB] bg-white px-3.5 focus-within:border-[#09AD2A] sm:w-64">
-                <Search className="h-4 w-4 shrink-0 text-[#98A2B3]" aria-hidden="true" />
-                <input
-                  value={modelQuery}
-                  onChange={(e) => {
-                    setModelQuery(e.target.value);
-                    setModelLimit(24);
-                  }}
-                  placeholder="Search model"
-                  aria-label="Search model"
-                  className="min-w-0 flex-1 bg-transparent text-base text-[#111111] outline-none placeholder:text-[#98A2B3] sm:text-sm"
-                />
-              </label>
-            </div>
-
-            {seriesChips.length > 1 ? (
-              <div className="mt-3 flex flex-wrap gap-2">
-                {[{ id: '', name: 'All' }, ...seriesChips].map((sr) => {
-                  const on = seriesFilter === sr.id;
-                  return (
-                    <button
-                      key={sr.id || 'all'}
-                      type="button"
-                      aria-pressed={on}
-                      onClick={() => {
-                        setSeriesFilter(sr.id);
-                        setModelLimit(24);
-                      }}
-                      className={cx(
-                        'rounded-full border px-3.5 py-1.5 text-[13px] font-semibold transition',
-                        FOCUS_RING,
-                        on ? 'border-[#09AD2A] bg-[#F2FBF4] text-[#0B6B3A]' : 'border-[#E5E7EB] bg-white text-[#344054] hover:border-[#09AD2A]/50',
-                      )}
-                    >
-                      {sr.name}
-                    </button>
-                  );
-                })}
-              </div>
-            ) : null}
-
-            {modelsLoading ? (
-              <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
-                {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
-                  <div key={i} className="h-[160px] animate-pulse sm:h-[200px] rounded-2xl border border-[#E5E7EB] bg-white" />
+        {/* Model — search, series chips, model tiles + Other */}
+        {brandPicked ? (
+          <DeviceField label="Model" required>
+            {modelPicked && deviceView !== 'model' ? (
+              <PickedCard
+                image={selectedModel?.imageUrl}
+                title={form.modelName || 'Model'}
+                subtitle={form.customModel ? 'Not in list' : [form.brandName, categoryOptions.find((c) => c.id === form.categoryCode)?.name].filter(Boolean).join(' · ')}
+                onChange={() => setDeviceView('model')}
+              />
+            ) : modelsLoading ? (
+              <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 lg:grid-cols-6">
+                {[0,1,2,3,4,5,6,7,8,9].map((i) => (
+                  <div key={i} className="h-[150px] animate-pulse rounded-[14px] border border-[#E5E7EB] bg-white" />
                 ))}
               </div>
             ) : modelsError ? (
-              <p className="mt-2 flex flex-wrap items-center gap-x-1.5 text-[0.75rem] text-red-600">
+              <p className="flex flex-wrap items-center gap-x-1.5 text-[0.75rem] text-red-600">
                 <AlertTriangle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {modelsError}
                 <button type="button" onClick={() => setModelsRetry((k) => k + 1)} className="font-bold underline underline-offset-2">
                   Retry
                 </button>
               </p>
-            ) : visibleModels.length === 0 ? (
-              <p className="mt-3 text-sm text-[#98A2B3]">{modelQuery || seriesFilter ? 'No model matches your search.' : 'No models available for this brand.'}</p>
             ) : (
               <>
-                <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+                {categoryModels.length ? (
+                  <label className="mb-3 flex h-10 w-full items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-3.5 focus-within:border-[#035C6C] sm:w-72">
+                    <Search className="h-4 w-4 shrink-0 text-[#98A2B3]" aria-hidden="true" />
+                    <input
+                      value={modelQuery}
+                      onChange={(e) => {
+                        setModelQuery(e.target.value);
+                        setModelLimit(24);
+                      }}
+                      placeholder="Search model"
+                      aria-label="Search model"
+                      className="min-w-0 flex-1 bg-transparent text-base text-[#111111] outline-none placeholder:text-[#98A2B3] sm:text-sm"
+                    />
+                  </label>
+                ) : null}
+
+                {seriesChips.length > 1 && !modelQuery.trim() ? (
+                  <div className="mb-3 flex flex-wrap gap-2">
+                    {[{ id: '', name: 'All' }, ...seriesChips].map((sr) => {
+                      const on = seriesFilter === sr.id;
+                      return (
+                        <button
+                          key={sr.id || 'all'}
+                          type="button"
+                          aria-pressed={on}
+                          onClick={() => {
+                            setSeriesFilter(sr.id);
+                            setModelLimit(24);
+                          }}
+                          className={cx(
+                            'rounded-xl border px-3.5 py-1.5 text-[13px] font-semibold transition',
+                            FOCUS_RING,
+                            on ? 'border-[#035C6C] bg-[#E5F3F5] text-[#024A57]' : 'border-[#E5E7EB] bg-white text-[#344054] hover:border-[#035C6C]/50',
+                          )}
+                        >
+                          {sr.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : null}
+
+                <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
                   {visibleModels.slice(0, modelLimit).map((model) => {
                     const on = form.modelId === model.id;
                     return (
                       <div
                         key={model.id}
                         className={cx(
-                          'relative flex min-w-0 flex-col items-center gap-3 rounded-2xl border p-3 text-center transition sm:p-4',
-                          on ? 'border-[#09AD2A] bg-[#F2FBF4] ring-1 ring-[#09AD2A]' : 'border-[#E5E7EB] bg-white hover:-translate-y-0.5 hover:border-[#09AD2A]/50',
+                          'relative flex min-w-0 flex-col items-center gap-2 rounded-[14px] border p-3 text-center transition',
+                          on ? 'border-[1.5px] border-[#035C6C] bg-[#E5F3F5]' : 'border-[#E5E7EB] bg-white hover:border-[#035C6C]/50',
                         )}
                       >
                         {/* Whole card selects (stretched button); the image sits above it and opens the full-screen preview. */}
@@ -3192,114 +3669,129 @@ export default function BookServicePage() {
                           aria-pressed={on}
                           aria-label={deviceTitle(form.brandName, model.name)}
                           onClick={() => selectModel(model)}
-                          className={cx('absolute inset-0 rounded-2xl', FOCUS_RING)}
+                          className={cx('absolute inset-0 rounded-[14px]', FOCUS_RING)}
                         />
+                        {on ? <TickBadge /> : null}
                         <button
                           type="button"
                           onClick={() => openDevicePreview(model.id)}
                           aria-label={`Preview ${deviceTitle(form.brandName, model.name)}`}
                           className={cx('relative z-10 w-full cursor-zoom-in rounded-xl', FOCUS_RING)}
                         >
-                          <PickImage url={model.imageUrl} name={model.name} className="h-24 w-full sm:h-32" />
+                          <PickImage url={model.imageUrl} name={model.name} className="h-20 w-full sm:h-24" />
                         </button>
-                        <span className={cx('pointer-events-none relative line-clamp-2 break-words text-[13.5px] font-semibold', on ? 'text-[#0B6B3A]' : 'text-[#111111]')}>{deviceTitle(form.brandName, model.name)}</span>
+                        <span className={cx('pointer-events-none relative line-clamp-2 break-words text-[13px] leading-tight', on ? 'font-bold text-[#024A57]' : 'font-semibold text-[#111111]')}>{model.name}</span>
                       </div>
                     );
                   })}
+                  <OptionCard
+                    on={form.customModel}
+                    label={form.customModel ? form.modelName : 'Other'}
+                    className="min-h-[150px]"
+                    onClick={() =>
+                      setTypeSheet({
+                        title: 'Other Model',
+                        placeholder: 'Type the model name',
+                        initial: form.customModel ? form.modelName : modelQuery.trim(),
+                        onDone: pickOtherModel,
+                      })
+                    }
+                  >
+                    <OtherIcon />
+                  </OptionCard>
                 </div>
+
                 {visibleModels.length > modelLimit ? (
                   <div className="mt-3 text-center">
                     <button
                       type="button"
                       onClick={() => setModelLimit((n) => n + 24)}
-                      className={cx('rounded-full border border-[#E5E7EB] bg-white px-5 py-2 text-[13px] font-semibold text-[#111111] transition hover:border-[#09AD2A] hover:text-[#09AD2A]', FOCUS_RING)}
+                      className={cx('rounded-xl border border-[#E5E7EB] bg-white px-5 py-2 text-[13px] font-bold text-[#035C6C] transition hover:border-[#035C6C]', FOCUS_RING)}
                     >
-                      Show more models ({visibleModels.length - modelLimit} more)
+                      Show more models ({visibleModels.length - modelLimit})
                     </button>
                   </div>
                 ) : null}
+                {!categoryModels.length ? (
+                  <p className="mt-2 text-xs text-[#6B7280]">No models listed for this brand — tap Other to type it.</p>
+                ) : modelQuery.trim() && !visibleModels.length ? (
+                  <p className="mt-2 text-xs text-[#6B7280]">No model matches “{modelQuery.trim()}” — tap Other to type it.</p>
+                ) : null}
               </>
             )}
-          </div>
+          </DeviceField>
         ) : null}
 
-        {/* STEP 4 — Selected device summary + colour + storage/RAM */}
-        {deviceStep === 'done' && selectedBrand && selectedModel ? (
-          <div>
-            <h3 className="text-[15px] font-bold text-[#111111]">Your device</h3>
-            <p className="mt-0.5 text-[13px] text-[#666666]">Book the repair in the GGFIX app, or find a shop near you to take it in.</p>
-            {/* Image + name on the left, colour/storage pickers on the right; stacks on small screens. */}
-            <div className="mt-3 flex flex-col gap-5 rounded-2xl border border-[#E5E7EB] bg-white p-4 sm:p-5 md:flex-row md:gap-8">
-              <div className="mx-auto flex min-w-0 max-w-full shrink-0 flex-col items-center gap-3 rounded-2xl p-2 text-center md:mx-0 md:w-64">
-                <PickImage url={selectedModel.imageUrl || selectedBrand.imageUrl} name={selectedModel.name} className="h-44 w-44" />
-                <span>
-                  <span className="block break-words text-[18px] font-extrabold text-[#111111]">{deviceTitle(selectedBrand.name, selectedModel.name)}</span>
-                  <span className="mt-0.5 block text-[13.5px] text-[#666666]">
-                    {[selectedBrand.name, categoryOptions.find((c) => c.id === form.categoryCode)?.name].filter(Boolean).join(' · ')}
-                  </span>
-                </span>
-              </div>
-
-              <div className="flex min-w-0 flex-1 flex-col justify-center border-t border-[#F3F3F3] pt-4 md:border-l md:border-t-0 md:pl-8 md:pt-0">
-                <div>
-                  <p className="text-[12px] font-bold uppercase tracking-wide text-[#666666]">Colour</p>
-                  {modelColors.length === 0 ? (
-                    <p className="mt-2 text-sm text-[#98A2B3]">No colours listed for this model.</p>
-                  ) : (
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {modelColors.map((name) => {
-                        const on = form.color === name;
-                        return (
-                          <button
-                            key={name}
-                            type="button"
-                            onClick={() => set('color', on ? '' : name)}
-                            aria-pressed={on}
-                            className={cx(
-                              'flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[13.5px] font-medium transition',
-                              FOCUS_RING,
-                              on ? 'border-[#09AD2A] bg-[#F2FBF4] text-[#0B6B3A]' : 'border-[#E5E7EB] bg-white text-[#344054] hover:border-[#09AD2A]/50',
-                            )}
-                          >
-                            <ColorSwatch hex={hexOfColor(name)} size="h-3.5 w-3.5" />
-                            {name}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
+        {/* Colour and Storage — catalogue options as tiles (+ Other); a model
+            typed through Other, or one with nothing listed, types them in. */}
+        {modelPicked ? (
+          <>
+            <DeviceField label="Color" optional>
+              {modelColors.length && !form.customModel ? (
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-6">
+                  {modelColors.map((name) => {
+                    const on = form.color === name;
+                    return (
+                      <ChipTile key={name} on={on} onClick={() => set('color', on ? '' : name)}>
+                        <ColorSwatch hex={hexOfColor(name)} size="h-4 w-4" />
+                        <span className="truncate">{name}</span>
+                      </ChipTile>
+                    );
+                  })}
+                  <ChipTile
+                    on={Boolean(form.color) && !modelColors.includes(form.color)}
+                    onClick={() =>
+                      setTypeSheet({
+                        title: 'Other Color',
+                        placeholder: 'Type the colour, e.g. Sea Green',
+                        initial: modelColors.includes(form.color) ? '' : form.color,
+                        onDone: (t) => set('color', t),
+                      })
+                    }
+                  >
+                    <Plus className="h-4 w-4 shrink-0 text-[#035C6C]" aria-hidden="true" />
+                    <span className="truncate">{form.color && !modelColors.includes(form.color) ? form.color : 'Other'}</span>
+                  </ChipTile>
                 </div>
-  
-                {modelVariants.length > 0 ? (
-                  <div className="mt-4">
-                    <p className="text-[12px] font-bold uppercase tracking-wide text-[#666666]">Storage &amp; RAM</p>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {modelVariants.map((v) => {
-                        const on = form.variant === v;
-                        return (
-                          <button
-                            key={v}
-                            type="button"
-                            onClick={() => set('variant', on ? '' : v)}
-                            aria-pressed={on}
-                            className={cx(
-                              'rounded-full border px-3.5 py-1.5 text-[13.5px] font-semibold transition',
-                              FOCUS_RING,
-                              on ? 'border-[#09AD2A] bg-[#F2FBF4] text-[#0B6B3A]' : 'border-[#E5E7EB] bg-white text-[#344054] hover:border-[#09AD2A]/50',
-                            )}
-                          >
-                            {v}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-            </div>
-          </div>
+              ) : (
+                <input value={form.color} onChange={(e) => set('color', e.target.value)} placeholder="Enter colour, e.g. Sea Green" aria-label="Color" maxLength={40} className="h-11 w-full rounded-xl border border-[#E5E7EB] bg-white px-3.5 text-base text-[#111111] outline-none placeholder:text-[#9CA3AF] focus:border-[#035C6C] sm:text-sm" />
+              )}
+            </DeviceField>
+
+            <DeviceField label="Storage & RAM" optional>
+              {modelVariants.length && !form.customModel ? (
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-6">
+                  {modelVariants.map((v) => {
+                    const on = form.variant === v;
+                    return (
+                      <ChipTile key={v} on={on} onClick={() => set('variant', on ? '' : v)}>
+                        <span className="truncate">{v}</span>
+                      </ChipTile>
+                    );
+                  })}
+                  <ChipTile
+                    on={Boolean(form.variant) && !modelVariants.includes(form.variant)}
+                    onClick={() =>
+                      setTypeSheet({
+                        title: 'Other Storage & RAM',
+                        placeholder: 'e.g. 8 GB + 256 GB',
+                        initial: modelVariants.includes(form.variant) ? '' : form.variant,
+                        onDone: (t) => set('variant', t),
+                      })
+                    }
+                  >
+                    <Plus className="h-4 w-4 shrink-0 text-[#035C6C]" aria-hidden="true" />
+                    <span className="truncate">{form.variant && !modelVariants.includes(form.variant) ? form.variant : 'Other'}</span>
+                  </ChipTile>
+                </div>
+              ) : (
+                <input value={form.variant} onChange={(e) => set('variant', e.target.value)} placeholder="Enter storage & RAM, e.g. 8 GB + 128 GB" aria-label="Storage and RAM" maxLength={40} className="h-11 w-full rounded-xl border border-[#E5E7EB] bg-white px-3.5 text-base text-[#111111] outline-none placeholder:text-[#9CA3AF] focus:border-[#035C6C] sm:text-sm" />
+              )}
+            </DeviceField>
+          </>
         ) : null}
 
+        {typeSheet ? <TypeSheet key={typeSheet.title} sheet={typeSheet} onClose={() => setTypeSheet(null)} /> : null}
       </div>
 
       {devicePreviewOpen && previewModel
@@ -3389,7 +3881,7 @@ export default function BookServicePage() {
                         }}
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center text-3xl font-bold text-[#09AD2A]">{initials(previewModel.name)}</div>
+                      <div className="flex h-full w-full items-center justify-center text-3xl font-bold text-[#035C6C]">{initials(previewModel.name)}</div>
                     )}
                   </div>
 
@@ -3455,7 +3947,7 @@ export default function BookServicePage() {
                         selectModel(previewModel);
                         closeDevicePreview();
                       }}
-                      className="mx-auto mt-3 flex w-full max-w-xl items-center justify-center rounded-full bg-[#09AD2A] px-5 py-3.5 text-base font-semibold text-white transition hover:bg-[#08961F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:mt-4 sm:py-4 [@media(max-height:480px)]:mt-2 [@media(max-height:480px)]:py-2.5"
+                      className="mx-auto mt-3 flex w-full max-w-xl items-center justify-center rounded-full bg-[#035C6C] px-5 py-3.5 text-base font-semibold text-white transition hover:bg-[#035C6C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:mt-4 sm:py-4 [@media(max-height:480px)]:mt-2 [@media(max-height:480px)]:py-2.5"
                     >
                       Select this product
                     </button>
@@ -3539,126 +4031,45 @@ export default function BookServicePage() {
    * "1-2-3-6-9", the same way a typed PIN/password would populate it.
    */
   const deviceSecuritySection = (
-    <Section title="Device Security Lock" icon={Lock}>
-      <p className="-mt-1 mb-4 text-xs text-[#666666]">Protect the device while it is being serviced.</p>
-
-      <div
-        className={cx(
-          'flex items-center gap-3 rounded-xl border p-3.5',
-          deviceLockStatus.chip === 'SECURED' ? 'border-[#09AD2A] bg-[#F8F8F8]' : 'border-[#ECECEC] bg-white',
-        )}
-      >
-        <span
-          className={cx(
-            'flex h-11 w-11 shrink-0 items-center justify-center rounded-full',
-            deviceLockStatus.chip === 'SECURED' ? 'bg-[#09AD2A] text-white' : 'bg-[#F8F8F8] text-[#09AD2A]',
-          )}
-        >
-          <Lock className="h-5 w-5" aria-hidden="true" />
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="text-[0.65rem] font-bold uppercase tracking-wide text-[#98A2B3]">Current Security</p>
-          <p className="text-sm font-bold text-[#111111]">{deviceLockStatus.label}</p>
-          <p className="text-xs text-[#666666]">{deviceLockStatus.description}</p>
-        </div>
-        <span
-          className={cx(
-            'shrink-0 rounded-full px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wide',
-            deviceLockStatus.chip === 'SECURED' ? 'bg-[#09AD2A] text-white' : 'bg-[#F3F3F3] text-[#09AD2A]',
-          )}
-        >
-          {deviceLockStatus.chip}
-        </span>
-      </div>
-
-      <div ref={registerField(fieldRefs, 'deviceSecurityType')} className="mt-5">
-        <p className="text-sm font-bold text-[#111111]">Choose Device Lock</p>
-        <p className="text-xs text-[#666666]">Select the lock currently used on this device.</p>
-        {fieldErrors.deviceSecurityType ? <p className="mt-1 text-xs text-red-600">{fieldErrors.deviceSecurityType}</p> : null}
-
-        <div className="mt-3 grid grid-cols-2 gap-2 md:grid-cols-4">
-          {LOCK_OPTIONS.map((opt) => {
-            const selected = form.deviceSecurityType === opt.key;
-            return (
+    <div ref={registerField(fieldRefs, 'deviceSecurityType')}>
+      <div ref={registerField(fieldRefs, 'devicePin')} role="radiogroup" aria-label="Device security">
+        {[...LOCK_OPTIONS.filter((o) => o.key === 'NONE'), ...LOCK_OPTIONS.filter((o) => o.key !== 'NONE')].map((opt) => {
+          const on = (form.deviceSecurityType || 'NONE') === opt.key;
+          return (
+            <div key={opt.key} className="flex min-h-[40px] items-center gap-2.5 py-1">
               <button
-                key={opt.title}
                 type="button"
+                role="radio"
+                aria-checked={on}
                 onClick={() => {
-                  // Re-picking the current type just reopens the popup (keeps what was entered).
+                  // Re-picking the current type just reopens the entry popup (keeps what was entered).
                   if (opt.key !== form.deviceSecurityType) selectLockType(opt.key);
                   if (opt.key !== 'NONE') setLockModalOpen(true);
-                  if (fieldErrors.deviceSecurityType) setFieldErrors((prev) => ({ ...prev, deviceSecurityType: undefined }));
+                  if (fieldErrors.devicePin) setFieldErrors((prev) => ({ ...prev, devicePin: undefined }));
                 }}
-                aria-pressed={selected}
-                className={cx(
-                  'flex h-full w-full flex-col items-start gap-2.5 rounded-xl border p-3.5 text-left transition',
-                  selected ? 'border-[#09AD2A] bg-[#F8F8F8]' : 'border-[#ECECEC] bg-white hover:border-[#ECECEC]',
-                )}
+                className={cx('flex min-w-0 flex-1 items-center gap-2.5 rounded-lg text-left', FOCUS_RING)}
               >
-                <div className="flex w-full items-start justify-between gap-2">
-                  <span
-                    className={cx(
-                      'flex h-10 w-10 shrink-0 items-center justify-center rounded-full',
-                      selected ? 'bg-[#09AD2A] text-white' : 'bg-[#F8F8F8] text-[#09AD2A]',
-                    )}
-                  >
-                    <opt.icon className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                  <span
-                    className={cx(
-                      'flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2',
-                      selected ? 'border-[#09AD2A] bg-[#09AD2A]' : 'border-[#D0D5DD]',
-                    )}
-                  >
-                    {selected ? <Check className="h-3 w-3 text-white" aria-hidden="true" /> : null}
-                  </span>
-                </div>
-                <div className="w-full min-w-0 break-words">
-                  <p className="text-sm font-bold text-[#111111]">{opt.title}</p>
-                  <p className="text-xs text-[#666666]">{opt.subtitle}</p>
-                  {opt.example ? <p className="mt-1 text-[0.7rem] text-[#98A2B3]">{opt.example}</p> : null}
-                  {opt.badge ? (
-                    <span className="mt-1 inline-block rounded-full bg-[#F3F3F3] px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wide text-[#09AD2A]">
-                      {opt.badge}
-                    </span>
-                  ) : null}
-                  {opt.key === 'Pattern' ? (
-                    <div className="mt-1.5 grid w-fit grid-cols-3 gap-1" aria-hidden="true">
-                      {Array.from({ length: 9 }).map((_, i) => (
-                        <span key={i} className="h-1.5 w-1.5 rounded-full bg-[#D0D5DD]" />
-                      ))}
-                    </div>
-                  ) : null}
-                </div>
+                <span
+                  className={cx(
+                    'flex h-5 w-5 shrink-0 items-center justify-center rounded-full',
+                    on ? 'bg-[#035C6C] text-white' : 'border-[1.5px] border-[#B8B8B8] bg-white',
+                  )}
+                >
+                  {on ? <Check className="h-3.5 w-3.5" strokeWidth={3} aria-hidden="true" /> : null}
+                </span>
+                <span className="truncate text-[14px] text-[#111111]">{opt.key === 'NONE' ? 'None' : opt.title}</span>
               </button>
-            );
-          })}
-        </div>
-
-        {/* Selected lock: a compact status row; the entry itself is in the popup below. */}
-        {form.deviceSecurityType && form.deviceSecurityType !== 'NONE' ? (
-          <div
-            ref={registerField(fieldRefs, 'devicePin')}
-            className={cx(
-              'mt-3 flex items-center justify-between gap-3 rounded-xl border p-3.5',
-              fieldErrors.devicePin ? 'border-red-300 bg-red-50/40' : lockValueValid ? 'border-[#09AD2A] bg-[#F8F8F8]' : 'border-[#ECECEC] bg-white',
-            )}
-          >
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-[#111111]">
-                {lockValueValid ? `${lockLabel} saved` : `No ${lockLabel.toLowerCase()} entered yet`}
-              </p>
-              {fieldErrors.devicePin ? <p className="text-xs text-red-600">{fieldErrors.devicePin}</p> : null}
+              {on && opt.key !== 'NONE' ? (
+                <button type="button" onClick={() => setLockModalOpen(true)} className={cx('max-w-[50%] shrink-0 truncate rounded-md text-[12.5px] text-[#6B7280]', FOCUS_RING)}>
+                  {lockValueValid ? '•'.repeat(Math.min(String(form.devicePin || '').length, 8)) : 'Not entered'}{' '}
+                  <span className="font-bold text-[#035C6C]">Edit</span>
+                </button>
+              ) : null}
             </div>
-            <button
-              type="button"
-              onClick={() => setLockModalOpen(true)}
-              className="shrink-0 rounded-lg border border-[#09AD2A] px-3 py-1.5 text-xs font-bold text-[#09AD2A] transition hover:bg-[#F8F8F8]"
-            >
-              {lockValueValid ? 'Change' : `Enter ${lockLabel}`}
-            </button>
-          </div>
-        ) : null}
+          );
+        })}
+        {fieldErrors.devicePin ? <p className="pb-1 text-xs text-red-600">{fieldErrors.devicePin}</p> : null}
+      </div>
 
         {lockModalOpen && form.deviceSecurityType && form.deviceSecurityType !== 'NONE' && typeof document !== 'undefined'
           ? createPortal(
@@ -3742,7 +4153,7 @@ export default function BookServicePage() {
                 <div>
                   <div className="mb-2 flex items-center justify-between gap-2">
                     <p className="text-[0.7rem] font-semibold uppercase tracking-wide text-[#666666]">Draw Pattern</p>
-                    <button type="button" onClick={clearPattern} className="text-xs font-bold text-[#09AD2A]">
+                    <button type="button" onClick={clearPattern} className="text-xs font-bold text-[#035C6C]">
                       Clear pattern
                     </button>
                   </div>
@@ -3755,8 +4166,11 @@ export default function BookServicePage() {
                       tap still works too — each dot's own onClick calls the same
                       togglePatternDot, which is a no-op if the drag already
                       added that dot. */}
+                  {/* Square pad that uses the popup's width; the drawn path is an
+                      SVG under the dots (viewBox 3×3: dot n sits at its column/
+                      row centre), plus a live line to the pointer while dragging. */}
                   <div
-                    className="mx-auto grid w-fit touch-none select-none grid-cols-3 gap-4 py-2"
+                    className="relative mx-auto aspect-square w-full max-w-[300px] touch-none select-none rounded-2xl bg-[#F9FAFB]"
                     onPointerDown={(e) => {
                       const dotEl = e.target.closest('[data-pattern-dot]');
                       if (!dotEl) return;
@@ -3766,37 +4180,77 @@ export default function BookServicePage() {
                     }}
                     onPointerMove={(e) => {
                       if (!patternDragging.current) return;
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      setPatternTail({ x: ((e.clientX - rect.left) / rect.width) * 3, y: ((e.clientY - rect.top) / rect.height) * 3 });
                       const el = document.elementFromPoint(e.clientX, e.clientY);
                       const dotEl = el?.closest('[data-pattern-dot]');
                       if (dotEl) togglePatternDot(Number(dotEl.dataset.patternDot));
                     }}
                     onPointerUp={() => {
                       patternDragging.current = false;
+                      setPatternTail(null);
                     }}
                     onPointerCancel={() => {
                       patternDragging.current = false;
+                      setPatternTail(null);
                     }}
                   >
-                    {Array.from({ length: 9 }).map((_, i) => {
-                      const dot = i + 1;
-                      const active = patternDots.includes(dot);
-                      return (
-                        <button
-                          key={dot}
-                          type="button"
-                          data-pattern-dot={dot}
-                          onClick={() => togglePatternDot(dot)}
-                          aria-pressed={active}
-                          aria-label={`Pattern dot ${dot}`}
-                          className={cx(
-                            'flex h-10 w-10 items-center justify-center rounded-full border-2 transition',
-                            active ? 'border-[#09AD2A] bg-[#09AD2A]' : 'border-[#D0D5DD] bg-white hover:border-[#ECECEC]',
-                          )}
-                        >
-                          <span className={cx('h-2.5 w-2.5 rounded-full', active ? 'bg-white' : 'bg-[#D0D5DD]')} />
-                        </button>
-                      );
-                    })}
+                    <svg viewBox="0 0 3 3" className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true">
+                      {patternDots.length > 1 ? (
+                        <polyline
+                          points={patternDots.map((d) => `${((d - 1) % 3) + 0.5},${Math.floor((d - 1) / 3) + 0.5}`).join(' ')}
+                          fill="none"
+                          stroke="#035C6C"
+                          strokeWidth="6"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          vectorEffect="non-scaling-stroke"
+                          opacity="0.85"
+                        />
+                      ) : null}
+                      {patternTail && patternDots.length ? (
+                        <line
+                          x1={((patternDots[patternDots.length - 1] - 1) % 3) + 0.5}
+                          y1={Math.floor((patternDots[patternDots.length - 1] - 1) / 3) + 0.5}
+                          x2={patternTail.x}
+                          y2={patternTail.y}
+                          stroke="#035C6C"
+                          strokeWidth="6"
+                          strokeLinecap="round"
+                          vectorEffect="non-scaling-stroke"
+                          opacity="0.35"
+                        />
+                      ) : null}
+                    </svg>
+                    <div className="relative grid h-full w-full grid-cols-3 grid-rows-3">
+                      {Array.from({ length: 9 }).map((_, i) => {
+                        const dot = i + 1;
+                        const order = patternDots.indexOf(dot);
+                        const active = order >= 0;
+                        return (
+                          <div key={dot} className="flex items-center justify-center">
+                            <button
+                              type="button"
+                              data-pattern-dot={dot}
+                              onClick={() => togglePatternDot(dot)}
+                              aria-pressed={active}
+                              aria-label={`Pattern dot ${dot}`}
+                              className={cx(
+                                'flex h-14 w-14 items-center justify-center rounded-full border-2 transition',
+                                active ? 'border-[#035C6C] bg-[#035C6C]' : 'border-[#D0D5DD] bg-white hover:border-[#035C6C]/50',
+                                order === 0 && 'ring-4 ring-[#035C6C]/20',
+                              )}
+                            >
+                              {active ? (
+                                <span className="text-[13px] font-extrabold text-white">{order + 1}</span>
+                              ) : (
+                                <span className="h-3 w-3 rounded-full bg-[#D0D5DD]" />
+                              )}
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                   <p className="text-center text-xs text-[#666666]">
                     {patternDots.length ? `Pattern: ${patternDots.join(' → ')}` : 'Drag or tap at least 4 dots in sequence.'}
@@ -3833,14 +4287,7 @@ export default function BookServicePage() {
               document.body,
             )
           : null}
-      </div>
-
-
-      <p className="mt-2 flex items-center justify-center gap-1.5 text-xs text-[#98A2B3]">
-        <ShieldCheck className="h-3.5 w-3.5 text-[#09AD2A]" aria-hidden="true" />
-        Encrypted &amp; Secure
-      </p>
-    </Section>
+    </div>
   );
 
   /**
@@ -3860,7 +4307,7 @@ export default function BookServicePage() {
           <p className="text-xs text-[#666666]">Parts Flagged</p>
         </div>
         <div className="flex flex-col items-center justify-center rounded-xl border border-[#ECECEC] bg-[#F8F8F8] p-3 text-center">
-          <p className="text-xs font-bold text-[#09AD2A]">Inspection in progress</p>
+          <p className="text-xs font-bold text-[#035C6C]">Inspection in progress</p>
         </div>
       </div>
 
@@ -3874,13 +4321,13 @@ export default function BookServicePage() {
           return (
             <div
               key={item.key}
-              className={cx('flex flex-col rounded-xl border p-3.5 transition', flagged ? 'border-[#09AD2A] bg-[#F8F8F8]' : 'border-[#ECECEC] bg-white')}
+              className={cx('flex flex-col rounded-xl border p-3.5 transition', flagged ? 'border-[#035C6C] bg-[#F8F8F8]' : 'border-[#ECECEC] bg-white')}
             >
               <div className="flex items-center gap-3">
                 <span
                   className={cx(
                     'flex h-10 w-10 shrink-0 items-center justify-center rounded-full',
-                    flagged ? 'bg-[#09AD2A] text-white' : 'bg-[#F8F8F8] text-[#09AD2A]',
+                    flagged ? 'bg-[#035C6C] text-white' : 'bg-[#F8F8F8] text-[#035C6C]',
                   )}
                 >
                   <item.icon className="h-5 w-5" aria-hidden="true" />
@@ -3889,7 +4336,7 @@ export default function BookServicePage() {
                   <p className="text-sm font-bold text-[#111111]">{item.title}</p>
                   <p className="text-xs text-[#666666]">{item.subtitle}</p>
                 </div>
-                <span className={cx('h-2.5 w-2.5 shrink-0 rounded-full', flagged ? 'bg-[#09AD2A]' : 'bg-[#D0D5DD]')} aria-hidden="true" />
+                <span className={cx('h-2.5 w-2.5 shrink-0 rounded-full', flagged ? 'bg-[#035C6C]' : 'bg-[#D0D5DD]')} aria-hidden="true" />
               </div>
               <div className="mt-auto grid grid-cols-2 gap-2 pt-3">
                 <button
@@ -3898,7 +4345,7 @@ export default function BookServicePage() {
                   aria-pressed={status === 'missing'}
                   className={cx(
                     'rounded-full border px-3 py-1.5 text-xs font-bold transition',
-                    status === 'missing' ? 'border-[#09AD2A] bg-[#09AD2A] text-white' : 'border-[#D0D5DD] bg-white text-[#344054] hover:border-[#ECECEC]',
+                    status === 'missing' ? 'border-[#035C6C] bg-[#035C6C] text-white' : 'border-[#D0D5DD] bg-white text-[#344054] hover:border-[#ECECEC]',
                   )}
                 >
                   Missing
@@ -3909,7 +4356,7 @@ export default function BookServicePage() {
                   aria-pressed={status === 'damaged'}
                   className={cx(
                     'rounded-full border px-3 py-1.5 text-xs font-bold transition',
-                    status === 'damaged' ? 'border-[#09AD2A] bg-[#09AD2A] text-white' : 'border-[#D0D5DD] bg-white text-[#344054] hover:border-[#ECECEC]',
+                    status === 'damaged' ? 'border-[#035C6C] bg-[#035C6C] text-white' : 'border-[#D0D5DD] bg-white text-[#344054] hover:border-[#ECECEC]',
                   )}
                 >
                   Damaged
@@ -3937,7 +4384,7 @@ export default function BookServicePage() {
         <span
           className={cx(
             'flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition',
-            form.customIssues.length ? 'bg-[#09AD2A] text-white' : 'bg-[#F8F8F8] text-[#09AD2A]',
+            form.customIssues.length ? 'bg-[#035C6C] text-white' : 'bg-[#F8F8F8] text-[#035C6C]',
           )}
         >
           <Sparkles className="h-5 w-5" aria-hidden="true" />
@@ -3947,7 +4394,7 @@ export default function BookServicePage() {
           <span className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-[#666666]">
             Add a custom issue
             {form.customIssues.length ? (
-              <span className="inline-flex items-center rounded-full bg-[#F8F8F8] px-2 py-0.5 text-[0.68rem] font-bold text-[#09AD2A]">
+              <span className="inline-flex items-center rounded-full bg-[#F8F8F8] px-2 py-0.5 text-[0.68rem] font-bold text-[#035C6C]">
                 {form.customIssues.length} added
               </span>
             ) : null}
@@ -3960,8 +4407,8 @@ export default function BookServicePage() {
         <div className="overflow-hidden">
           <div className="space-y-2 border-t border-dashed border-[#ECECEC] px-3 py-3">
             {form.customIssues.map((c) => (
-              <div key={c.id} className="flex items-center gap-3 rounded-xl border border-[#09AD2A] bg-white px-3.5 py-2.5">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#09AD2A] text-white">
+              <div key={c.id} className="flex items-center gap-3 rounded-xl border border-[#035C6C] bg-white px-3.5 py-2.5">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#035C6C] text-white">
                   <Sparkles className="h-4 w-4" aria-hidden="true" />
                 </span>
                 <div className="min-w-0 flex-1">
@@ -4019,7 +4466,7 @@ export default function BookServicePage() {
                           aria-pressed={active}
                           className={cx(
                             'rounded-full border px-3 py-1.5 text-xs font-bold transition',
-                            active ? 'border-[#09AD2A] bg-[#09AD2A] text-white' : 'border-[#D0D5DD] bg-white text-[#344054] hover:border-[#09AD2A]',
+                            active ? 'border-[#035C6C] bg-[#035C6C] text-white' : 'border-[#D0D5DD] bg-white text-[#344054] hover:border-[#035C6C]',
                           )}
                         >
                           {c.displayName || c.name}
@@ -4054,7 +4501,7 @@ export default function BookServicePage() {
                 onClick={addCustomIssue}
                 disabled={!customIssueName}
                 className={cx(
-                  'flex w-full items-center justify-center gap-1.5 rounded-full bg-[#09AD2A] py-2.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-[#078F22] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[#09AD2A]',
+                  'flex w-full items-center justify-center gap-1.5 rounded-full bg-[#035C6C] py-2.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-[#035C6C] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[#035C6C]',
                   FOCUS_RING,
                 )}
               >
@@ -4067,86 +4514,205 @@ export default function BookServicePage() {
     </div>
   );
 
+  // Partner App RepairIssuesPicker: search, the category's issue groups as
+  // tiles (first 8, then View All), a sheet to pick a group's issues, an
+  // "Other Issue" tile, and the selected services with Price | Service
+  // Charge | Warranty each.
+  const ISSUE_FIRST_TILES = 8;
+  const voiceExpanded = voiceOpen || voiceNote.status === 'recording' || Boolean(voiceNote.audioUrl);
+  const voiceHint = voiceNote.status === 'recording' ? 'Recording…' : voiceNote.audioUrl ? 'Voice note attached' : '';
+  const issueGroups = relevantRepairCategories
+    .filter((c) => (servicesByCategoryId.get(c.id) || []).length)
+    .map((c, i) => ({ c, i }))
+    .sort((a, b) => issueTileRank(a.c.displayName || a.c.name) - issueTileRank(b.c.displayName || b.c.name) || a.i - b.i)
+    .map(({ c }) => c);
+  const groupName = (c) => c?.displayName || c?.name || '';
+  const visibleIssueGroups = showAllIssueGroups ? issueGroups : issueGroups.slice(0, ISSUE_FIRST_TILES);
+  const issueSheetGroup = issueSheetId ? issueGroups.find((c) => c.id === issueSheetId) || null : null;
+  const issueQ = issueQuery.trim().toLowerCase();
+  const issueMatches = issueQ
+    ? issueGroups
+        .flatMap((c) =>
+          (servicesByCategoryId.get(c.id) || [])
+            .filter((x) => String(x.name || '').toLowerCase().includes(issueQ) || groupName(c).toLowerCase().includes(issueQ))
+            .map((x) => ({ x, group: groupName(c) })),
+        )
+        .slice(0, 30)
+    : [];
+
   const problemSection = (
-    <Section title="Add Issue / Service" icon={Wrench}>
+    <Section title="Repair Issues" icon={Wrench}>
       <div className="space-y-3">
-        <p className="-mt-1 text-xs text-[#666666]">Select the repair issues or services required for this device.</p>
+        <p className="-mt-1 text-xs text-[#666666]">Search or pick the repair issues for this device — each gets its own price, service charge and warranty.</p>
 
         {!form.categoryId ? (
           <p className="rounded-lg border border-dashed border-[#D0D5DD] bg-[#F3F3F3] px-3 py-4 text-center text-xs text-[#98A2B3]">
-            Select a Device Category on the Device Details tab to see the relevant repair options.
+            Select a Device Category on the Device step to see the relevant repair options.
           </p>
         ) : (
           <>
-            {relevantRepairCategories.length === 0 ? (
-              <p className="rounded-lg border border-dashed border-[#D0D5DD] bg-[#F3F3F3] px-3 py-4 text-center text-xs text-[#98A2B3]">
-                No repair categories are set up for this device category yet — add a custom issue under Others below.
-              </p>
-            ) : (
-              <div className="grid grid-cols-1 items-start gap-3 lg:grid-cols-2 lg:gap-4">
-                {relevantRepairCategories.map((c) => (
-                  <IssueCategoryRow
-                    key={c.id}
-                    category={c}
-                    services={servicesByCategoryId.get(c.id) || []}
-                    expanded={expandedIssueCategories.includes(c.id)}
-                    onToggleExpand={() => toggleIssueCategory(c.id)}
-                    selectedIds={form.serviceIds}
-                    onToggleService={toggleService}
-                    draftPrices={draftServicePrices}
-                    draftWarranty={draftServiceWarranty}
-                    onDraftPriceChange={setDraftServicePrice}
-                    onDraftWarrantyChange={setDraftServiceWarrantyMonths}
+            <label className="flex h-11 items-center gap-2 rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] px-3 focus-within:border-[#035C6C]">
+              <Search className="h-[17px] w-[17px] shrink-0 text-[#6B7280]" aria-hidden="true" />
+              <input
+                value={issueQuery}
+                onChange={(e) => setIssueQuery(e.target.value)}
+                placeholder="Search issue (e.g. display, battery)"
+                aria-label="Search repair issue"
+                className="min-w-0 flex-1 bg-transparent text-base text-[#111111] outline-none placeholder:text-[#9CA3AF] sm:text-[13.5px]"
+              />
+              {issueQuery ? (
+                <button type="button" onClick={() => setIssueQuery('')} aria-label="Clear issue search" className={cx('rounded-full p-0.5 text-[#6B7280]', FOCUS_RING)}>
+                  <X className="h-4 w-4" aria-hidden="true" />
+                </button>
+              ) : null}
+            </label>
+
+            {issueQ ? (
+              <div className="grid grid-cols-1 gap-1.5 lg:grid-cols-2">
+                {issueMatches.map(({ x, group }) => (
+                  <IssueCheckRow
+                    key={x.id}
+                    name={x.name}
+                    sub={group}
+                    Icon={iconForRepairService(x.name, group)}
+                    on={form.serviceIds.includes(x.id)}
+                    onClick={() => toggleService(x.id)}
                   />
                 ))}
+                {issueMatches.length === 0 ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      addOtherIssue(issueQuery.trim());
+                      setIssueQuery('');
+                    }}
+                    className={cx('flex min-h-[46px] w-full items-center gap-2.5 rounded-xl border border-dashed border-[#035C6C] bg-[#E5F3F5] px-3 text-left text-[13px] text-[#111111]', FOCUS_RING)}
+                  >
+                    <MessageSquarePlus className="h-[18px] w-[18px] shrink-0 text-[#035C6C]" strokeWidth={1.75} aria-hidden="true" />
+                    <span className="min-w-0 flex-1">
+                      No matching issue — add <span className="font-extrabold">“{issueQuery.trim()}”</span> as Other Issue
+                    </span>
+                  </button>
+                ) : null}
               </div>
+            ) : (
+              <>
+                {/* Compact app-sized tiles (~120-140px): 3 across on phones, then as
+                    many as fit, left to right — tiles never stretch on wide screens. */}
+                <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-[repeat(auto-fill,minmax(120px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(132px,1fr))]">
+                  {visibleIssueGroups.map((c) => (
+                    <IssueTile
+                      key={c.id}
+                      name={groupName(c)}
+                      Icon={iconForRepairCategory(groupName(c))}
+                      picked={(servicesByCategoryId.get(c.id) || []).filter((x) => form.serviceIds.includes(x.id)).length}
+                      onClick={() => setIssueSheetId(c.id)}
+                    />
+                  ))}
+                  <IssueTile
+                    name="Other Issue"
+                    Icon={MessageSquarePlus}
+                    picked={form.customIssues.length}
+                    onClick={() => setTypeSheet({ title: 'Other Issue', placeholder: 'Describe the issue (e.g. Face ID not working)', initial: '', onDone: addOtherIssue })}
+                  />
+                </div>
+                {issueGroups.length > ISSUE_FIRST_TILES ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowAllIssueGroups((v) => !v)}
+                    className={cx('mx-auto flex items-center gap-0.5 rounded-md py-1 text-[12.5px] font-bold text-[#035C6C]', FOCUS_RING)}
+                  >
+                    {showAllIssueGroups ? 'Show less' : `View All (${issueGroups.length})`}
+                    <ChevronDown className={cx('h-3.5 w-3.5 transition', showAllIssueGroups && 'rotate-180')} aria-hidden="true" />
+                  </button>
+                ) : null}
+                {issueGroups.length === 0 ? (
+                  <p className="text-xs text-[#98A2B3]">No repair issues are set up for this device category yet — use Other Issue.</p>
+                ) : null}
+              </>
             )}
-            <div className="mt-5 border-t border-dashed border-[#ECECEC] pt-4">
-              <p className="mb-2.5 text-xs font-bold uppercase tracking-wider text-[#666666]">Others</p>
-              {customIssuesCard}
-            </div>
           </>
         )}
 
         {chosenServices.length > 0 ? (
-          <div className="rounded-xl border border-[#ECECEC] bg-[#F3F3F3] p-3.5">
-            <div className="mb-2 flex flex-wrap items-center justify-between gap-1.5">
-              <p className="text-xs font-bold text-[#111111]">
-                Selected Services <span className="text-[#09AD2A]">({chosenServices.length})</span>
+          <div className="pt-1">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <p className="text-[13px] font-extrabold text-[#111111]">Selected Services ({chosenServices.length})</p>
+              <p className={cx('text-[13px] font-extrabold', draftServicesSubtotal > 0 ? 'text-[#035C6C]' : 'text-[#6B7280]')}>
+                {draftServicesSubtotal > 0 ? money(draftServicesSubtotal) : 'Not Estimated'}
               </p>
-              {draftServicesSubtotal > 0 ? (
-                <p className="text-[0.7rem] text-[#666666]">
-                  Services subtotal: <span className="font-bold text-[#111111]">{money(draftServicesSubtotal)}</span>
-                </p>
-              ) : null}
             </div>
-            <div className="flex flex-wrap gap-2">
-              {chosenServices.map((s) => {
-                const ServiceIcon = iconForRepairService(s.name, repairCategoryNames.get(s.categoryId));
+            <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
+              {chosenServices.map((x) => {
+                const group = x.isCustom ? 'Other Issue' : repairCategoryNames.get(x.categoryId) || '';
                 return (
-                  <span
-                    key={s.id}
-                    className="inline-flex max-w-full items-center gap-1.5 break-words rounded-full border border-[#09AD2A] bg-white py-1 pl-2.5 pr-1.5 text-xs font-semibold text-[#09AD2A]"
-                  >
-                    <ServiceIcon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                    {s.name}
-                    {draftServicePrices[s.id] ? <span className="font-normal text-[#666666]">· ₹{draftServicePrices[s.id]}</span> : null}
-                    {draftServiceWarranty[s.id] ? <span className="font-normal text-[#666666]">· {draftServiceWarranty[s.id]}mo warranty</span> : null}
-                    <button
-                      type="button"
-                      onClick={() => removeChosenService(s)}
-                      aria-label={`Remove ${s.name}`}
-                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition hover:bg-[#F8F8F8] sm:h-4 sm:w-4"
-                    >
-                      <X className="h-3 w-3" aria-hidden="true" />
-                    </button>
-                  </span>
+                  <SelectedIssueRow
+                    key={x.id}
+                    name={x.name}
+                    sub={group}
+                    Icon={x.isCustom ? MessageSquarePlus : iconForRepairService(x.name, group)}
+                    price={draftServicePrices[x.id] || ''}
+                    charge={draftServiceCharges[x.id] || ''}
+                    warranty={draftServiceWarranty[x.id] || ''}
+                    note={draftServiceNotes[x.id] || ''}
+                    onNote={(v) => setDraftServiceNotes((m) => ({ ...m, [x.id]: v }))}
+                    onPrice={(v) => setDraftServicePrice(x.id, v)}
+                    onCharge={(v) => setDraftServiceCharge(x.id, v)}
+                    onWarranty={(v) => setDraftServiceWarranty((w) => ({ ...w, [x.id]: v }))}
+                    onRemove={() => removeChosenService(x)}
+                  />
                 );
               })}
             </div>
+            <p className="mt-2 text-[11px] text-[#6B7280]">Price and Service Charge add to the estimate. Notes are saved with the booking; warranty is a note only.</p>
           </div>
         ) : null}
+
+        {/* Voice note — the app's collapsible "Record Voice Note (optional)" card, right under the issues. */}
+        <div className="rounded-[14px] border border-[#E5E7EB] bg-white p-3">
+          <button
+            type="button"
+            onClick={() => setVoiceOpen((v) => !v)}
+            aria-expanded={voiceExpanded}
+            className={cx('flex w-full items-center gap-2.5 rounded-lg text-left', FOCUS_RING)}
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#E5F3F5]">
+              <Mic className={cx('h-[18px] w-[18px]', voiceNote.status === 'recording' ? 'text-[#DC2626]' : 'text-[#035C6C]')} aria-hidden="true" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[13px] font-bold text-[#111111]">
+                Record Voice Note <span className="text-[12px] font-normal text-[#6B7280]">(optional)</span>
+              </span>
+              {voiceHint ? <span className="block truncate text-[12px] text-[#6B7280]">{voiceHint}</span> : null}
+            </span>
+            {voiceExpanded ? <ChevronDown className="h-[18px] w-[18px] text-[#9CA3AF]" aria-hidden="true" /> : <ChevronRight className="h-[18px] w-[18px] text-[#9CA3AF]" aria-hidden="true" />}
+          </button>
+          {voiceExpanded ? (
+            <div className="mt-2.5">
+              <VoiceNoteCard voice={voiceNote} />
+            </div>
+          ) : null}
+        </div>
       </div>
+
+      {issueSheetGroup ? (
+        <IssueSheet title={groupName(issueSheetGroup)} Icon={iconForRepairCategory(groupName(issueSheetGroup))} onClose={() => setIssueSheetId(null)}>
+          {(servicesByCategoryId.get(issueSheetGroup.id) || []).map((x) => (
+            <IssueCheckRow
+              key={x.id}
+              name={x.name}
+              Icon={iconForRepairService(x.name, groupName(issueSheetGroup))}
+              on={form.serviceIds.includes(x.id)}
+              onClick={() => {
+                // Select / unselect, then the sheet closes by itself (as in the app).
+                toggleService(x.id);
+                setIssueSheetId(null);
+              }}
+            />
+          ))}
+        </IssueSheet>
+      ) : null}
+      {typeSheet ? <TypeSheet key={typeSheet.title} sheet={typeSheet} onClose={() => setTypeSheet(null)} /> : null}
     </Section>
   );
 
@@ -4160,43 +4726,236 @@ export default function BookServicePage() {
    * the same endpoint the public /repair flow's photo picker uses), and the
    * URLs are saved on the ticket as devicePhotosJson {front, back, video}.
    */
+  // App format: Camera · Gallery · Video buttons, then the added files as
+  // thumbnails (tap × to remove). Photos fill the Front, then Back slot; the
+  // video fills Full Coverage — still saved as devicePhotosJson {front, back, video}.
+  const devicePhotoSlots = DEVICE_FILE_SLOTS.filter((slot) => !slot.video);
+  const deviceVideoSlot = DEVICE_FILE_SLOTS.find((slot) => slot.video) || null;
+  const nextDevicePhotoSlot = devicePhotoSlots.find((slot) => !form[slot.field] && !photoUploading[slot.key]) || null;
+  const deviceMediaBusy = Object.values(photoUploading).some(Boolean);
+  const addDeviceMedia = (slot, e) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (slot && file) handlePhotoUpload(slot, file);
+  };
+  const deviceMediaShown = DEVICE_FILE_SLOTS.filter((slot) => form[slot.field] || photoUploading[slot.key]);
+  // Still read by the display-only summary (pickupSummarySection).
   const deviceFilesAdded = DEVICE_FILE_SLOTS.filter((slot) => form[slot.field]).length;
-  const deviceFilesError = fieldErrors.frontImageUrl || fieldErrors.backImageUrl;
   const devicePhotosCard = (
     <div className="min-w-0 rounded-xl border border-[#ECECEC] bg-white p-4">
-      <div className="mb-3 flex items-center gap-2.5">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[#09AD2A]">
-          <Camera className="h-4 w-4" aria-hidden="true" />
+      <p className="mb-2 text-sm font-bold text-[#111111]">
+        Device Photo or Video <span className="font-normal text-[#6B7280]">(Optional)</span>
+      </p>
+      <div className="grid grid-cols-3 gap-2">
+        {[
+          { key: 'camera', label: 'Camera', Icon: Camera, slot: nextDevicePhotoSlot, accept: 'image/*', capture: 'environment' },
+          { key: 'gallery', label: 'Gallery', Icon: ImageIcon, slot: nextDevicePhotoSlot, accept: 'image/*' },
+          { key: 'video', label: 'Video', Icon: Video, slot: deviceVideoSlot && !form[deviceVideoSlot.field] ? deviceVideoSlot : null, accept: 'video/mp4,video/quicktime,video/webm' },
+        ].map((b) => {
+          const off = !b.slot || deviceMediaBusy;
+          return (
+            <label
+              key={b.key}
+              className={cx(
+                'flex h-11 items-center justify-center gap-1.5 rounded-xl border text-[13px] font-bold transition focus-within:ring-2 focus-within:ring-[#035C6C]',
+                off ? 'cursor-not-allowed border-[#E5E7EB] bg-[#F3F4F6] text-[#6B7280] opacity-60' : 'cursor-pointer border-[#035C6C]/30 bg-[#E5F3F5] text-[#035C6C] hover:border-[#035C6C]',
+              )}
+            >
+              <input type="file" accept={b.accept} capture={b.capture} disabled={off} className="sr-only" aria-label={`Add ${b.label.toLowerCase()}`} onChange={(e) => addDeviceMedia(b.slot, e)} />
+              {deviceMediaBusy && b.key !== 'video' ? <Loader2 className="h-[18px] w-[18px] animate-spin" aria-hidden="true" /> : <b.Icon className="h-[18px] w-[18px]" aria-hidden="true" />}
+              {b.label}
+            </label>
+          );
+        })}
+      </div>
+      {deviceMediaShown.length ? (
+        <div className="mt-2.5 grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
+          {deviceMediaShown.map((slot) => (
+            <div key={slot.key} className="min-w-0">
+              <div className="relative aspect-square overflow-hidden rounded-xl border border-[#E5E7EB] bg-[#F3F4F6]">
+                {photoUploading[slot.key] ? (
+                  <span className="flex h-full items-center justify-center">
+                    <Loader2 className="h-6 w-6 animate-spin text-[#035C6C]" aria-hidden="true" />
+                  </span>
+                ) : slot.video ? (
+                  <a href={form[slot.field]} target="_blank" rel="noreferrer" className="flex h-full items-center justify-center bg-[#111111]" aria-label={`Open ${slot.label}`}>
+                    <Video className="h-8 w-8 text-white" aria-hidden="true" />
+                  </a>
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element -- uploaded device photo (remote URL).
+                  <img src={form[slot.field]} alt={slot.label} className="h-full w-full object-cover" />
+                )}
+                {form[slot.field] ? (
+                  <button
+                    type="button"
+                    onClick={() => removePhoto(slot)}
+                    aria-label={`Remove ${slot.label}`}
+                    className={cx('absolute right-1.5 top-1.5 flex h-[22px] w-[22px] items-center justify-center rounded-full bg-[#111111]/70 text-white', FOCUS_RING)}
+                  >
+                    <X className="h-3.5 w-3.5" aria-hidden="true" />
+                  </button>
+                ) : null}
+              </div>
+              <p className="mt-1 truncate text-center text-[11.5px] font-semibold text-[#6B7280]">{slot.label}</p>
+            </div>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+
+  /* ---- Booking & Delivery (app format): Booking Time, then the delivery date + time ---- */
+  const deliveryDayLabel = (d) => {
+    const today = new Date();
+    const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+    const same = (x, y) => x.getFullYear() === y.getFullYear() && x.getMonth() === y.getMonth() && x.getDate() === y.getDate();
+    const short = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+    if (same(d, today)) return `Today, ${short}`;
+    if (same(d, tomorrow)) return `Tomorrow, ${short}`;
+    return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
+  };
+  const bookingDeliveryCard = (
+    <div className="min-w-0 rounded-xl border border-[#ECECEC] bg-white p-4">
+      <p className="mb-2 text-sm font-bold text-[#111111]">Booking Time</p>
+      <div className="flex min-h-[44px] items-center gap-2 rounded-xl border border-[#E5E7EB] px-3">
+        <Calendar className="h-[18px] w-[18px] shrink-0 text-[#111111]" aria-hidden="true" />
+        <span className="flex-1 text-[13px] text-[#6B7280]">Booking Time</span>
+        <span className="truncate text-[13.5px] font-bold text-[#111111]">
+          {deliveryDayLabel(draftReceivedAt).split(',')[0]}, {fmtChipTime(draftReceivedAt)}
         </span>
-        <div className="min-w-0">
-          <p className="text-sm font-bold text-[#111111]">Device Files</p>
-          <p className="text-xs text-[#666666]">
-            Front + Back required · Coverage video optional
-            {deviceFilesAdded ? ` · ${deviceFilesAdded}/${DEVICE_FILE_SLOTS.length} added` : ''}
-          </p>
+      </div>
+      <p className="mb-1.5 mt-3 text-[12.5px] font-bold text-[#111111]">Estimated &amp; Delivery Time</p>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={() => setReadyByPickerOpen(true)}
+          aria-label={`Delivery date ${deliveryDayLabel(draftReadyBy)}. Change.`}
+          className={cx('flex h-11 min-w-0 flex-[1.2] items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-2.5 text-left transition hover:border-[#035C6C]', FOCUS_RING)}
+        >
+          <Calendar className="h-[18px] w-[18px] shrink-0 text-[#035C6C]" aria-hidden="true" />
+          <span className="truncate text-[13.5px] font-bold text-[#111111]">{deliveryDayLabel(draftReadyBy)}</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setReadyByPickerOpen(true)}
+          aria-label={`Delivery time ${fmtChipTime(draftReadyBy)}. Change.`}
+          className={cx('flex h-11 min-w-0 flex-[0.8] items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-2.5 text-left transition hover:border-[#035C6C]', FOCUS_RING)}
+        >
+          <Timer className="h-[18px] w-[18px] shrink-0 text-[#035C6C]" aria-hidden="true" />
+          <span className="truncate text-[13.5px] font-bold text-[#111111]">{fmtChipTime(draftReadyBy)}</span>
+        </button>
+      </div>
+      <p className="mt-1.5 text-[11.5px] text-[#6B7280]">Ready in {durationLabel(draftDurationMinutes)} from booking · estimate only, not saved with this booking.</p>
+    </div>
+  );
+
+  /* ---- More Device Details (app format): two folds in one box ---- */
+  const lockIsSet = Boolean(form.deviceSecurityType) && form.deviceSecurityType !== 'NONE';
+  const lockSummaryText = !lockIsSet
+    ? 'None'
+    : lockValueValid
+      ? `${lockLabel} · ${'•'.repeat(Math.min(String(form.devicePin || '').length, 8))}`
+      : `${lockLabel} — not entered`;
+  const missingPartsChecklist = (
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
+      {MISSING_PART_ITEMS.map((item) => {
+        const status = missingParts[item.key];
+        return (
+          <div
+            key={item.key}
+            className={cx(
+              'min-w-0 rounded-[14px] p-2.5',
+              status === 'damaged' ? 'border-[1.5px] border-[#F84141] bg-[#FEECEC]' : status === 'missing' ? 'border-[1.5px] border-[#F3BF23] bg-[#FFF8E1]' : 'border border-[#F3F4F6] bg-white',
+            )}
+          >
+            <div className="flex items-center gap-2">
+              <span className={cx('flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px]', status ? 'bg-white' : 'bg-[#E5F3F5]')}>
+                <item.icon className={cx('h-4 w-4', status === 'damaged' ? 'text-[#F84141]' : status === 'missing' ? 'text-[#C99A00]' : 'text-[#035C6C]')} aria-hidden="true" />
+              </span>
+              <p className="line-clamp-2 text-[13px] font-extrabold text-[#111111]">{item.title}</p>
+            </div>
+            <div className="mt-2.5 flex gap-1.5">
+              {[
+                ['missing', 'Missing', 'border-[1.5px] border-[#F3BF23] bg-[#FFF8E1] text-[#8A6A00]'],
+                ['damaged', 'Damaged', 'border-[1.5px] border-[#F84141] bg-[#FEECEC] text-[#D63232]'],
+              ].map(([key, label, onCls]) => {
+                const on = status === key;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    role="checkbox"
+                    aria-checked={on}
+                    aria-label={`${item.title} ${label}`}
+                    onClick={() => setPartStatus(item.key, key)}
+                    className={cx(
+                      'flex min-h-[30px] min-w-0 flex-1 items-center justify-center gap-0.5 rounded-[9px] px-1 text-[11px] font-bold transition',
+                      FOCUS_RING,
+                      on ? onCls : 'border border-[#E5E7EB] bg-white text-[#6B7280] hover:border-[#D1D5DB]',
+                    )}
+                  >
+                    {on ? <X className="h-2.5 w-2.5 shrink-0" strokeWidth={2.75} aria-hidden="true" /> : null}
+                    <span className="truncate">{label}</span>
+                  </button>
+                );
+              })}
+            </div>
+            {status ? (
+              <input
+                value={missingPartDetails[item.key] || ''}
+                onChange={(e) => setMissingPartDetails((d) => ({ ...d, [item.key]: e.target.value.slice(0, 120) }))}
+                placeholder="Add details…"
+                aria-label={`${item.title} details`}
+                className="mt-2 h-9 w-full rounded-[10px] border border-[#E5E7EB] bg-white px-2.5 text-base text-[#111111] outline-none placeholder:text-[#9CA3AF] focus:border-[#035C6C] sm:text-[12px]"
+              />
+            ) : null}
+          </div>
+        );
+      })}
+    </div>
+  );
+  const moreDeviceDetails = (
+    <div className="min-w-0">
+      <p className="mb-2 text-sm font-bold text-[#111111]">More Device Details</p>
+      <div className="overflow-hidden rounded-[14px] border border-[#E5E7EB] bg-white">
+        <div id="bs-part-missingParts" className="scroll-mt-28">
+          <button
+            type="button"
+            onClick={() => setOpenFolds((o) => ({ ...o, missingParts: !o.missingParts }))}
+            aria-expanded={Boolean(openFolds.missingParts)}
+            className={cx('flex min-h-[48px] w-full items-center gap-2 px-3 text-left', FOCUS_RING)}
+          >
+            <span className="min-w-0 flex-1 truncate text-[13.5px] font-bold text-[#111111]">
+              Missing / Damaged Parts <span className="font-normal text-[#6B7280]">(Optional)</span>
+            </span>
+            {flaggedPartsCount ? (
+              <span className="shrink-0 text-[11.5px] font-extrabold text-[#D63232]">
+                {flaggedPartsCount} Part{flaggedPartsCount === 1 ? '' : 's'} Flagged
+              </span>
+            ) : null}
+            <ChevronDown className={cx('h-[18px] w-[18px] shrink-0 text-[#111111] transition', openFolds.missingParts && 'rotate-180')} aria-hidden="true" />
+          </button>
+          {openFolds.missingParts ? <div className="px-3 pb-3">{missingPartsChecklist}</div> : null}
+        </div>
+        <div className="h-px bg-[#E5E7EB]" />
+        <div id="bs-part-deviceSecurity" className="scroll-mt-28">
+          <button
+            type="button"
+            onClick={() => setOpenFolds((o) => ({ ...o, deviceSecurity: !o.deviceSecurity }))}
+            aria-expanded={Boolean(openFolds.deviceSecurity)}
+            className={cx('flex min-h-[48px] w-full items-center gap-2 px-3 text-left', FOCUS_RING)}
+          >
+            <span className="min-w-0 flex-1 truncate text-[13.5px] font-bold text-[#111111]">
+              Device Security <span className="font-normal text-[#6B7280]">(Optional)</span>
+            </span>
+            <span className={cx('max-w-[45%] shrink-0 truncate text-[12px] font-bold', fieldErrors.devicePin ? 'text-[#F84141]' : lockIsSet ? 'text-[#035C6C]' : 'text-[#6B7280]')}>
+              {lockSummaryText}
+            </span>
+            <ChevronDown className={cx('h-[18px] w-[18px] shrink-0 text-[#111111] transition', openFolds.deviceSecurity && 'rotate-180')} aria-hidden="true" />
+          </button>
+          {openFolds.deviceSecurity ? <div className="px-3 pb-2">{deviceSecuritySection}</div> : null}
         </div>
       </div>
-
-      <div className="grid grid-cols-3 gap-3">
-        {DEVICE_FILE_SLOTS.map((slot) => (
-          <PhotoTile
-            key={slot.key}
-            slot={slot}
-            url={form[slot.field]}
-            uploading={Boolean(photoUploading[slot.key])}
-            invalid={Boolean(fieldErrors[slot.field])}
-            fieldRef={slot.required ? registerField(fieldRefs, slot.field) : undefined}
-            onUpload={(file) => handlePhotoUpload(slot, file)}
-            onRemove={() => removePhoto(slot)}
-          />
-        ))}
-      </div>
-      {deviceFilesError ? <p className="mt-2 text-xs text-red-600">{deviceFilesError}</p> : null}
-
-      <p className="mt-3 flex items-start gap-1.5 rounded-lg bg-[#F8F8F8] px-3 py-2 text-xs text-[#666666]">
-        <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#09AD2A]" aria-hidden="true" />
-        Photos help the customer verify the device&apos;s condition before and after repair.
-      </p>
     </div>
   );
 
@@ -4208,7 +4967,7 @@ export default function BookServicePage() {
           columns stretch to the taller one so their bottoms line up: the
           Bill Details list and the Issue Description textarea take up the slack. */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="flex min-w-0 flex-col gap-4">
+        <div className="contents">
           {/* Bill Details — same real chosenServices/draftServicePrices/toggleService
               this page already collects, restyled as an itemized bill. Each line
               price is entered on the Add Issue / Service tab and summed into the
@@ -4218,7 +4977,7 @@ export default function BookServicePage() {
           <div className="flex flex-1 flex-col overflow-hidden rounded-xl border border-[#ECECEC] bg-white">
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#ECECEC] bg-[#F3F3F3] px-4 py-3">
               <div className="flex items-center gap-2.5">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[#09AD2A]">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[#035C6C]">
                   <ClipboardList className="h-4 w-4" aria-hidden="true" />
                 </span>
                 <div>
@@ -4241,17 +5000,17 @@ export default function BookServicePage() {
             </div>
 
             {chosenServices.length === 0 ? (
-              <p className="flex-1 px-4 py-6 text-center text-sm text-[#98A2B3]">No services selected yet — add one from the Add Issue / Service tab.</p>
+              <p className="flex-1 px-4 py-6 text-center text-sm text-[#98A2B3]">No services selected yet — add one from Add Issue / Service above.</p>
             ) : (
               <div className="flex-1 divide-y divide-dashed divide-[#ECECEC]">
                 {chosenServices.map((s, idx) => (
                   <div key={s.id} className="flex items-center gap-3 px-4 py-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-xs font-bold text-[#09AD2A]">{idx + 1}</span>
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-xs font-bold text-[#035C6C]">{idx + 1}</span>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-bold text-[#111111]">{s.name}</p>
                       {draftServiceWarranty[s.id] ? <p className="text-xs text-[#666666]">{draftServiceWarranty[s.id]} months warranty (draft)</p> : null}
                     </div>
-                    <span className="shrink-0 text-sm font-semibold text-[#344054]">{draftServicePrices[s.id] ? money(draftServicePrices[s.id]) : '₹0'}</span>
+                    <span className="shrink-0 text-sm font-semibold text-[#344054]">{money(lineAmount(s.id))}</span>
                     <button
                       type="button"
                       onClick={() => removeChosenService(s)}
@@ -4267,7 +5026,7 @@ export default function BookServicePage() {
 
             <div className="flex items-center justify-between gap-3 bg-[#F8F8F8] px-4 py-3.5">
               <div className="flex items-center gap-2">
-                <Tag className="h-4 w-4 shrink-0 text-[#09AD2A]" aria-hidden="true" />
+                <Tag className="h-4 w-4 shrink-0 text-[#035C6C]" aria-hidden="true" />
                 <div>
                   <p className="text-sm font-bold text-[#111111]">Estimated Total</p>
                   <p className="text-[0.7rem] text-[#666666]">Final amount may vary based on parts availability.</p>
@@ -4307,7 +5066,7 @@ export default function BookServicePage() {
                 Scan
               </button>
             </div>
-            <p className="mt-2.5 flex items-start gap-1.5 rounded-lg bg-[#F8F8F8] px-3 py-2 text-xs text-[#09AD2A]">
+            <p className="mt-2.5 flex items-start gap-1.5 rounded-lg bg-[#F8F8F8] px-3 py-2 text-xs text-[#035C6C]">
               <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               Tip: dial *#06# on the device to display the IMEI as a barcode.
             </p>
@@ -4315,150 +5074,14 @@ export default function BookServicePage() {
 
         </div>
 
-        {/* Issue Description & Voice Note — one card. Issue Description is
-            the real form.issueDescription field and is
-            required here (SECTION_VALIDATORS.pickup). The voice note is
-            independent of the text: recording never touches the textarea, and
-            its state lives on this page (useVoiceNote) so it survives step
-            changes. */}
-        <div className="flex min-w-0 flex-col rounded-xl border border-[#ECECEC] bg-white p-4">
-          <p className="mb-3 flex items-center gap-2 text-sm font-bold text-[#111111]">
-            <Pencil className="h-4 w-4 text-[#09AD2A]" aria-hidden="true" />
-            Issue Description &amp; Voice Note
-          </p>
-          <div className="mb-1.5 flex items-center justify-between gap-2">
-            <label htmlFor="issue-description" className="text-[0.7rem] font-semibold uppercase tracking-wide text-[#666666]">
-              Issue Description <span className="text-red-500">*</span>
-            </label>
-            <span className="shrink-0 text-xs text-[#98A2B3]">{form.issueDescription.length}/500</span>
-          </div>
-          <textarea
-            id="issue-description"
-            ref={registerField(fieldRefs, 'issueDescription')}
-            className={cx(COMPACT_INPUT_CLS, 'min-h-[110px] grow resize-y', fieldErrors.issueDescription && 'border-red-300 focus:border-red-400')}
-            value={form.issueDescription}
-            maxLength={500}
-            required
-            aria-required="true"
-            aria-invalid={fieldErrors.issueDescription ? 'true' : undefined}
-            onChange={(e) => {
-              set('issueDescription', e.target.value.slice(0, 500));
-              if (fieldErrors.issueDescription) setFieldErrors((prev) => ({ ...prev, issueDescription: undefined }));
-            }}
-            placeholder="What's wrong with the device? e.g. Screen cracked, battery drains fast…"
-          />
-          {fieldErrors.issueDescription ? <p className="mt-1.5 text-xs text-red-600">{fieldErrors.issueDescription}</p> : null}
-
-          <div className="mt-4 border-t border-dashed border-[#ECECEC] pt-3">
-            <p className="mb-2 text-[0.7rem] font-semibold uppercase tracking-wide text-[#666666]">Voice Note</p>
-            <VoiceNoteCard voice={voiceNote} />
-          </div>
-        </div>
       </div>
 
-      {/* Estimated Delivery (left) and Device Photos (right) — two columns
-          from md up, stacked on phones. mt-4 because Section's className lands
-          on the <section>, not on this content wrapper, so rows need their own gap. */}
-      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-        {/* Estimated Delivery — local planning aid only, see the ReadyByPicker
-            doc comment near the top of this file for why it's never
-            submitted with the booking. Ready By is now a pure derived value
-            (Received + Duration, recomputed on every render — no state of its
-            own), so there's no separate "Edit" affordance for it any more:
-            Received and Duration are each directly clickable instead. */}
-        <div className="min-w-0 rounded-xl border border-[#ECECEC] bg-white p-4">
-          <p className="mb-3 flex items-center gap-2 text-sm font-bold text-[#111111]">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[#09AD2A]">
-              <Truck className="h-4 w-4" aria-hidden="true" />
-            </span>
-            Estimated Delivery
-          </p>
-
-          <div className="flex items-stretch gap-1.5 overflow-x-auto pb-1">
-            <button
-              type="button"
-              onClick={() => setReceivedPickerOpen(true)}
-              className={cx('min-w-[108px] shrink-0 rounded-xl bg-[#F8F8F8] px-3 py-2.5 text-left transition hover:bg-[#F3F3F3]', FOCUS_RING)}
-            >
-              <p className="flex items-center gap-1 text-[0.6rem] font-bold uppercase tracking-wide text-[#666666]">
-                <Calendar className="h-3 w-3" aria-hidden="true" /> Received
-              </p>
-              <p className="mt-1 text-sm font-bold text-[#111111]">{fmtChipDate(draftReceivedAt)}</p>
-              <p className="text-xs text-[#666666]">{fmtChipTime(draftReceivedAt)}</p>
-            </button>
-
-            <ChevronRight className="my-auto h-4 w-4 shrink-0 text-[#98A2B3]" aria-hidden="true" />
-
-            <button
-              type="button"
-              onClick={() => setDurationPickerOpen(true)}
-              className={cx('min-w-[108px] shrink-0 rounded-xl bg-[#F8F8F8] px-3 py-2.5 text-left transition hover:bg-[#F3F3F3]', FOCUS_RING)}
-            >
-              <p className="flex items-center gap-1 text-[0.6rem] font-bold uppercase tracking-wide text-[#666666]">
-                <Timer className="h-3 w-3" aria-hidden="true" /> Duration
-              </p>
-              <span className="mt-1 flex items-center gap-1 text-sm font-bold text-[#111111]">
-                {durationLabel(draftDurationMinutes)}
-                <ChevronDown className="h-3 w-3 shrink-0 text-[#98A2B3]" aria-hidden="true" />
-              </span>
-            </button>
-
-            <ChevronRight className="my-auto h-4 w-4 shrink-0 text-[#98A2B3]" aria-hidden="true" />
-
-            <button
-              type="button"
-              onClick={() => setReadyByPickerOpen(true)}
-              className={cx(
-                'min-w-[108px] shrink-0 cursor-pointer rounded-xl bg-[#F3BF23] px-3 py-2.5 text-left text-[#1E1E1E] transition hover:bg-[#E5B11A]',
-                FOCUS_RING,
-              )}
-            >
-              <p className="flex items-center gap-1 text-[0.6rem] font-bold uppercase tracking-wide text-[#DCFCE7]">
-                <ShieldCheck className="h-3 w-3" aria-hidden="true" /> Ready By
-              </p>
-              <p className="mt-1 text-sm font-bold">{fmtChipDate(draftReadyBy)}</p>
-              <p className="text-xs text-[#DCFCE7]">{fmtChipTime(draftReadyBy)}</p>
-            </button>
-          </div>
-
-          <div className="mt-3">
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#F8F8F8] px-2.5 py-1 text-xs font-bold text-[#09AD2A]">
-              <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" /> On time
-            </span>
-          </div>
-
-          <p className="mt-2.5 flex items-center gap-1.5 text-[0.7rem] text-[#98A2B3]">
-            <AlertTriangle className="h-3 w-3 shrink-0" aria-hidden="true" /> Estimate only — not saved with this booking.
-          </p>
-        </div>
-
+      {/* App order: Device Photo or Video · More Device Details · Booking & Delivery. */}
+      <div className="mt-4 space-y-4">
         {devicePhotosCard}
+        {moreDeviceDetails}
+        {bookingDeliveryCard}
       </div>
-
-      {receivedPickerOpen ? (
-        <DateTimeSheet
-          title="Received"
-          description="Pick the date and time the device was received. Ready By follows it."
-          confirmLabel="Set received time"
-          initialValue={draftReceivedAt}
-          onConfirm={(next) => {
-            setDraftReceivedAt(next);
-            setReceivedPickerOpen(false);
-          }}
-          onClose={() => setReceivedPickerOpen(false)}
-        />
-      ) : null}
-
-      {durationPickerOpen ? (
-        <DurationSheet
-          initialMinutes={draftDurationMinutes}
-          onConfirm={(minutes) => {
-            setDraftDurationMinutes(minutes);
-            setDurationPickerOpen(false);
-          }}
-          onClose={() => setDurationPickerOpen(false)}
-        />
-      ) : null}
 
       {readyByPickerOpen ? (
         <DateTimeSheet
@@ -4479,7 +5102,7 @@ export default function BookServicePage() {
         ref={registerField(fieldRefs, 'customerApproved')}
         className={cx(
           'mt-4 flex cursor-pointer items-start gap-3 rounded-xl border bg-white p-4',
-          fieldErrors.customerApproved ? 'border-red-300 bg-red-50/40' : customerApproved ? 'border-[#09AD2A] bg-[#F8F8F8]' : 'border-[#ECECEC]',
+          fieldErrors.customerApproved ? 'border-red-300 bg-red-50/40' : customerApproved ? 'border-[#035C6C] bg-[#F8F8F8]' : 'border-[#ECECEC]',
         )}
       >
         <input
@@ -4489,7 +5112,7 @@ export default function BookServicePage() {
             setCustomerApproved(e.target.checked);
             if (fieldErrors.customerApproved) setFieldErrors((prev) => ({ ...prev, customerApproved: undefined }));
           }}
-          className="mt-0.5 h-4 w-4 shrink-0 rounded border-[#D0D5DD] text-[#09AD2A] focus:ring-[#09AD2A]"
+          className="mt-0.5 h-4 w-4 shrink-0 rounded border-[#D0D5DD] text-[#035C6C] focus:ring-[#035C6C]"
         />
         <span>
           <span className="block text-sm font-bold text-[#111111]">
@@ -4518,7 +5141,7 @@ export default function BookServicePage() {
           <div className="flex flex-1 flex-col overflow-hidden rounded-xl border border-[#ECECEC] bg-white">
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#ECECEC] bg-[#F3F3F3] px-4 py-3">
               <div className="flex items-center gap-2.5">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[#09AD2A]">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[#035C6C]">
                   <ClipboardList className="h-4 w-4" aria-hidden="true" />
                 </span>
                 <div>
@@ -4537,12 +5160,12 @@ export default function BookServicePage() {
               <div className="flex-1 divide-y divide-dashed divide-[#ECECEC]">
                 {chosenServices.map((s, idx) => (
                   <div key={s.id} className="flex items-center gap-3 px-4 py-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-xs font-bold text-[#09AD2A]">{idx + 1}</span>
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-xs font-bold text-[#035C6C]">{idx + 1}</span>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-bold text-[#111111]">{s.name}</p>
                       {draftServiceWarranty[s.id] ? <p className="text-xs text-[#666666]">{draftServiceWarranty[s.id]} months warranty (draft)</p> : null}
                     </div>
-                    <span className="shrink-0 text-sm font-semibold text-[#344054]">{draftServicePrices[s.id] ? money(draftServicePrices[s.id]) : '₹0'}</span>
+                    <span className="shrink-0 text-sm font-semibold text-[#344054]">{money(lineAmount(s.id))}</span>
                   </div>
                 ))}
               </div>
@@ -4550,7 +5173,7 @@ export default function BookServicePage() {
 
             <div className="flex items-center justify-between gap-3 bg-[#F8F8F8] px-4 py-3.5">
               <div className="flex items-center gap-2">
-                <Tag className="h-4 w-4 shrink-0 text-[#09AD2A]" aria-hidden="true" />
+                <Tag className="h-4 w-4 shrink-0 text-[#035C6C]" aria-hidden="true" />
                 <div>
                   <p className="text-sm font-bold text-[#111111]">Estimated Total</p>
                   <p className="text-[0.7rem] text-[#666666]">Final amount may vary based on parts availability.</p>
@@ -4570,7 +5193,7 @@ export default function BookServicePage() {
 
         <div className="flex min-w-0 flex-col rounded-xl border border-[#ECECEC] bg-white p-4">
           <p className="mb-3 flex items-center gap-2 text-sm font-bold text-[#111111]">
-            <Wrench className="h-4 w-4 text-[#09AD2A]" aria-hidden="true" />
+            <Wrench className="h-4 w-4 text-[#035C6C]" aria-hidden="true" />
             Issue Description &amp; Voice Note
           </p>
           <p className="mb-1.5 text-[0.7rem] font-semibold uppercase tracking-wide text-[#666666]">Issue Description</p>
@@ -4593,7 +5216,7 @@ export default function BookServicePage() {
       <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="min-w-0 rounded-xl border border-[#ECECEC] bg-white p-4">
           <p className="mb-3 flex items-center gap-2 text-sm font-bold text-[#111111]">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[#09AD2A]">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[#035C6C]">
               <Truck className="h-4 w-4" aria-hidden="true" />
             </span>
             Estimated Delivery
@@ -4635,7 +5258,7 @@ export default function BookServicePage() {
 
         <div className="min-w-0 rounded-xl border border-[#ECECEC] bg-white p-4">
           <div className="mb-3 flex items-center gap-2.5">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[#09AD2A]">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[#035C6C]">
               <Camera className="h-4 w-4" aria-hidden="true" />
             </span>
             <div className="min-w-0">
@@ -4658,7 +5281,7 @@ export default function BookServicePage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`View ${slot.label}`}
-                      className={cx('relative block h-28 w-full overflow-hidden rounded-2xl border-2 border-[#09AD2A] bg-[#F2FBF4]', FOCUS_RING)}
+                      className={cx('relative block h-28 w-full overflow-hidden rounded-2xl border-2 border-[#035C6C] bg-[#E5F3F5]', FOCUS_RING)}
                     >
                       {slot.video ? (
                         <>
@@ -4689,13 +5312,13 @@ export default function BookServicePage() {
       <div
         className={cx(
           'mt-4 flex items-start gap-3 rounded-xl border p-4',
-          customerApproved ? 'border-[#09AD2A] bg-[#F8F8F8]' : 'border-[#ECECEC] bg-white',
+          customerApproved ? 'border-[#035C6C] bg-[#F8F8F8]' : 'border-[#ECECEC] bg-white',
         )}
       >
         <span
           className={cx(
             'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full',
-            customerApproved ? 'bg-[#09AD2A] text-white' : 'bg-[#F3F3F3] text-[#98A2B3]',
+            customerApproved ? 'bg-[#035C6C] text-white' : 'bg-[#F3F3F3] text-[#98A2B3]',
           )}
         >
           {customerApproved ? <Check className="h-3 w-3" aria-hidden="true" /> : <X className="h-3 w-3" aria-hidden="true" />}
@@ -4733,13 +5356,13 @@ export default function BookServicePage() {
         <button
           type="button"
           onClick={addAnotherDevice}
-          className="flex items-center gap-2.5 rounded-xl border-2 border-dashed border-[#ECECEC] bg-white px-3 py-2 text-left transition hover:border-[#09AD2A] hover:bg-[#F8F8F8]"
+          className="flex items-center gap-2.5 rounded-xl border-2 border-dashed border-[#ECECEC] bg-white px-3 py-2 text-left transition hover:border-[#035C6C] hover:bg-[#F8F8F8]"
         >
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[#09AD2A]">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[#035C6C]">
             <Plus className="h-4 w-4" aria-hidden="true" />
           </span>
           <span className="min-w-0">
-            <span className="block text-sm font-bold text-[#09AD2A]">Add another device</span>
+            <span className="block text-sm font-bold text-[#035C6C]">Add another device</span>
           </span>
         </button>
         )
@@ -4751,7 +5374,7 @@ export default function BookServicePage() {
       <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-5">
         <div className="min-w-0 lg:col-span-3">
           <div className="mb-5 flex items-center gap-3 rounded-xl border border-[#ECECEC] bg-white p-3.5">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[#09AD2A]">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[#035C6C]">
               <User className="h-5 w-5" aria-hidden="true" />
             </span>
             <div className="min-w-0 flex-1">
@@ -4759,12 +5382,12 @@ export default function BookServicePage() {
               <p className="truncate text-sm font-bold text-[#111111]">{form.customerName || 'Not provided'}</p>
               <p className="truncate text-xs text-[#666666]">{form.customerMobile || 'Not provided'}</p>
             </div>
-            <span className="shrink-0 rounded-full bg-[#F3F3F3] px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-[#09AD2A]">Verified</span>
+            <span className="shrink-0 rounded-full bg-[#F3F3F3] px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-[#035C6C]">Verified</span>
           </div>
 
           <div className="mb-2 flex items-center justify-between gap-2">
             <p className="text-[0.7rem] font-bold uppercase tracking-wide text-[#666666]">Devices in this Booking</p>
-            <span className="shrink-0 rounded-full bg-[#F8F8F8] px-2.5 py-1 text-xs font-bold text-[#09AD2A]">
+            <span className="shrink-0 rounded-full bg-[#F8F8F8] px-2.5 py-1 text-xs font-bold text-[#035C6C]">
               {bookingDevices.length} Device{bookingDevices.length === 1 ? '' : 's'}
             </span>
           </div>
@@ -4785,7 +5408,7 @@ export default function BookServicePage() {
                       </p>
                       <div className="mt-1.5 flex flex-wrap gap-1.5">
                         {d.brand ? (
-                          <span className="rounded-full bg-[#F8F8F8] px-2 py-0.5 text-[0.65rem] font-bold text-[#09AD2A]">{d.brand}</span>
+                          <span className="rounded-full bg-[#F8F8F8] px-2 py-0.5 text-[0.65rem] font-bold text-[#035C6C]">{d.brand}</span>
                         ) : null}
                         {d.modelCode ? (
                           <span className="rounded-full bg-[#F3F3F3] px-2 py-0.5 text-[0.65rem] font-bold text-[#344054] ring-1 ring-[#ECECEC]">
@@ -4793,7 +5416,7 @@ export default function BookServicePage() {
                           </span>
                         ) : null}
                         {d.isPrimary ? (
-                          <span className="rounded-full bg-[#F3F3F3] px-2 py-0.5 text-[0.65rem] font-bold text-[#09AD2A]">Primary Device</span>
+                          <span className="rounded-full bg-[#F3F3F3] px-2 py-0.5 text-[0.65rem] font-bold text-[#035C6C]">Primary Device</span>
                         ) : null}
                       </div>
                     </div>
@@ -4816,7 +5439,7 @@ export default function BookServicePage() {
                       <ul className="space-y-1">
                         {d.selectedServices.map((s, i) => (
                           <li key={s.id || i} className="flex min-w-0 items-center gap-2 break-words text-sm text-[#344054]">
-                            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[0.6rem] font-bold text-[#09AD2A]">
+                            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8] text-[0.6rem] font-bold text-[#035C6C]">
                               {i + 1}
                             </span>
                             {s.name}
@@ -4829,7 +5452,7 @@ export default function BookServicePage() {
                   </div>
 
                   <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-[#F8F8F8] px-3 py-2.5">
-                    <span className="text-xs font-bold text-[#09AD2A]">Estimated repair amount</span>
+                    <span className="text-xs font-bold text-[#035C6C]">Estimated repair amount</span>
                     <span className="text-sm font-extrabold text-[#111111]">{money(d.estimatedAmount)}</span>
                   </div>
                 </div>
@@ -4856,7 +5479,7 @@ export default function BookServicePage() {
             </div>
             <div className="mt-3 flex items-center justify-between border-t border-dashed border-[#ECECEC] pt-3">
               <span className="text-sm font-bold text-[#111111]">Grand Total</span>
-              <span className="text-lg font-extrabold text-[#09AD2A]">{money(grandTotal)}</span>
+              <span className="text-lg font-extrabold text-[#035C6C]">{money(grandTotal)}</span>
             </div>
             <p className="mt-2 text-[0.7rem] text-[#98A2B3]">Final amount may vary slightly based on parts availability and inspection.</p>
           </div>
@@ -4906,10 +5529,32 @@ export default function BookServicePage() {
         </div>
       ) : (
         <div className="space-y-5">
+          {/* Shop header — avatar, shop name, booking date & time (the app's receipt header). */}
+          <div className="mx-auto flex max-w-3xl items-center gap-2.5">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#C7E6EA] bg-white">
+              {/* eslint-disable-next-line @next/next/no-img-element -- static public logo. */}
+              <img src="/logo.png" alt="" className="h-7 w-7 object-contain" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[13px] font-extrabold text-[#111111]">{shopLocation?.name || 'Your Shop'}</p>
+              <p className="text-[11px] text-[#6B7280]">Booking Receipt</p>
+            </div>
+            <div className="shrink-0 text-right text-[11px]">
+              <p className="flex items-center justify-end gap-1 font-bold text-[#111111]">
+                <Calendar className="h-3 w-3 text-[#035C6C]" aria-hidden="true" />
+                {fmtChipDate(draftReceivedAt)}
+              </p>
+              <p className="mt-0.5 flex items-center justify-end gap-1 text-[#6B7280]">
+                <Timer className="h-3 w-3 text-[#035C6C]" aria-hidden="true" />
+                {fmtChipTime(draftReceivedAt)}
+              </p>
+            </div>
+          </div>
+
           {/* Top success area — visual only, same data/handler as before */}
           <div className="relative overflow-hidden rounded-3xl bg-[#F8F8F8] px-4 py-8 text-center sm:px-6 sm:py-9">
             <span className="relative mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-white ring-4 ring-white">
-              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#09AD2A] text-white">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#035C6C] text-white">
                 <CheckCircle2 className="h-8 w-8" aria-hidden="true" />
               </span>
             </span>
@@ -4918,124 +5563,102 @@ export default function BookServicePage() {
             <button
               type="button"
               onClick={copyTrackingId}
-              className="relative mx-auto mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#09AD2A] ring-1 ring-[#ECECEC] transition"
+              className="relative mx-auto mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#035C6C] ring-1 ring-[#ECECEC] transition"
             >
               #{confirmed.bookingNumber}
               <Copy className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
           </div>
 
-          {/* Customer / Device & Repair / Service Information — three columns
-              from xl up (equal height via grid stretch), stacked below that. */}
-          <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-            {/* Customer Details — same fields/values, richer card chrome */}
-            <div className="overflow-hidden rounded-2xl border border-[#ECECEC] bg-[#F8F8F8]">
-              <div className="flex items-center gap-2.5 border-b border-[#ECECEC] bg-[#F8F8F8] px-4 py-3">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3] text-[#09AD2A]">
-                  <User className="h-4 w-4" aria-hidden="true" />
-                </span>
-                <p className="text-sm font-bold text-[#111111]">Customer Details</p>
-              </div>
-              <div className="grid grid-cols-1 gap-4 break-words p-4 text-sm sm:grid-cols-2">
-                <div>
-                  <p className="text-[0.65rem] font-bold uppercase tracking-wide text-[#98A2B3]">Shop Name</p>
-                  <p className="mt-0.5 font-bold text-[#111111]">{shopLocation?.name || 'Not available'}</p>
-                </div>
-                <div>
-                  <p className="text-[0.65rem] font-bold uppercase tracking-wide text-[#98A2B3]">Shop Number</p>
-                  <p className="mt-0.5 font-bold text-[#111111]">{profile?.mobile || 'Not available'}</p>
-                </div>
-                <div>
-                  <p className="text-[0.65rem] font-bold uppercase tracking-wide text-[#98A2B3]">Customer Name</p>
-                  <p className="mt-0.5 font-bold text-[#111111]">{confirmed.customerName || 'Not available'}</p>
-                </div>
-                <div>
-                  <p className="text-[0.65rem] font-bold uppercase tracking-wide text-[#98A2B3]">Mobile Number</p>
-                  <p className="mt-0.5 font-bold text-[#111111]">{confirmed.customerMobile || 'Not available'}</p>
-                </div>
-                <div className="sm:col-span-2">
-                  <p className="text-[0.65rem] font-bold uppercase tracking-wide text-[#98A2B3]">Address</p>
-                  <p className="mt-0.5 font-bold text-[#111111]">{shopAddress || 'Not available'}</p>
-                </div>
-              </div>
-            </div>
+          {/* The app's receipt: Customer Details · Device & Repair Details (every
+              device) · Service Information — each repair issue with its own price,
+              its Service Charge on a separate line, then the Estimated Repair Price. */}
+          {(() => {
+            const devices = confirmed.receiptDevices?.length ? confirmed.receiptDevices : [];
+            const created = confirmed.allBookings?.length ? confirmed.allBookings : [confirmed];
+            const many = devices.length > 1;
+            const priceLines = devices.flatMap((d, i) => {
+              const tag = many ? `Device ${i + 1} · ` : '';
+              const lines = d.lines || [];
+              return [
+                ...lines.map((l) => ({ label: `${tag}${l.name}`, amount: l.price })),
+                ...lines.filter((l) => l.charge > 0).map((l) => ({ label: `${tag}Service Charge – ${l.name}`, amount: l.charge })),
+              ];
+            });
+            const total = devices.length
+              ? devices.reduce((sum, d) => sum + (Number(d.estimatedAmount) || 0), 0)
+              : Number(confirmed.pricing?.estimatedAmount) || 0;
+            return (
+              <div className="mx-auto max-w-3xl rounded-2xl border border-[#E5E7EB] bg-white p-4 sm:p-6">
+                <ReceiptSection label="Customer Details">
+                  <ReceiptRow icon={User} label="Customer Name" value={confirmed.customerName} />
+                  <ReceiptRow icon={Phone} label="Mobile Number" value={confirmed.customerMobile} />
+                  <ReceiptRow icon={MapPin} label="Address" value={shopAddress} />
+                </ReceiptSection>
 
-            {/* Device & Repair Details — same data, styled image box + tag pills for services */}
-            <div className="overflow-hidden rounded-2xl border border-[#ECECEC] bg-[#F8F8F8]">
-              <div className="flex items-center gap-2.5 border-b border-[#ECECEC] bg-[#F8F8F8] px-4 py-3">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3] text-[#09AD2A]">
-                  <Smartphone className="h-4 w-4" aria-hidden="true" />
-                </span>
-                <p className="text-sm font-bold text-[#111111]">Device &amp; Repair Details</p>
-              </div>
-              <div className="flex items-start gap-4 p-4">
-                <span className="inline-flex shrink-0 overflow-hidden rounded-2xl border border-[#ECECEC] bg-[#F8F8F8] p-1.5">
-                  <Thumb url={confirmed.deviceImage} name={confirmed.modelName} size="h-14 w-14" />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[0.65rem] font-bold uppercase tracking-wide text-[#98A2B3]">Device</p>
-                  <p className="break-words text-base font-extrabold text-[#111111]">
-                    {[confirmed.brandName, confirmed.modelName].filter(Boolean).join(' ') || 'Not specified'}
-                  </p>
-                  <p className="mt-2.5 text-[0.65rem] font-bold uppercase tracking-wide text-[#98A2B3]">Repair Services</p>
-                  {confirmed.services?.length ? (
-                    <div className="mt-1.5 flex flex-wrap gap-1.5">
-                      {confirmed.services.map((s) => (
-                        <span
-                          key={s.repairServiceId || s.serviceCode || s.serviceName}
-                          className="rounded-full bg-[#F8F8F8] px-2.5 py-1 text-xs font-bold text-[#09AD2A] ring-1 ring-[#ECECEC]"
-                        >
-                          {s.serviceName || s.serviceCode}
-                        </span>
-                      ))}
+                <ReceiptSection label="Device & Repair Details">
+                  {(devices.length ? devices : [{ brand: confirmed.brandName, model: confirmed.modelName, image: confirmed.deviceImage }]).map((d, i, all) => (
+                    <div key={i} className={cx(i > 0 && 'mt-3 border-t border-[#F3F4F6] pt-3')}>
+                      <div className="mb-2 flex items-center gap-2.5">
+                        <Thumb url={d.image || created[i]?.deviceImage} name={d.model} size="h-10 w-10" />
+                        <div className="min-w-0">
+                          <p className="truncate text-[13.5px] font-extrabold text-[#111111]">
+                            {[d.brand, d.model].filter(Boolean).join(' · ') || 'Device'}
+                          </p>
+                          {created[i] && bookingRef(created[i]) ? <p className="text-[11px] font-bold text-[#035C6C]">#{String(bookingRef(created[i])).replace(/^#/, '')}</p> : null}
+                        </div>
+                        {all.length > 1 ? <span className="ml-auto shrink-0 text-[11px] font-bold text-[#6B7280]">Device {i + 1}</span> : null}
+                      </div>
+                      {d.modelCode ? <ReceiptRow icon={Hash} label="Model No." value={d.modelCode} /> : null}
+                      {d.variant ? <ReceiptRow icon={Info} label="Variant" value={d.variant} /> : null}
+                      {d.imei ? <ReceiptRow icon={Hash} label="IMEI" value={d.imei} /> : null}
+                      <ReceiptRow
+                        icon={Wrench}
+                        label="Repair Issues"
+                        value={(d.lines || []).map((l) => (l.note ? `${l.name} (${l.note})` : l.name)).join(', ') || (created[i]?.services || []).map((x) => x.serviceName).join(', ')}
+                      />
+                      {(d.lines || []).some((l) => l.warranty) ? (
+                        <ReceiptRow
+                          icon={ShieldCheck}
+                          label="Warranty"
+                          value={(d.lines || []).filter((l) => l.warranty).map((l) => `${l.name}: ${l.warranty} Mo`).join(', ')}
+                        />
+                      ) : null}
+                      {d.deviceMissingParts ? <ReceiptRow icon={ListChecks} label="Missing Parts" value={d.deviceMissingParts} /> : null}
+                      <ReceiptRow icon={Timer} label="Estimated Time" value={`${fmtChipDate(draftReadyBy)} · ${fmtChipTime(draftReadyBy)}`} />
                     </div>
-                  ) : (
-                    <p className="mt-1 text-sm text-[#98A2B3]">Not specified</p>
-                  )}
-                </div>
-              </div>
-            </div>
+                  ))}
+                </ReceiptSection>
 
-            {/* Service Information — same 4 values, shown as colored stat tiles */}
-            <div className="overflow-hidden rounded-2xl border border-[#ECECEC] bg-[#F8F8F8]">
-              <div className="flex items-center gap-2.5 border-b border-[#ECECEC] bg-[#F8F8F8] px-4 py-3">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3] text-[#09AD2A]">
-                  <Receipt className="h-4 w-4" aria-hidden="true" />
-                </span>
-                <p className="text-sm font-bold text-[#111111]">Service Information</p>
+                <ReceiptSection label="Service Information" last>
+                  <ReceiptRow icon={Hash} label="Tracking ID" value={`#${confirmed.bookingNumber}`} bold />
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <span className="flex items-center gap-1.5 text-[12px] font-semibold text-[#6B7280]">
+                      <Timer className="h-3.5 w-3.5 text-[#035C6C]" aria-hidden="true" />
+                      Status
+                    </span>
+                    <span className="rounded-full border border-[#C7E6EA] bg-[#E5F3F5] px-2.5 py-0.5 text-[11px] font-extrabold text-[#024A57]">
+                      {{ CREATED: 'Order Placed' }[confirmed.status] || confirmed.status || 'Order Placed'}
+                    </span>
+                  </div>
+                  {priceLines.map((p, j) => (
+                    <ReceiptRow key={j} icon={Receipt} label={p.label} value={money(p.amount)} />
+                  ))}
+                  <div className="mt-2 border-t border-dashed border-[#E5E7EB] pt-2">
+                    <ReceiptRow icon={Receipt} label="Estimated Repair Price" value={money(total)} bold />
+                  </div>
+                </ReceiptSection>
               </div>
-              <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2">
-                <div className="rounded-xl bg-[#F3F3F3] p-3">
-                  <p className="text-[0.65rem] font-bold uppercase tracking-wide text-[#98A2B3]">Tracking ID</p>
-                  <p className="mt-1 text-sm font-extrabold text-[#111111]">#{confirmed.bookingNumber}</p>
-                </div>
-                <div className="rounded-xl bg-[#F3F3F3] p-3">
-                  <p className="text-[0.65rem] font-bold uppercase tracking-wide text-[#98A2B3]">Status</p>
-                  <span className="mt-1 inline-block rounded-full bg-[#F3F3F3] px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-[#09AD2A]">
-                    {{ CREATED: 'Order Placed' }[confirmed.status] || confirmed.status}
-                  </span>
-                </div>
-                <div className="rounded-xl bg-[#F8F8F8] p-3 ring-1 ring-[#ECECEC]">
-                  <p className="text-[0.65rem] font-bold uppercase tracking-wide text-[#09AD2A]">Estimated Repair Price</p>
-                  <p className="mt-1 text-lg font-extrabold text-[#111111]">{money(confirmed.pricing?.estimatedAmount)}</p>
-                </div>
-                <div className="rounded-xl bg-[#F8F8F8] p-3 ring-1 ring-[#ECECEC]">
-                  <p className="text-[0.65rem] font-bold uppercase tracking-wide text-[#09AD2A]">Estimated Delivery</p>
-                  <p className="mt-1 text-sm font-extrabold text-[#111111]">
-                    {fmtChipDate(draftReadyBy)} · {fmtChipTime(draftReadyBy)}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+            );
+          })()}
 
           {/* Booking confirmed status banner */}
           <div className="flex items-center gap-3 rounded-2xl border border-[#ECECEC] bg-[#F8F8F8] p-4">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#09AD2A] text-white">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#035C6C] text-white">
               <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
             </span>
             <div>
-              <p className="text-base font-extrabold text-[#09AD2A]">Booking confirmed!</p>
+              <p className="text-base font-extrabold text-[#035C6C]">Booking confirmed!</p>
               <p className="text-xs font-medium text-[#666666]">Your request is ready for technician assignment.</p>
             </div>
           </div>
@@ -5067,7 +5690,7 @@ export default function BookServicePage() {
                       : 'Assign technician to repair'}
                 </span>
               </span>
-              <ChevronRight className="h-4 w-4 shrink-0 text-[#98A2B3] transition group-hover:text-[#09AD2A]" aria-hidden="true" />
+              <ChevronRight className="h-4 w-4 shrink-0 text-[#98A2B3] transition group-hover:text-[#035C6C]" aria-hidden="true" />
             </button>
             <Link
               href={`/shop-home/services/bookings/view/receipt/?id=${encodeURIComponent(confirmed.id)}`}
@@ -5080,7 +5703,7 @@ export default function BookServicePage() {
                 <span className="block text-sm font-bold text-[#111111]">Share Receipt</span>
                 <span className="block truncate text-xs text-[#666666]">Share booking details</span>
               </span>
-              <ChevronRight className="h-4 w-4 shrink-0 text-[#98A2B3] transition group-hover:text-[#09AD2A]" aria-hidden="true" />
+              <ChevronRight className="h-4 w-4 shrink-0 text-[#98A2B3] transition group-hover:text-[#035C6C]" aria-hidden="true" />
             </Link>
             <Link
               href={`/shop-home/services/bookings/view/qr/?id=${encodeURIComponent(confirmed.id)}`}
@@ -5093,7 +5716,7 @@ export default function BookServicePage() {
                 <span className="block text-sm font-bold text-[#111111]">Barcode Print</span>
                 <span className="block truncate text-xs text-[#666666]">Print booking label</span>
               </span>
-              <ChevronRight className="h-4 w-4 shrink-0 text-[#98A2B3] transition group-hover:text-[#09AD2A]" aria-hidden="true" />
+              <ChevronRight className="h-4 w-4 shrink-0 text-[#98A2B3] transition group-hover:text-[#035C6C]" aria-hidden="true" />
             </Link>
           </div>
 
@@ -5145,7 +5768,7 @@ export default function BookServicePage() {
               type="button"
               onClick={resetForm}
               className={cx(
-                'rounded-full border-2 border-[#D0D5DD] bg-white px-6 py-2.5 text-sm font-bold text-[#344054] transition hover:border-[#09AD2A] hover:text-[#09AD2A]',
+                'rounded-full border-2 border-[#D0D5DD] bg-white px-6 py-2.5 text-sm font-bold text-[#344054] transition hover:border-[#035C6C] hover:text-[#035C6C]',
                 FOCUS_RING,
               )}
             >
@@ -5167,23 +5790,28 @@ export default function BookServicePage() {
   );
 
   const sectionContent = {
-    customer: (
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-        {customerSection}
-        {addressSection}
-      </div>
-    ),
+    customer: customerSection,
     device: deviceSection,
-    problem: problemSection,
-    pickup: pickupSection,
-    deviceInfo: (
+    // Devices & Repair — one screen, as in the Partner App. Device Info heads
+    // it; its old Price & Estimate summary is dropped (the editable section is
+    // on the same screen now).
+    repair: (
       <>
-        {deviceInfoSection}
-        {pickupSummarySection}
+        {queuedDevices.length && !isEditing ? (
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border border-[#C7E6EA] bg-[#E5F3F5] px-3.5 py-2.5 text-[13px] text-[#024A57]">
+            <span className="font-extrabold">
+              {queuedDevices.length} device{queuedDevices.length === 1 ? '' : 's'} already in this booking
+            </span>
+            <span className="min-w-0 truncate">
+              · {queuedDevices.map((q) => [q.payload?.brandName, q.payload?.modelName].filter(Boolean).join(' ') || 'Device').join(', ')}
+            </span>
+          </div>
+        ) : null}
+        <div id="bs-part-deviceInfo" className="scroll-mt-28">{deviceInfoSection}</div>
+        <div id="bs-part-problem" className="scroll-mt-28">{problemSection}</div>
+        <div id="bs-part-pickup" className="scroll-mt-28">{pickupSection}</div>
       </>
     ),
-    deviceSecurity: deviceSecuritySection,
-    missingParts: missingPartsSection,
     devicesList: bookingDevicesSection,
     confirmation: confirmationSection,
   };
@@ -5199,18 +5827,18 @@ export default function BookServicePage() {
               <button
                 type="button"
                 onClick={() => setEditRetry((k) => k + 1)}
-                className={cx('rounded-xl bg-[#09AD2A] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#08961F]', FOCUS_RING)}
+                className={cx('rounded-xl bg-[#035C6C] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#035C6C]', FOCUS_RING)}
               >
                 Retry
               </button>
-              <Link href="/shop-home/services/requote" className={cx('rounded-xl border border-[#ECECEC] bg-white px-4 py-2 text-sm font-bold text-[#111111]', FOCUS_RING)}>
-                Back to Requote
+              <Link href="/shop-home/services/bookings/" className={cx('rounded-xl border border-[#ECECEC] bg-white px-4 py-2 text-sm font-bold text-[#111111]', FOCUS_RING)}>
+                Back to Bookings
               </Link>
             </div>
           </>
         ) : (
           <>
-            <Loader2 className="h-8 w-8 animate-spin text-[#09AD2A]" aria-hidden="true" />
+            <Loader2 className="h-8 w-8 animate-spin text-[#035C6C]" aria-hidden="true" />
             <p className="text-sm font-semibold text-[#666666]">Loading booking for re-estimate…</p>
           </>
         )}
@@ -5221,11 +5849,11 @@ export default function BookServicePage() {
   return (
     <div className="w-full space-y-5">
       {isEditing ? (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-[20px] border border-[#09AD2A]/30 bg-[#F2FBF4] px-4 py-3.5 sm:px-5">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-[20px] border border-[#035C6C]/30 bg-[#E5F3F5] px-4 py-3.5 sm:px-5">
           <div className="flex min-w-0 items-center gap-3">
             <Icon3D flat icon={Pencil} tone="green" size="md" />
             <div className="min-w-0">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-[#0B6B3A]">Re-Estimate</p>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-[#024A57]">Re-Estimate</p>
               <p className="break-words text-base font-extrabold text-[#111111]">
                 Editing {editTicket.trackingId ? `#${editTicket.trackingId}` : 'booking'}
                 {form.customerName ? ` · ${form.customerName}` : ''}
@@ -5233,13 +5861,13 @@ export default function BookServicePage() {
             </div>
           </div>
           <Link
-            href="/shop-home/services/requote"
+            href="/shop-home/services/bookings/"
             className={cx(
-              'inline-flex items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#111111] transition hover:border-[#09AD2A] hover:text-[#09AD2A]',
+              'inline-flex items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#111111] transition hover:border-[#035C6C] hover:text-[#035C6C]',
               FOCUS_RING,
             )}
           >
-            <X className="h-4 w-4 text-[#09AD2A]" aria-hidden="true" />
+            <X className="h-4 w-4 text-[#035C6C]" aria-hidden="true" />
             Cancel
           </Link>
         </div>
@@ -5249,22 +5877,22 @@ export default function BookServicePage() {
         <Link
           href="/shop-home/services/customers"
           className={cx(
-            'inline-flex items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#111111] transition hover:border-[#09AD2A] hover:text-[#09AD2A]',
+            'inline-flex items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#111111] transition hover:border-[#035C6C] hover:text-[#035C6C]',
             FOCUS_RING,
           )}
         >
-          <History className="h-4 w-4 text-[#09AD2A]" aria-hidden="true" />
+          <History className="h-4 w-4 text-[#035C6C]" aria-hidden="true" />
           Customer History
         </Link>
         <button
           type="button"
           onClick={resetForm}
           className={cx(
-            'inline-flex items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#111111] transition hover:border-[#09AD2A] hover:text-[#09AD2A]',
+            'inline-flex items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#111111] transition hover:border-[#035C6C] hover:text-[#035C6C]',
             FOCUS_RING,
           )}
         >
-          <RotateCcw className="h-4 w-4 text-[#09AD2A]" aria-hidden="true" />
+          <RotateCcw className="h-4 w-4 text-[#035C6C]" aria-hidden="true" />
           Reset
         </button>
       </div>
@@ -5314,24 +5942,24 @@ export default function BookServicePage() {
                   onClick={() => handleTabClick(s.key)}
                   aria-current={active ? 'step' : undefined}
                   aria-disabled={locked || undefined}
-                  title={locked ? 'Submit the booking from Devices List first' : s.label}
+                  title={locked ? 'Submit the booking from Review & Confirm first' : s.label}
                   className={cx(
                     // Shorter/narrower tiles on phones so more steps fit before the row scrolls.
                     'relative flex h-[76px] min-w-[92px] flex-1 shrink-0 flex-col items-center justify-center gap-1.5 px-2 text-center transition sm:h-[92px] sm:min-w-[112px] sm:gap-2 sm:px-3',
                     FOCUS_RING,
-                    active ? 'text-[#09AD2A]' : locked ? 'cursor-not-allowed text-[#111111]/35' : 'text-[#111111]/70 hover:text-[#111111]',
+                    active ? 'text-[#035C6C]' : locked ? 'cursor-not-allowed text-[#111111]/35' : 'text-[#111111]/70 hover:text-[#111111]',
                   )}
                 >
                   <span
                     className={cx(
                       'flex h-9 w-9 items-center justify-center rounded-full transition sm:h-10 sm:w-10',
-                      active ? 'bg-[#09AD2A] text-white' : locked ? 'text-[#111111]/35' : 'text-[#111111]',
+                      active ? 'bg-[#035C6C] text-white' : locked ? 'text-[#111111]/35' : 'text-[#111111]',
                     )}
                   >
                     <MaterialIcon name={s.ms} filled className="h-[22px] w-[22px]" />
                   </span>
                   <span className={cx('whitespace-nowrap text-[13px] sm:text-[14px]', active ? 'font-semibold' : 'font-medium')}>{s.short}</span>
-                  {active ? <span className="absolute inset-x-0 bottom-0 h-[3px] bg-[#09AD2A]" aria-hidden="true" /> : null}
+                  {active ? <span className="absolute inset-x-0 bottom-0 h-[3px] bg-[#035C6C]" aria-hidden="true" /> : null}
                 </button>
               </div>
             );
@@ -5343,6 +5971,8 @@ export default function BookServicePage() {
       <div className="space-y-4">
         {sectionContent[activeSection]}
       </div>
+
+      {celebrating ? <BookingSuccessBurst onDone={() => setCelebrating(false)} /> : null}
 
       {/* Step footer — Previous / Next, or Confirm Booking on the last tab.
           Hidden once a booking is confirmed: nothing is left to estimate, and
@@ -5356,13 +5986,18 @@ export default function BookServicePage() {
         )}
       >
         <div className="relative flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <Icon3D flat icon={Receipt} tone="green" size="md" />
-            <div>
-              <p className="text-xs font-semibold text-[#666666]">Estimated Total</p>
-              <p className="text-lg font-extrabold text-[#111111]">{money(totals.total)}</p>
+          {/* The total only means something once issues are priced: Customer / Device show just Previous / Next. */}
+          {activeSection === 'repair' || activeSection === 'devicesList' ? (
+            <div className="flex items-center gap-3">
+              <Icon3D flat icon={Receipt} tone="green" size="md" />
+              <div>
+                <p className="text-xs font-semibold text-[#666666]">Estimated Total</p>
+                <p className="text-lg font-extrabold text-[#111111]">{money(totals.total)}</p>
+              </div>
             </div>
-          </div>
+          ) : (
+            <span aria-hidden="true" />
+          )}
           <div className="flex w-full items-center gap-2 sm:w-auto">
             {activeIndex > 0 ? (
               <button
@@ -5374,6 +6009,22 @@ export default function BookServicePage() {
                 )}
               >
                 Previous
+              </button>
+            ) : null}
+            {activeSection === 'repair' && !isEditing ? (
+              // Bulk booking, as in the app's Devices & Repair footer: queue this
+              // device (validated) and start the next one for the same customer.
+              <button
+                type="button"
+                onClick={addAnotherDevice}
+                className={cx(
+                  'inline-flex flex-1 items-center justify-center gap-1.5 rounded-2xl border border-[#035C6C] bg-white px-4 py-2.5 text-sm font-bold text-[#035C6C] transition hover:bg-[#E5F3F5] sm:flex-none',
+                  FOCUS_RING,
+                )}
+              >
+                <Plus className="h-4 w-4" aria-hidden="true" />
+                <span className="sm:hidden">Add Device</span>
+                <span className="hidden sm:inline">Add Another Device</span>
               </button>
             ) : null}
             {activeSection === 'confirmation' ? null : activeSection === 'devicesList' ? (

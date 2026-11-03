@@ -27,24 +27,36 @@ import { MONTHS, shiftMonth } from '@/components/shop-dashboard/MonthSwitcher';
 import { fetchTicketsPaged, isToday } from '@/lib/shopDashboard';
 import { downloadReportPdf } from '@/lib/reportPdf';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 
-// Page-local KPI card — same look as the other Reports pages' stat cards.
-const REVENUE_CHIP = {
-  green: 'bg-gradient-to-br from-[#22C55E] to-[#0BA65A]',
-  blue: 'bg-gradient-to-br from-[#5EB6FA] to-[#2196F3]',
-  orange: 'bg-gradient-to-br from-[#FFB35C] to-[#FF8F2C]',
-  violet: 'bg-gradient-to-br from-[#A78BFA] to-[#8B5CF6]',
+const CARD = 'min-w-0 rounded-[20px] border border-[#E5E7EB] bg-white p-5 sm:p-6';
+
+const TONE = {
+  green: 'bg-[#035C6C]/10 text-[#035C6C]',
+  blue: 'bg-[#0788C9]/10 text-[#0788C9]',
+  orange: 'bg-[#FAA700]/15 text-[#B87A00]',
+  navy: 'bg-[#1C3053]/10 text-[#1C3053]',
 };
 
 function RevenueStatCard({ icon: Icon, label, value, tone }) {
   return (
-    <div className="relative flex flex-col overflow-hidden rounded-[18px] border border-[#ECECEC] bg-[#F8F8F8] p-5">
-      <span className={cx('flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white', REVENUE_CHIP[tone] || REVENUE_CHIP.green)}>
-        <Icon className="h-5 w-5" aria-hidden="true" />
-      </span>
-      <p className="mt-4 text-[28px] font-extrabold leading-none text-[#111111]">{value}</p>
-      <p className="mt-1.5 text-[14px] font-medium text-[#666666]">{label}</p>
+    <div className="flex min-w-0 flex-col rounded-[20px] border border-[#E5E7EB] bg-white p-4 sm:p-5">
+      <div className="flex items-center justify-between gap-2">
+        <p className="truncate text-[13px] font-semibold text-[#666666]">{label}</p>
+        <span className={cx('flex h-9 w-9 shrink-0 items-center justify-center rounded-xl', TONE[tone] || TONE.green)}>
+          <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
+        </span>
+      </div>
+      <p className="mt-3 truncate text-[22px] font-extrabold leading-tight text-[#111111] sm:text-[26px]">{value}</p>
+    </div>
+  );
+}
+
+function CardTitle({ title, hint }) {
+  return (
+    <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
+      <h2 className="text-[15px] font-bold text-[#111111]">{title}</h2>
+      {hint ? <span className="text-xs text-[#666666]">{hint}</span> : null}
     </div>
   );
 }
@@ -106,11 +118,32 @@ export default function RevenueReportPage() {
   const daysWithPayments = useMemo(() => new Set(monthPaid.map((t) => new Date(t.paymentPaidAt).toDateString())).size, [monthPaid]);
   const avgPerDay = daysWithPayments > 0 ? monthRevenue / daysWithPayments : 0;
 
+  const daily = useMemo(() => {
+    const days = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 0).getDate();
+    const arr = Array.from({ length: days }, (_, i) => ({ day: i + 1, amount: 0 }));
+    monthPaid.forEach((t) => {
+      arr[new Date(t.paymentPaidAt).getDate() - 1].amount += Number(t.paymentAmount || 0);
+    });
+    return arr;
+  }, [monthPaid, viewDate]);
+  const maxDaily = Math.max(1, ...daily.map((d) => d.amount));
+  const bestDay = daily.reduce((best, d) => (d.amount > best.amount ? d : best), { day: 0, amount: 0 });
+
+  const weekly = useMemo(() => {
+    const weeks = [0, 0, 0, 0, 0];
+    daily.forEach((d) => {
+      weeks[Math.min(4, Math.floor((d.day - 1) / 7))] += d.amount;
+    });
+    return weeks
+      .map((amount, i) => ({ label: `Week ${i + 1}`, range: `${i * 7 + 1}–${Math.min(daily.length, i * 7 + 7)}`, amount }))
+      .filter((w, i) => i * 7 < daily.length);
+  }, [daily]);
+
   const monthStats = [
     { label: 'This Month', value: money(monthRevenue), icon: IndianRupee, tone: 'green' },
     { label: "Today's Revenue", value: money(todayRevenue), icon: TrendingUp, tone: 'blue' },
     { label: 'Avg / Active Day', value: money(avgPerDay), icon: CalendarDays, tone: 'orange' },
-    { label: 'Transactions', value: monthPaid.length, icon: Receipt, tone: 'violet' },
+    { label: 'Transactions', value: monthPaid.length, icon: Receipt, tone: 'navy' },
   ];
 
   const goPrevMonth = () => shiftMonth(setViewDate, -1);
@@ -121,7 +154,7 @@ export default function RevenueReportPage() {
     try {
       await downloadReportPdf({
         title: 'Revenue Report',
-        subtitle: `${new Date(viewDate).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })} — GGFIX Partner Dashboard`,
+        subtitle: `${new Date(viewDate).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })} — NearGFix Partner Dashboard`,
         stats: monthStats.map((s) => ({ label: s.label, value: s.value })),
         notes: ['Payment-method breakdown is not tracked by this backend — amounts and dates only.'],
         columns: [
@@ -139,7 +172,7 @@ export default function RevenueReportPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="mx-auto flex w-full min-w-0 max-w-[1440px] flex-col gap-5">
       <PageHeader
         title="Revenue Report"
         subtitle="Daily, weekly and monthly revenue."
@@ -173,51 +206,95 @@ export default function RevenueReportPage() {
 
       {error ? <ErrorBanner message={error} onRetry={() => setReloadKey((k) => k + 1)} /> : null}
 
-      <div>
-        <p className="mb-3 text-sm font-bold text-[#111111]">This Month</p>
-        {loading ? (
-          <SkeletonStatCards count={4} />
-        ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {monthStats.map((s) => (
-              <RevenueStatCard key={s.label} icon={s.icon} label={s.label} value={s.value} tone={s.tone} />
-            ))}
-          </div>
-        )}
-      </div>
+      {loading ? (
+        <SkeletonStatCards count={4} />
+      ) : (
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {monthStats.map((s) => (
+            <RevenueStatCard key={s.label} icon={s.icon} label={s.label} value={s.value} tone={s.tone} />
+          ))}
+        </div>
+      )}
 
-      <p className="flex items-start gap-1.5 rounded-xl bg-[#F8F8F8] px-3.5 py-2.5 text-xs text-[#15803D]">
-        <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-        Payment-method breakdown isn&apos;t tracked by this backend — amounts and dates only.
-      </p>
-
-      <div>
-        <p className="mb-2.5 text-sm font-bold text-[#111111]">Transactions This Month</p>
-        <section className="rounded-3xl border border-[#ECECEC] bg-[#F8F8F8]">
+      <div className="grid gap-4 lg:grid-cols-3">
+        <section className={cx(CARD, 'lg:col-span-2')}>
+          <CardTitle title="Daily Revenue" hint={`${MONTHS[viewDate.getMonth()]} ${viewDate.getFullYear()}`} />
           {loading ? (
-            <SkeletonRows rows={5} />
+            <SkeletonRows rows={4} />
           ) : monthPaid.length === 0 ? (
-            <EmptyState icon={Receipt} title="No revenue this month yet" description="Paid tickets will show up here as amount + date." />
+            <EmptyState icon={TrendingUp} title="No revenue this month yet" description="Daily totals will appear once tickets are paid." />
           ) : (
-            <div className="divide-y divide-[#ECECEC]">
-              {monthPaid.map((t) => (
-                <div key={t.id} className="flex items-center gap-3 px-4 py-3.5 sm:px-5">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F8F8F8]">
-                    <IndianRupee className="h-4 w-4 text-[#15803D]" aria-hidden="true" />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-bold text-[#111111]">{t.customerName || t.deviceDisplayName || 'Ticket'}</p>
-                    <p className="truncate text-xs text-[#666666]">
-                      {new Date(t.paymentPaidAt).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' })}
-                    </p>
-                  </div>
-                  <span className="shrink-0 text-sm font-extrabold text-[#111111]">{money(t.paymentAmount)}</span>
+            <div className="flex h-48 items-end gap-[2px] sm:gap-1" role="img" aria-label="Daily revenue bar chart">
+              {daily.map((d) => (
+                <div key={d.day} className="group flex h-full min-w-0 flex-1 flex-col items-center justify-end">
+                  <div
+                    className={cx('w-full rounded-t-[4px] transition-colors', d.amount > 0 ? 'bg-[#035C6C] group-hover:bg-[#0788C9]' : 'bg-[#E5E7EB]')}
+                    style={{ height: `${d.amount > 0 ? Math.max(4, (d.amount / maxDaily) * 100) : 2}%` }}
+                    title={`${d.day} ${MONTHS[viewDate.getMonth()]}: ${money(d.amount)}`}
+                  />
+                  <span className={cx('mt-1 text-[10px] text-[#666666]', d.day % 5 !== 1 && 'invisible')}>{d.day}</span>
                 </div>
               ))}
             </div>
           )}
         </section>
+
+        <section className={CARD}>
+          <CardTitle title="Weekly Breakdown" hint={bestDay.amount > 0 ? `Best day: ${bestDay.day} · ${money(bestDay.amount)}` : null} />
+          {loading ? (
+            <SkeletonRows rows={4} />
+          ) : (
+            <ul className="flex flex-col gap-3.5">
+              {weekly.map((w) => (
+                <li key={w.label}>
+                  <div className="flex items-baseline justify-between gap-2 text-sm">
+                    <span className="font-semibold text-[#111111]">
+                      {w.label} <span className="text-xs font-normal text-[#666666]">Days {w.range}</span>
+                    </span>
+                    <span className="font-bold text-[#111111]">{money(w.amount)}</span>
+                  </div>
+                  <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-[#F1F5F9]">
+                    <div className="h-full rounded-full bg-[#0788C9]" style={{ width: `${monthRevenue > 0 ? (w.amount / monthRevenue) * 100 : 0}%` }} />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="mt-5 flex items-start gap-1.5 rounded-xl bg-[#F8FAFC] px-3 py-2.5 text-xs text-[#024A57]">
+            <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            Payment-method breakdown isn&apos;t tracked by this backend — amounts and dates only.
+          </p>
+        </section>
       </div>
+
+      <section className={cx(CARD, 'p-0 sm:p-0')}>
+        <div className="px-5 pt-5 sm:px-6 sm:pt-6">
+          <CardTitle title="Transactions This Month" hint={loading ? null : `${monthPaid.length} payments`} />
+        </div>
+        {loading ? (
+          <SkeletonRows rows={5} />
+        ) : monthPaid.length === 0 ? (
+          <EmptyState icon={Receipt} title="No revenue this month yet" description="Paid tickets will show up here as amount + date." />
+        ) : (
+          <div className="divide-y divide-[#E5E7EB] border-t border-[#E5E7EB]">
+            {monthPaid.map((t) => (
+              <div key={t.id} className="flex items-center gap-3 px-5 py-3.5 sm:px-6">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#035C6C]/10">
+                  <IndianRupee className="h-4 w-4 text-[#035C6C]" aria-hidden="true" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-bold text-[#111111]">{t.customerName || t.deviceDisplayName || 'Ticket'}</p>
+                  <p className="truncate text-xs text-[#666666]">
+                    {new Date(t.paymentPaidAt).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' })}
+                    {t.customerName && t.deviceDisplayName ? ` · ${t.deviceDisplayName}` : ''}
+                  </p>
+                </div>
+                <span className="shrink-0 text-sm font-extrabold text-[#111111]">{money(t.paymentAmount)}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

@@ -21,7 +21,7 @@
  * card's ring. No new API client, no mock data.
  *
  * "+ Add Employee" now navigates to the real Add Staff flow
- * (/team/new -> /team/new/create, matching the real GGFIX Staff mobile
+ * (/team/new -> /team/new/create, matching the real NearGFix Staff mobile
  * app screens) — a live probe confirmed `TECHNICIAN_BASE`
  * (src/lib/api.js, https://api.ggfix.in/technician) is a real,
  * auth-protected service never called anywhere in this web app, so a real
@@ -45,7 +45,7 @@ import { readShopOwner } from '@/lib/shopAuth';
 import { isOwnerSession } from '@/lib/shopAccess';
 import { fetchSubscriptionMe } from '@/lib/shopSubscription';
 
-const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803D] focus-visible:ring-offset-2';
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024A57] focus-visible:ring-offset-2';
 
 // Best-guess pastel badge tone for a role label — derives a visual from
 // real text rather than a fixed per-role table, so it works for whatever
@@ -53,7 +53,7 @@ const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visibl
 function roleBadgeTone(roleLabel) {
   const r = String(roleLabel || '').toLowerCase();
   if (r === 'pickup person') return 'bg-[#FFF1E0] text-[#B45A00]';
-  if (r === 'technician') return 'bg-[#F3F3F3] text-[#066B39]';
+  if (r === 'technician') return 'bg-[#F3F3F3] text-[#024A57]';
   return 'bg-[#F3F3F3] text-[#0F766E]';
 }
 
@@ -74,14 +74,14 @@ function Avatar({ name, url, active }) {
       <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full ring-1 ring-[#ECECEC]">
         {/* eslint-disable-next-line @next/next/no-img-element -- employee profile photos are arbitrary shop-catalog URLs, not app assets Next can optimize. */}
         <img src={url} alt="" onError={() => setBroken(true)} className="h-full w-full object-cover" />
-        <span className={cx('absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white', active ? 'bg-[#15803D]' : 'bg-[#98A2B3]')} aria-hidden="true" />
+        <span className={cx('absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white', active ? 'bg-[#024A57]' : 'bg-[#98A2B3]')} aria-hidden="true" />
       </span>
     );
   }
   return (
-    <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3] text-sm font-bold text-[#066B39]">
+    <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#F3F3F3] text-sm font-bold text-[#024A57]">
       {initials(name)}
-      <span className={cx('absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white', active ? 'bg-[#15803D]' : 'bg-[#98A2B3]')} aria-hidden="true" />
+      <span className={cx('absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white', active ? 'bg-[#024A57]' : 'bg-[#98A2B3]')} aria-hidden="true" />
     </span>
   );
 }
@@ -114,7 +114,7 @@ function CircularProgress({ value, total }) {
         cy={size / 2}
         r={r}
         fill="none"
-        stroke="#0A934D"
+        stroke="#035C6C"
         strokeWidth={stroke}
         strokeDasharray={c}
         strokeDashoffset={c * (1 - pct)}
@@ -182,7 +182,7 @@ export default function EmployeeManagementPage() {
   return (
     <div className="flex w-full flex-col gap-5">
       {/* Add Employee: real navigation to the new "Add Staff" flow
-          (/team/new -> /team/new/create), matching the real GGFIX Staff
+          (/team/new -> /team/new/create), matching the real NearGFix Staff
           mobile app screens of the same name. Those screens' own
           Create/upload actions stay honestly disabled pending a confirmed
           create-employee endpoint (TECHNICIAN_BASE is defined in
@@ -214,7 +214,7 @@ export default function EmployeeManagementPage() {
         <div className="flex min-w-0 items-center gap-3">
           <Icon3D icon={Users} tone="green" size="md" />
           <div className="min-w-0">
-            <p className="text-sm font-extrabold text-[#10213D]">All Employees</p>
+            <p className="text-sm font-extrabold text-[#1C3053]">All Employees</p>
             <p className="mt-0.5 truncate text-xs text-[#666666]">
               {loading ? 'Loading…' : `${counts.active} active · ${counts.total} total`}
             </p>
@@ -223,7 +223,7 @@ export default function EmployeeManagementPage() {
         <div className="relative flex shrink-0 items-center justify-center">
           <CircularProgress value={counts.active} total={ringTotal} />
           <div className="absolute flex flex-col items-center">
-            <span className="text-xs font-extrabold text-[#10213D]">{loading ? '—' : `${counts.active}/${ringTotal || counts.active || 0}`}</span>
+            <span className="text-xs font-extrabold text-[#1C3053]">{loading ? '—' : `${counts.active}/${ringTotal || counts.active || 0}`}</span>
             <span className="text-[0.6rem] font-bold uppercase tracking-wide text-[#98A2B3]">Active</span>
           </div>
         </div>
@@ -263,11 +263,11 @@ export default function EmployeeManagementPage() {
 
       {/* Bottom info card */}
       <div className="flex items-center gap-3 rounded-2xl border border-[#ECECEC] bg-[#F8F8F8] px-4 py-3.5">
-        <Info className="h-4.5 w-4.5 shrink-0 text-[#0A934D]" aria-hidden="true" />
+        <Info className="h-4.5 w-4.5 shrink-0 text-[#035C6C]" aria-hidden="true" />
         <p className="min-w-0 flex-1 text-xs leading-relaxed text-[#345245]">
           You can add, edit or deactivate employees. Only active employees can access the shop.
         </p>
-        <ShieldCheck className="h-4.5 w-4.5 shrink-0 text-[#0A934D]" aria-hidden="true" />
+        <ShieldCheck className="h-4.5 w-4.5 shrink-0 text-[#035C6C]" aria-hidden="true" />
       </div>
     </div>
   );
@@ -284,14 +284,14 @@ function EmployeeCard({ employee }) {
     <Link
       href={`/shop-home/employee/team/view/?id=${encodeURIComponent(employee.id)}`}
       className={cx(
-        'flex items-center gap-3.5 rounded-2xl border border-[#ECECEC] bg-[#F8F8F8] p-4 transition hover:border-[#079447]',
+        'flex items-center gap-3.5 rounded-2xl border border-[#ECECEC] bg-[#F8F8F8] p-4 transition hover:border-[#035C6C]',
         FOCUS_RING,
       )}
     >
       <Avatar name={employee.name} url={employee.avatarUrl} active={employee.active} />
 
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-bold text-[#10213D]">{employee.name}</p>
+        <p className="truncate text-sm font-bold text-[#1C3053]">{employee.name}</p>
         {employee.phone ? (
           <span className="mt-0.5 flex items-center gap-1 text-xs text-[#666666]">
             <Phone className="h-3 w-3 shrink-0" aria-hidden="true" />
@@ -305,11 +305,11 @@ function EmployeeCard({ employee }) {
 
       <div className="flex shrink-0 items-center gap-2.5">
         <div className="flex flex-col items-end gap-1">
-          <span className={cx('text-xs font-bold', employee.active ? 'text-[#15803D]' : 'text-[#98A2B3]')}>{employee.active ? 'Active' : 'Inactive'}</span>
+          <span className={cx('text-xs font-bold', employee.active ? 'text-[#024A57]' : 'text-[#98A2B3]')}>{employee.active ? 'Active' : 'Inactive'}</span>
           <span
             title="Changing employee status isn't available yet — there's no activate/deactivate endpoint."
             aria-hidden="true"
-            className={cx('flex h-[18px] w-8 shrink-0 items-center rounded-full p-0.5 transition', employee.active ? 'justify-end bg-[#15803D]/70' : 'justify-start bg-[#D0D5DD]')}
+            className={cx('flex h-[18px] w-8 shrink-0 items-center rounded-full p-0.5 transition', employee.active ? 'justify-end bg-[#024A57]/70' : 'justify-start bg-[#D0D5DD]')}
           >
             <span className="h-[14px] w-[14px] rounded-full bg-white" />
           </span>

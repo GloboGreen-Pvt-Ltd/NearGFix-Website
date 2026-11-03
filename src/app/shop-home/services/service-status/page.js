@@ -32,18 +32,18 @@ function ServiceStatusEmptyIllustration() {
     <svg viewBox="0 0 160 140" className="h-28 w-28" aria-hidden="true">
       <defs>
         <linearGradient id="ssEmptyGear" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#4ADE80" />
-          <stop offset="1" stopColor="#0A934D" />
+          <stop offset="0" stopColor="#357D89" />
+          <stop offset="1" stopColor="#035C6C" />
         </linearGradient>
       </defs>
-      <circle cx="80" cy="70" r="54" fill="#DFF8EB" opacity="0.6" />
-      <ellipse cx="80" cy="118" rx="34" ry="7" fill="#0C6636" opacity="0.1" />
-      <circle cx="34" cy="40" r="4" fill="#86EFAC" />
-      <circle cx="128" cy="96" r="3.5" fill="#86EFAC" />
-      <rect x="50" y="44" width="44" height="56" rx="8" fill="white" stroke="#DCFCE7" strokeWidth="2" />
-      <rect x="58" y="54" width="28" height="4" rx="2" fill="#DCFCE7" />
-      <rect x="58" y="64" width="22" height="4" rx="2" fill="#DCFCE7" />
-      <rect x="58" y="74" width="26" height="4" rx="2" fill="#DCFCE7" />
+      <circle cx="80" cy="70" r="54" fill="#E5F3F5" opacity="0.6" />
+      <ellipse cx="80" cy="118" rx="34" ry="7" fill="#024A57" opacity="0.1" />
+      <circle cx="34" cy="40" r="4" fill="#C7E6EA" />
+      <circle cx="128" cy="96" r="3.5" fill="#C7E6EA" />
+      <rect x="50" y="44" width="44" height="56" rx="8" fill="white" stroke="#E5F3F5" strokeWidth="2" />
+      <rect x="58" y="54" width="28" height="4" rx="2" fill="#E5F3F5" />
+      <rect x="58" y="64" width="22" height="4" rx="2" fill="#E5F3F5" />
+      <rect x="58" y="74" width="26" height="4" rx="2" fill="#E5F3F5" />
       <circle cx="100" cy="92" r="20" fill="url(#ssEmptyGear)" />
       <circle cx="100" cy="92" r="8" fill="white" opacity="0.9" />
       {[0, 60, 120, 180, 240, 300].map((deg) => (
@@ -60,16 +60,16 @@ function ServiceStatusEmptyIllustration() {
 const SERVICE_STATUS_STYLES = {
   green: {
     card: 'bg-[#F8F8F8]',
-    chip: 'bg-gradient-to-br from-[#22C55E] to-[#0A934D]',
-    value: 'text-[#10213D]',
-    label: 'text-[#066B39]',
-    wave: 'text-[#BBF7D0]',
+    chip: 'bg-gradient-to-br from-[#035C6C] to-[#035C6C]',
+    value: 'text-[#1C3053]',
+    label: 'text-[#024A57]',
+    wave: 'text-[#C7E6EA]',
     glow: 'bg-[#F3F3F3]',
   },
   orange: {
     card: 'bg-[#F8F8F8]',
     chip: 'bg-gradient-to-br from-[#FB923C] to-[#FF7A1A]',
-    value: 'text-[#10213D]',
+    value: 'text-[#1C3053]',
     label: 'text-[#9A5B27]',
     wave: 'text-[#FDBA74]',
     glow: 'bg-[#FDBA74]',
@@ -77,7 +77,7 @@ const SERVICE_STATUS_STYLES = {
   blue: {
     card: 'bg-[#F8F8F8]',
     chip: 'bg-gradient-to-br from-[#38BDF8] to-[#1DA8E8]',
-    value: 'text-[#10213D]',
+    value: 'text-[#1C3053]',
     label: 'text-[#1D6FA0]',
     wave: 'text-[#93D6F7]',
     glow: 'bg-[#93D6F7]',
@@ -85,7 +85,7 @@ const SERVICE_STATUS_STYLES = {
   purple: {
     card: 'bg-[#F8F8F8]',
     chip: 'bg-gradient-to-br from-[#A78BFA] to-[#8B5CF6]',
-    value: 'text-[#10213D]',
+    value: 'text-[#1C3053]',
     label: 'text-[#6D5A9E]',
     wave: 'text-[#C4B5FD]',
     glow: 'bg-[#C4B5FD]',
@@ -207,11 +207,11 @@ export default function ServiceStatusPage() {
             type="button"
             onClick={() => setReloadKey((k) => k + 1)}
             className={cx(
-              'inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#10213D] transition hover:border-[#079447] hover:text-[#079447]',
+              'inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#ECECEC] bg-white px-4 py-2.5 text-sm font-semibold text-[#1C3053] transition hover:border-[#035C6C] hover:text-[#035C6C]',
               FOCUS_RING,
             )}
           >
-            <RefreshCw className={cx('h-4 w-4 text-[#079447]', loading && 'animate-spin')} aria-hidden="true" />
+            <RefreshCw className={cx('h-4 w-4 text-[#035C6C]', loading && 'animate-spin')} aria-hidden="true" />
             Refresh
           </button>
         </div>
@@ -242,13 +242,13 @@ export default function ServiceStatusPage() {
           rows.length === 0 ? (
             <div className="flex flex-col items-center px-4 py-14 text-center sm:px-5">
               <ServiceStatusEmptyIllustration />
-              <p className="mt-3 text-base font-bold text-[#10213D]">No service records found</p>
+              <p className="mt-3 text-base font-bold text-[#1C3053]">No service records found</p>
               <p className="mt-1 max-w-sm text-sm text-[#666666]">Active repair service updates will appear here.</p>
             </div>
           ) : (
             <div className="flex flex-col items-center px-4 py-14 text-center sm:px-5">
               <Icon3D icon={Clock} tone="gray" size="lg" />
-              <p className="mt-3 text-sm font-bold text-[#10213D]">No services match your filters</p>
+              <p className="mt-3 text-sm font-bold text-[#1C3053]">No services match your filters</p>
               <p className="mt-1 text-sm text-[#666666]">Try a different stage or search term.</p>
             </div>
           )
@@ -283,7 +283,7 @@ function ServiceStatusRow({ ticket, expanded, onToggle }) {
           <Icon3D icon={Clock} tone="green" size="lg" className="relative" />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-base font-bold text-[#10213D]">{ticket.customerName || ticket.deviceDisplayName || 'Ticket'}</p>
+          <p className="truncate text-base font-bold text-[#1C3053]">{ticket.customerName || ticket.deviceDisplayName || 'Ticket'}</p>
           <p className="truncate text-[13px] text-[#666666]">
             #{ticket.trackingId || ticket.id} {ticket.deviceDisplayName ? `· ${ticket.deviceDisplayName}` : ''}
           </p>
@@ -296,7 +296,7 @@ function ServiceStatusRow({ ticket, expanded, onToggle }) {
         >
           {ticket.stageLabel}
         </span>
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#10213D] transition">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#1C3053] transition">
           <ChevronDown className={cx('h-4 w-4 transition-transform', expanded && 'rotate-180')} aria-hidden="true" />
         </span>
       </button>
@@ -327,14 +327,14 @@ function ServiceStatusRow({ ticket, expanded, onToggle }) {
                   <li key={stage.key} className="relative flex gap-3 pb-5 last:pb-0">
                     {i < TICKET_STAGES.length - 1 ? (
                       <span
-                        className={cx('absolute left-[11px] top-6 h-full w-[2px]', done || current ? 'bg-[#15803D]' : 'bg-[#EAECF0]')}
+                        className={cx('absolute left-[11px] top-6 h-full w-[2px]', done || current ? 'bg-[#024A57]' : 'bg-[#EAECF0]')}
                         aria-hidden="true"
                       />
                     ) : null}
                     <span
                       className={cx(
                         'relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full',
-                        done ? 'bg-[#15803D] text-white' : current ? 'bg-[#15803D] text-white ring-4 ring-[#ECECEC]' : 'bg-white text-[#98A2B3] ring-1 ring-[#D0D5DD]',
+                        done ? 'bg-[#024A57] text-white' : current ? 'bg-[#024A57] text-white ring-4 ring-[#ECECEC]' : 'bg-white text-[#98A2B3] ring-1 ring-[#D0D5DD]',
                       )}
                     >
                       {done ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : <span className="h-1.5 w-1.5 rounded-full bg-current" />}

@@ -94,7 +94,7 @@ const TINTS = ['bg-[#F3F3F3]', 'bg-[#EEF7FF]', 'bg-[#F5EFFF]', 'bg-[#FFF0F2]', '
 
 // The app's trust strip.
 const BENEFITS = [
-  { icon: ShieldCheck, title: 'Verified Sellers', subtitle: '100% Trusted', card: 'from-[#E9F9EE] to-[#CFF2DA]', chip: 'from-[#22C55E] to-[#079455]', text: 'text-[#067647]' },
+  { icon: ShieldCheck, title: 'Verified Sellers', subtitle: '100% Trusted', card: 'from-[#E5F3F5] to-[#CFF2DA]', chip: 'from-[#035C6C] to-[#035C6C]', text: 'text-[#024A57]' },
   { icon: BadgePercent, title: 'Best Prices', subtitle: 'Great Discounts', card: 'from-[#EEF5FF] to-[#D6E7FF]', chip: 'from-[#5EA2FF] to-[#1570EF]', text: 'text-[#175CD3]' },
   { icon: RotateCcw, title: 'Easy Returns', subtitle: '7 Days Policy', card: 'from-[#FFF6EA] to-[#FFE3BF]', chip: 'from-[#FDB022] to-[#F79009]', text: 'text-[#B54708]' },
   { icon: BadgeCheck, title: 'Warranty', subtitle: 'Brand Warranty', card: 'from-[#F5EFFF] to-[#E4D6FF]', chip: 'from-[#A48AFB] to-[#7F56D9]', text: 'text-[#6941C6]' },
@@ -133,7 +133,7 @@ function Img({ src, fallbackIcon: Fallback, className = 'h-full w-full', iconCla
   const [index, setIndex] = useState(0);
   useEffect(() => setIndex(0), [listKey]);
   const current = list[index];
-  if (!current) return <Fallback className={cx(iconClassName, 'text-[#079455]/50')} aria-hidden="true" />;
+  if (!current) return <Fallback className={cx(iconClassName, 'text-[#035C6C]/50')} aria-hidden="true" />;
   // eslint-disable-next-line @next/next/no-img-element -- remote catalog photos, not app assets Next can optimize.
   return <img src={current} alt="" loading="lazy" onError={() => setIndex((i) => i + 1)} className={cx('object-contain object-center', className)} />;
 }
@@ -159,9 +159,9 @@ function BuyBanner({ banners, onBroken, onBrowse }) {
 
   if (!count) {
     return (
-      <section aria-label="Nearby deals" className="flex flex-col gap-4 overflow-hidden rounded-[18px] border border-[#ECECEC] bg-gradient-to-br from-[#EAF8EC] via-white to-white p-4 sm:flex-row sm:items-center sm:p-5">
+      <section aria-label="Nearby deals" className="flex flex-col gap-4 overflow-hidden rounded-[18px] border border-[#ECECEC] bg-gradient-to-br from-[#E5F3F5] via-white to-white p-4 sm:flex-row sm:items-center sm:p-5">
         <div className="min-w-0 flex-1">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#079455] px-2.5 py-1 text-[11px] font-extrabold tracking-wider text-white">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#035C6C] px-2.5 py-1 text-[11px] font-extrabold tracking-wider text-white">
             <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
             NEARBY DEALS
           </span>
@@ -193,7 +193,7 @@ function BuyBanner({ banners, onBroken, onBrowse }) {
         type="button"
         onClick={openBanner}
         aria-label="Open offer"
-        className="grid w-full overflow-hidden rounded-[20px] border border-[#ECECEC] bg-[#F8F8F8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#079455] focus-visible:ring-offset-2"
+        className="grid w-full overflow-hidden rounded-[20px] border border-[#ECECEC] bg-[#F8F8F8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#035C6C] focus-visible:ring-offset-2"
       >
         {banners.map((x, i) => (
           <span
@@ -219,7 +219,7 @@ function BuyBanner({ banners, onBroken, onBrowse }) {
               onClick={() => setIndex(i)}
               aria-label={`Show banner ${i + 1} of ${count}`}
               aria-current={i === current ? 'true' : undefined}
-              className={cx('h-1.5 rounded-full transition-all', i === current ? 'w-[18px] bg-[#079455]' : 'w-1.5 bg-[#ECECEC] hover:bg-[#98A2B3]')}
+              className={cx('h-1.5 rounded-full transition-all', i === current ? 'w-[18px] bg-[#035C6C]' : 'w-1.5 bg-[#ECECEC] hover:bg-[#98A2B3]')}
             />
           ))}
         </div>
@@ -266,7 +266,7 @@ function HScroll({ children, label }) {
   });
   const go = (dir) => ref.current?.scrollBy({ left: dir * ref.current.clientWidth * 0.85, behavior: 'smooth' });
   const btn =
-    'absolute top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#111111] shadow-md transition hover:border-[#079455] hover:text-[#079455] sm:flex';
+    'absolute top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#ECECEC] bg-white text-[#111111] shadow-md transition hover:border-[#035C6C] hover:text-[#035C6C] sm:flex';
   return (
     <div className="relative">
       {!edge.start ? (
@@ -293,13 +293,13 @@ function HScroll({ children, label }) {
 function PriceTag({ item, className }) {
   if (awaitingQuote(item)) return <span className={cx('font-extrabold text-[#B54708]', className)}>Awaiting quote</span>;
   const price = priceOf(item);
-  return <span className={cx('font-extrabold text-[#067647]', className)}>{price > 0 ? formatRupees(price) : '—'}</span>;
+  return <span className={cx('font-extrabold text-[#024A57]', className)}>{price > 0 ? formatRupees(price) : '—'}</span>;
 }
 
 function SellerBadge({ item }) {
   const customer = item.sellerType === 'CUSTOMER';
   return (
-    <span className={cx('rounded-full px-2 py-0.5 text-[10.5px] font-extrabold uppercase tracking-wide shadow-sm', customer ? 'bg-[#EEF4FF] text-[#3538CD]' : 'bg-white text-[#067647]')}>
+    <span className={cx('rounded-full px-2 py-0.5 text-[10.5px] font-extrabold uppercase tracking-wide shadow-sm', customer ? 'bg-[#EEF4FF] text-[#3538CD]' : 'bg-white text-[#024A57]')}>
       {customer ? 'Customer' : 'Shop'}
     </span>
   );
@@ -322,7 +322,7 @@ function BuyCard({ item, onOpen, onAdd, onContact, adding }) {
         ) : null}
       </button>
       <div className="flex flex-1 flex-col p-2.5">
-        {item.brandName ? <p className="text-[11.5px] font-bold uppercase tracking-wide text-[#079455]">{item.brandName}</p> : null}
+        {item.brandName ? <p className="text-[11.5px] font-bold uppercase tracking-wide text-[#035C6C]">{item.brandName}</p> : null}
         <p className="line-clamp-2 text-[14px] font-bold leading-snug text-[#111111]" title={name}>
           {name}
         </p>
@@ -349,7 +349,7 @@ function BuyCard({ item, onOpen, onAdd, onContact, adding }) {
           <button
             type="button"
             onClick={onOpen}
-            className="inline-flex h-9 flex-1 items-center justify-center rounded-xl border border-[#ECECEC] bg-white px-2 text-[12.5px] font-bold text-[#111111] transition hover:border-[#079455] hover:text-[#079455]"
+            className="inline-flex h-9 flex-1 items-center justify-center rounded-xl border border-[#ECECEC] bg-white px-2 text-[12.5px] font-bold text-[#111111] transition hover:border-[#035C6C] hover:text-[#035C6C]"
           >
             View Details
           </button>
@@ -359,7 +359,7 @@ function BuyCard({ item, onOpen, onAdd, onContact, adding }) {
               onClick={onAdd}
               disabled={adding}
               aria-label={`Add ${name} to cart`}
-              className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#079455] px-2 text-[12.5px] font-bold text-white transition hover:bg-[#067647] disabled:opacity-60"
+              className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#035C6C] px-2 text-[12.5px] font-bold text-white transition hover:bg-[#024A57] disabled:opacity-60"
             >
               {adding ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <ShoppingCart className="h-4 w-4" aria-hidden="true" />}
               Add
@@ -368,7 +368,7 @@ function BuyCard({ item, onOpen, onAdd, onContact, adding }) {
             <button
               type="button"
               onClick={onContact}
-              className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#079455] px-2 text-[12.5px] font-bold text-white transition hover:bg-[#067647]"
+              className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#035C6C] px-2 text-[12.5px] font-bold text-white transition hover:bg-[#024A57]"
             >
               <Phone className="h-4 w-4" aria-hidden="true" />
               Contact
@@ -415,7 +415,7 @@ function RailCard({ item, onOpen, onAdd, adding }) {
           onClick={onAdd}
           disabled={adding}
           aria-label={`Add ${name} to cart`}
-          className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#079455] text-white shadow-sm transition hover:bg-[#067647] disabled:opacity-60"
+          className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#035C6C] text-white shadow-sm transition hover:bg-[#024A57] disabled:opacity-60"
         >
           {adding ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Plus className="h-4 w-4" aria-hidden="true" />}
         </button>
@@ -429,7 +429,7 @@ function Rail({ title, items, onViewAll, renderItem }) {
     <section className="space-y-2.5">
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-[15px] font-extrabold tracking-tight text-[#111111]">{title}</h2>
-        <button type="button" onClick={onViewAll} className="inline-flex items-center gap-0.5 text-[13px] font-bold text-[#079455] hover:underline">
+        <button type="button" onClick={onViewAll} className="inline-flex items-center gap-0.5 text-[13px] font-bold text-[#035C6C] hover:underline">
           View all
           <ChevronRight className="h-4 w-4" aria-hidden="true" />
         </button>
@@ -668,7 +668,7 @@ export default function MarketplacePage() {
     );
   }
 
-  const selectCls = cx(CONTROL, 'h-11 px-3 text-[13.5px] font-semibold text-[#111111] focus:border-[#079455] focus:outline-none');
+  const selectCls = cx(CONTROL, 'h-11 px-3 text-[13.5px] font-semibold text-[#111111] focus:border-[#035C6C] focus:outline-none');
   const cardProps = (item) => ({
     item,
     onOpen: () => openDetails(item),
@@ -687,7 +687,7 @@ export default function MarketplacePage() {
             <h1 className="text-[20px] font-extrabold leading-tight tracking-tight text-[#111111]">Buy</h1>
             <p className="hidden text-[12px] text-[#666666] md:block">Devices, spares &amp; more from shops and customers near you.</p>
           </div>
-          <label className={cx(CONTROL, 'order-last flex h-10 w-full min-w-0 items-center gap-2.5 px-3.5 transition sm:order-none sm:w-auto sm:flex-1 focus-within:border-[#079455] focus-within:ring-4 focus-within:ring-[#079455]/10')}>
+          <label className={cx(CONTROL, 'order-last flex h-10 w-full min-w-0 items-center gap-2.5 px-3.5 transition sm:order-none sm:w-auto sm:flex-1 focus-within:border-[#035C6C] focus-within:ring-4 focus-within:ring-[#035C6C]/10')}>
             <Search className="h-4 w-4 shrink-0 text-[#98A2B3]" aria-hidden="true" />
             <input
               value={query}
@@ -709,17 +709,17 @@ export default function MarketplacePage() {
             className={cx(
               CONTROL,
               'inline-flex h-10 shrink-0 items-center gap-2 px-3 text-[13px] font-bold transition sm:px-3.5',
-              filtersOpen || activeFilters ? 'border-[#079455] bg-[#F3F3F3] text-[#067647]' : 'text-[#111111] hover:border-[#079455]',
+              filtersOpen || activeFilters ? 'border-[#035C6C] bg-[#F3F3F3] text-[#024A57]' : 'text-[#111111] hover:border-[#035C6C]',
             )}
           >
             <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
             <span className="hidden sm:inline">Filters</span>
-            {activeFilters ? <span className="flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-[#079455] px-1 text-[11px] text-white">{activeFilters}</span> : null}
+            {activeFilters ? <span className="flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-[#035C6C] px-1 text-[11px] text-white">{activeFilters}</span> : null}
           </button>
           <Link
             href={BUY_HREF.cart}
             aria-label={`My cart${cartCount ? `, ${cartCount} item${cartCount === 1 ? '' : 's'}` : ''}`}
-            className="relative inline-flex h-10 shrink-0 items-center gap-2 rounded-xl border border-[#ECECEC] bg-white px-3.5 text-[13px] font-bold text-[#111111] transition hover:border-[#079455] hover:text-[#079455]"
+            className="relative inline-flex h-10 shrink-0 items-center gap-2 rounded-xl border border-[#ECECEC] bg-white px-3.5 text-[13px] font-bold text-[#111111] transition hover:border-[#035C6C] hover:text-[#035C6C]"
           >
             <ShoppingCart className="h-5 w-5" aria-hidden="true" />
             <span className="hidden sm:inline">My Cart</span>
@@ -765,7 +765,7 @@ export default function MarketplacePage() {
                     onClick={() => setSellerFilter(s.value)}
                     className={cx(
                       'h-11 flex-1 rounded-[12px] border px-2 text-[13px] font-bold transition',
-                      sellerFilter === s.value ? 'border-[#079455] bg-[#EAF8EC] text-[#067647]' : 'border-[#ECECEC] bg-white text-[#344054] hover:border-[#D0D5DD]',
+                      sellerFilter === s.value ? 'border-[#035C6C] bg-[#E5F3F5] text-[#024A57]' : 'border-[#ECECEC] bg-white text-[#344054] hover:border-[#D0D5DD]',
                     )}
                   >
                     {s.label}
@@ -777,7 +777,7 @@ export default function MarketplacePage() {
               type="button"
               onClick={clearFilters}
               disabled={!activeFilters}
-              className="h-11 rounded-[14px] px-4 text-[13.5px] font-bold text-[#067647] transition hover:bg-[#F3F3F3] disabled:cursor-not-allowed disabled:text-[#98A2B3] disabled:hover:bg-transparent"
+              className="h-11 rounded-[14px] px-4 text-[13.5px] font-bold text-[#024A57] transition hover:bg-[#F3F3F3] disabled:cursor-not-allowed disabled:text-[#98A2B3] disabled:hover:bg-transparent"
             >
               Clear all
             </button>
@@ -808,14 +808,14 @@ export default function MarketplacePage() {
               onClick={() => selectCategory(c.code)}
               className={cx(
                 'flex min-w-[150px] shrink-0 items-center gap-2.5 rounded-xl border p-2 text-left transition sm:min-w-0',
-                selected ? 'border-[#079455] bg-[#F2FBF4] ring-1 ring-[#079455]' : 'border-[#ECECEC] bg-white hover:border-[#079455]/50',
+                selected ? 'border-[#035C6C] bg-[#E5F3F5] ring-1 ring-[#035C6C]' : 'border-[#ECECEC] bg-white hover:border-[#035C6C]/50',
               )}
             >
               <span className={cx('flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg p-1', selected ? 'bg-white' : TINTS[i % TINTS.length])}>
                 <Img src={resolveMediaUrl(c.imageUrl)} fallbackIcon={Fallback} iconClassName="h-5 w-5" />
               </span>
               <span className="min-w-0">
-                <span className={cx('block truncate text-[13px] font-bold', selected ? 'text-[#067647]' : 'text-[#111111]')}>{c.name}</span>
+                <span className={cx('block truncate text-[13px] font-bold', selected ? 'text-[#024A57]' : 'text-[#111111]')}>{c.name}</span>
                 <span className="block text-[11.5px] text-[#666666]">{loading ? '…' : `${n} item${n === 1 ? '' : 's'}`}</span>
               </span>
             </button>
@@ -848,7 +848,7 @@ export default function MarketplacePage() {
       <section ref={gridRef} className="scroll-mt-4 space-y-3">
         <div className="flex flex-wrap items-center gap-3">
           <h2 className="text-[15px] font-extrabold tracking-tight text-[#111111]">{sectionName}</h2>
-          <span className="rounded-full bg-[#F3F3F3] px-2.5 py-0.5 text-[12.5px] font-bold text-[#067647]">
+          <span className="rounded-full bg-[#F3F3F3] px-2.5 py-0.5 text-[12.5px] font-bold text-[#024A57]">
             {loading ? '…' : `${visible.length} item${visible.length === 1 ? '' : 's'}`}
           </span>
           <select
@@ -868,7 +868,7 @@ export default function MarketplacePage() {
         </div>
         {!loading && !error ? (
           <p className="flex items-center gap-1.5 text-[12.5px] text-[#666666]">
-            <MapPin className="h-3.5 w-3.5 text-[#079455]" aria-hidden="true" />
+            <MapPin className="h-3.5 w-3.5 text-[#035C6C]" aria-hidden="true" />
             {located
               ? `Listings within ${BUY_RADIUS_KM} km of your shop, plus shop catalogue items.`
               : "Add your shop's location to see the listings nearest to you."}
@@ -883,7 +883,7 @@ export default function MarketplacePage() {
           </div>
         ) : error ? null : visible.length === 0 ? (
           <div className="flex flex-col items-center rounded-[20px] border border-[#ECECEC] bg-[#F8F8F8] px-4 py-14 text-center">
-            <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F3F3F3] text-[#079455]">
+            <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F3F3F3] text-[#035C6C]">
               <Store className="h-8 w-8" aria-hidden="true" />
             </span>
             <p className="mt-4 text-[16px] font-extrabold text-[#111111]">
@@ -901,7 +901,7 @@ export default function MarketplacePage() {
                   setQuery('');
                   clearFilters();
                 }}
-                className="mt-4 rounded-xl border border-[#ECECEC] bg-white px-4 py-2 text-[13.5px] font-bold text-[#067647] transition hover:bg-[#F3F3F3]"
+                className="mt-4 rounded-xl border border-[#ECECEC] bg-white px-4 py-2 text-[13.5px] font-bold text-[#024A57] transition hover:bg-[#F3F3F3]"
               >
                 Clear search &amp; filters
               </button>

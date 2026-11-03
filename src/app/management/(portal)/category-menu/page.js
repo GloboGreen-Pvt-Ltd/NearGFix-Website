@@ -23,7 +23,7 @@ import { notifyError, notifySuccess } from '@/lib/toast';
 const CATEGORY_MENU_TYPES = [
   { value: 'REPAIR', label: 'Repair', icon: Wrench, tone: 'bg-blue-100 text-blue-700' },
   { value: 'SELL', label: 'Sell', icon: Tag, tone: 'bg-orange-100 text-orange-700' },
-  { value: 'BUY', label: 'Buy', icon: ShoppingCart, tone: 'bg-emerald-100 text-emerald-700' },
+  { value: 'BUY', label: 'Buy', icon: ShoppingCart, tone: 'bg-brand-100 text-brand-700' },
 ];
 
 const typeMeta = (value) => CATEGORY_MENU_TYPES.find((t) => t.value === value) || null;

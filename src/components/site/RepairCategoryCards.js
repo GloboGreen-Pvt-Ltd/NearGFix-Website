@@ -89,7 +89,7 @@ const THEMES = {
 
 const DEFAULT_THEME = {
   bg: 'linear-gradient(145deg, #F8FAFC 0%, #EEF2F6 55%, #E2E8F0 100%)',
-  tint: '#CBD5E1', fg: '#334155', solid: '#09AD2A', soft: '#F1F5F9',
+  tint: '#CBD5E1', fg: '#334155', solid: '#035C6C', soft: '#F1F5F9',
   icon: Cpu, badge: Wrench,
 };
 

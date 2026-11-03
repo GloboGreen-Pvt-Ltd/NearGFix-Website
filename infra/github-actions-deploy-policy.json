@@ -1,0 +1,29 @@
+{
+  "_comment": [
+    "Minimum permissions for .github/workflows/deploy-neargfix-website.yml.",
+    "Attach to the deploy IAM user (or the OIDC role) in the account that owns",
+    "bucket neargfix-website-prod and distribution E2C4Q1NNTRYYFA.",
+    "Replace ACCOUNT_ID with that AWS account id."
+  ],
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListBucket",
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": "arn:aws:s3:::neargfix-website-prod"
+    },
+    {
+      "Sid": "WriteObjects",
+      "Effect": "Allow",
+      "Action": ["s3:PutObject", "s3:GetObject"],
+      "Resource": "arn:aws:s3:::neargfix-website-prod/*"
+    },
+    {
+      "Sid": "InvalidateDistribution",
+      "Effect": "Allow",
+      "Action": ["cloudfront:CreateInvalidation", "cloudfront:GetInvalidation"],
+      "Resource": "arn:aws:cloudfront::ACCOUNT_ID:distribution/E2C4Q1NNTRYYFA"
+    }
+  ]
+}

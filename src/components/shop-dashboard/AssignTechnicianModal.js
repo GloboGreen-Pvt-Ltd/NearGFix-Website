@@ -88,7 +88,7 @@ export default function AssignTechnicianModal({ open, ticketId, currentTechnicia
         className="flex max-h-[85dvh] w-full max-w-md flex-col overflow-hidden rounded-t-[22px] pb-[env(safe-area-inset-bottom)] sm:pb-0 bg-white shadow-[0_24px_60px_rgba(11,23,57,0.25)] sm:rounded-[22px]"
       >
         <div className="flex items-start gap-3 border-b border-[#ECECEC] px-5 py-4">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F3F3F3] text-[#079455]">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F3F3F3] text-[#035C6C]">
             <UserCog className="h-5 w-5" aria-hidden="true" />
           </span>
           <div className="min-w-0 flex-1">
@@ -103,7 +103,7 @@ export default function AssignTechnicianModal({ open, ticketId, currentTechnicia
         </div>
 
         <div className="px-5 pt-4">
-          <label className="flex h-11 items-center gap-2 rounded-xl border border-[#ECECEC] px-3 focus-within:border-[#079455]">
+          <label className="flex h-11 items-center gap-2 rounded-xl border border-[#ECECEC] px-3 focus-within:border-[#035C6C]">
             <Search className="h-4 w-4 text-[#98A2B3]" aria-hidden="true" />
             <input
               value={query}
@@ -124,7 +124,7 @@ export default function AssignTechnicianModal({ open, ticketId, currentTechnicia
             <p className="rounded-xl bg-[#FEF3F2] p-3 text-[13px] text-[#B42318]">{loadError}</p>
           ) : filtered.length === 0 ? (
             <p className="py-8 text-center text-[13.5px] text-[#666666]">
-              {technicians.length ? 'No technicians match your search.' : 'No technicians yet — add one under Employee Management.'}
+              {technicians.length ? 'No technicians match your search.' : 'No technicians yet — add one under Team.'}
             </p>
           ) : (
             <ul role="radiogroup" aria-label="Technicians" className="space-y-2">
@@ -141,28 +141,28 @@ export default function AssignTechnicianModal({ open, ticketId, currentTechnicia
                       onClick={() => setSelected(id)}
                       className={cx(
                         'flex w-full items-center gap-3 rounded-xl border-[1.5px] px-3 py-2.5 text-left transition',
-                        isSel ? 'border-[#079455] bg-[#F3F3F3]' : 'border-[#ECECEC] hover:border-[#ECECEC]',
+                        isSel ? 'border-[#035C6C] bg-[#F3F3F3]' : 'border-[#ECECEC] hover:border-[#ECECEC]',
                       )}
                     >
                       {t.photoUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element -- remote profile photo.
                         <img src={t.photoUrl} alt="" className="h-10 w-10 shrink-0 rounded-full object-cover" />
                       ) : (
-                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#22C55E] to-[#067647] text-[13px] font-bold text-white">
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#035C6C] to-[#024A57] text-[13px] font-bold text-white">
                           {initials(t.name)}
                         </span>
                       )}
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-[14px] font-bold text-[#111111]">
                           {t.name || 'Technician'}
-                          {String(currentTechnicianId || '') === id ? <span className="ml-1.5 text-[11.5px] font-semibold text-[#079455]">(current)</span> : null}
+                          {String(currentTechnicianId || '') === id ? <span className="ml-1.5 text-[11.5px] font-semibold text-[#035C6C]">(current)</span> : null}
                         </span>
                         <span className="block truncate text-[12px] text-[#666666]">{[t.roleLabel, t.phone].filter(Boolean).join(' · ') || 'Technician'}</span>
                       </span>
-                      <span className={cx('shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold uppercase', unavailable ? 'bg-[#F3F3F3] text-[#98A2B3]' : 'bg-[#F3F3F3] text-[#067647]')}>
+                      <span className={cx('shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold uppercase', unavailable ? 'bg-[#F3F3F3] text-[#98A2B3]' : 'bg-[#F3F3F3] text-[#024A57]')}>
                         {unavailable ? 'Unavailable' : 'Available'}
                       </span>
-                      {isSel ? <CheckCircle2 className="h-5 w-5 shrink-0 text-[#079455]" aria-hidden="true" /> : null}
+                      {isSel ? <CheckCircle2 className="h-5 w-5 shrink-0 text-[#035C6C]" aria-hidden="true" /> : null}
                     </button>
                   </li>
                 );
