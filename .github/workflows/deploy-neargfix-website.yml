@@ -152,8 +152,10 @@ jobs:
       - name: Invalidate CloudFront
         run: |
           id=$(aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "/*" --query Invalidation.Id --output text)
-          echo "invalidation $id — waiting for it to complete"
-          aws cloudfront wait invalidation-completed --distribution-id "$DISTRIBUTION" --id "$id"
+          echo "invalidation $id created"
+          # Waiting needs cloudfront:GetInvalidation; without it, carry on — the
+          # verify step below retries until the site answers.
+          aws cloudfront wait invalidation-completed --distribution-id "$DISTRIBUTION" --id "$id" 2>/dev/null             || echo "::warning::Could not wait for invalidation $id (needs cloudfront:GetInvalidation); continuing."
 
       - name: Verify https://neargfix.com
         run: |
