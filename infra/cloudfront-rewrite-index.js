@@ -35,6 +35,15 @@
 // Query strings are carried over. The www rule is generic ("www." prefix), so the
 // same function is safe on preview/dev distributions that have no www alias.
 
+// SUBDOMAIN HOMES (301): the portals live in the same export as the customer site.
+//   https://admin.neargfix.com/  -> https://admin.neargfix.com/management/
+//   https://shop.neargfix.com/   -> https://shop.neargfix.com/shop-home/
+// Only "/" is redirected; every other path is served as-is, so links work on any host.
+var HOST_HOMES = {
+  'admin.neargfix.com': '/management/',
+  'shop.neargfix.com': '/shop-home/',
+};
+
 var PERMANENT_REDIRECTS = {
   '/shopmanagement/': '/sell-with-us/?login=1',
 };
@@ -67,6 +76,9 @@ function handler(event) {
   var canonicalHost = host.indexOf('www.') === 0 ? host.slice(4) : host;
   var canonicalUri = !isFile && !uri.endsWith('/') ? uri + '/' : uri;
 
+  if (uri === '/' && HOST_HOMES[canonicalHost]) {
+    return redirect('https://' + canonicalHost + HOST_HOMES[canonicalHost] + queryString(request.querystring));
+  }
   if (PERMANENT_REDIRECTS[canonicalUri]) {
     return redirect('https://' + canonicalHost + PERMANENT_REDIRECTS[canonicalUri]);
   }
