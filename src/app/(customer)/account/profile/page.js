@@ -5,7 +5,7 @@
  *
  * The website now uses the same profile contract as the customer app:
  * GET/PUT user-service /customer/profile. Avatar files are stored through the
- * master-data media endpoint (S3 behind media.ggfix.in); only the returned HTTPS
+ * master-data media endpoint (S3 behind cdn.neargfix.com); only the returned HTTPS
  * URL is saved in user-service's profile_image_url column.
  */
 

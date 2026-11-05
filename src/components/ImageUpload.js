@@ -8,7 +8,7 @@ import { notifyError } from '@/lib/toast';
  * Image upload card. Matches the "Avatar / Upload Avatar" pattern.
  *
  * Strategy: POST /media/upload, which stores the file on S3 and returns a
- * media.ggfix.in URL. A client-side FileReader -> base64 data URI remains as an
+ * cdn.neargfix.com URL. A client-side FileReader -> base64 data URI remains as an
  * OPT-IN fallback, no longer the default — see allowBase64Fallback.
  *
  * Props:
@@ -63,7 +63,7 @@ export default function ImageUpload({
       reader.readAsDataURL(file);
     });
 
-  // ---- Backend upload (S3 behind media.ggfix.in) ----
+  // ---- Backend upload (S3 behind cdn.neargfix.com) ----
   const uploadToBackend = (file) =>
     new Promise((resolve, reject) => {
       const fd = new FormData();
@@ -98,7 +98,7 @@ export default function ImageUpload({
     setUploading(true);
     setProgress(0);
     try {
-      // 1) Try the backend so we get a hosted media.ggfix.in URL.
+      // 1) Try the backend so we get a hosted cdn.neargfix.com URL.
       if (!clientOnly) {
         let failure = null;
         try {

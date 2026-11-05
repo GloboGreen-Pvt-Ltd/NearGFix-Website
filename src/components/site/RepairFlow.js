@@ -1173,7 +1173,7 @@ function ServiceStep({ deviceCategoryId, modelName, deviceHref, device }) {
 /* -------------------------------------------------------------------------- */
 /* Shown to a LOGGED-IN customer after picking services. Mirrors the app's
  * Review screen: device details, the chosen services, and front/back device
- * photos (uploaded for real to media.ggfix.in). Booking still finishes in the app,
+ * photos (uploaded for real to cdn.neargfix.com). Booking still finishes in the app,
  * so the end action is an app handoff — the photo URLs are not attached to a web
  * booking (there is no web booking backend). */
 

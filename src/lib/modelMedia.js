@@ -1,7 +1,7 @@
 import { MASTER_BASE } from '@/lib/api';
 
 /**
- * Model images on media.ggfix.in.
+ * Model images on cdn.neargfix.com.
  *
  * The client sends IDs and a file and NEVER a path. The S3 key is derived on the
  * server from the names those IDs resolve to — see MediaKeys.java. Building the key
@@ -140,7 +140,7 @@ export const ACCEPTED_IMAGE_TYPES = 'image/jpeg,image/png,image/webp';
  * Every upload endpoint returns previousImageUrl (what the record held before) and
  * previousImageRemoved (whether that file was deleted from the bucket). The server
  * keeps the old file in two cases it cannot safely delete — another record still
- * points at it, or it was never hosted on media.ggfix.in (a data URI, an old
+ * points at it, or it was never hosted on cdn.neargfix.com (a data URI, an old
  * Cloudinary link) — and those must not be reported as a deletion that happened.
  *
  * @param {object} res    upload response
@@ -150,12 +150,12 @@ export const ACCEPTED_IMAGE_TYPES = 'image/jpeg,image/png,image/webp';
 export function imageReplacementNotice(res, label = 'Image') {
   if (!res) return '';
   if (res.previousImageRemoved) {
-    return `${label} updated — the new file is stored on media.ggfix.in and the old one was deleted.`;
+    return `${label} updated — the new file is stored on cdn.neargfix.com and the old one was deleted.`;
   }
   if (res.previousImageUrl) {
-    return `${label} updated and stored on media.ggfix.in. The previous file was kept: it is either still used by another record or was not stored on media.ggfix.in.`;
+    return `${label} updated and stored on cdn.neargfix.com. The previous file was kept: it is either still used by another record or was not stored on cdn.neargfix.com.`;
   }
-  return `${label} stored on media.ggfix.in.`;
+  return `${label} stored on cdn.neargfix.com.`;
 }
 
 /* -------------------------------------------------------------------------- */

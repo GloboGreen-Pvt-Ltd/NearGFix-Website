@@ -105,7 +105,7 @@ const EXAMPLE_ROW = {
   mainCategoryName: 'Display & Touch',
   name: 'Screen Broken',
   description: 'Cracked or damaged display glass.',
-  iconUrl: 'https://media.ggfix.in/repair-services/screen-broken.png',
+  iconUrl: 'https://cdn.neargfix.com/repair-services/screen-broken.png',
 };
 
 function buildGuideSheet(XLSX, columns) {

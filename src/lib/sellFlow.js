@@ -101,8 +101,8 @@ export function sortSellCategories(list) {
 }
 
 // The Sell-specific category art the Partner app shows (OwnerSellHomeScreen's
-// SELL_IMAGES). All five files checked: 200 image/png on media.ggfix.in.
-const SELL_ART_DIR = 'https://media.ggfix.in/buy&sell-categories-image';
+// SELL_IMAGES). All five files checked: 200 image/png on cdn.neargfix.com.
+const SELL_ART_DIR = 'https://cdn.neargfix.com/buy&sell-categories-image';
 const SELL_ART = {
   MOBILE: 'Sell-Phone.png',
   SMARTPHONE: 'Sell-Phone.png',

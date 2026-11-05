@@ -16,9 +16,9 @@
 import { masterApi } from '@/lib/api';
 
 // Where the media service serves uploads from. Every URL the backend
-// returns today is already absolute (https://media.ggfix.in/...); this only
+// returns today is already absolute (https://cdn.neargfix.com/...); this only
 // matters if a row ever comes back with a bare key like "master/models/x.png".
-export const MEDIA_ORIGIN = 'https://media.ggfix.in';
+export const MEDIA_ORIGIN = 'https://cdn.neargfix.com';
 
 // Priority order: the device/model's own photo first, then product, then
 // brand, then a generic imageUrl.

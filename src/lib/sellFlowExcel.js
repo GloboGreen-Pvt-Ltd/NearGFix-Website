@@ -132,7 +132,7 @@ const DEFINITIONS = {
     example: {
       groupId: '', categoryName: 'Mobile', groupCode: 'SCREEN_CONDITION', groupName: 'Screen Condition',
       flow: 'COMMON', groupSortOrder: '0', optionId: '', optionLabel: 'No Damage', priceImpact: '0',
-      iconUrl: 'https://media.ggfix.in/conditions/no-damage.png', optionSortOrder: '0',
+      iconUrl: 'https://cdn.neargfix.com/conditions/no-damage.png', optionSortOrder: '0',
     },
   },
   functionalIssues: {
@@ -161,7 +161,7 @@ const DEFINITIONS = {
     },
     example: {
       id: '', categoryName: 'Mobile', name: 'Speaker Not Working',
-      priceImpact: '0', iconUrl: 'https://media.ggfix.in/issues/speaker.png', sortOrder: '0', isActive: 'Yes',
+      priceImpact: '0', iconUrl: 'https://cdn.neargfix.com/issues/speaker.png', sortOrder: '0', isActive: 'Yes',
     },
   },
   deviceConfiguration: {

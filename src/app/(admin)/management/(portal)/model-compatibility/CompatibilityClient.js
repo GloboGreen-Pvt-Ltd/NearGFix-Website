@@ -1258,7 +1258,7 @@ export default function CompatibilityClient() {
                 label="Reference image"
                 caption={
                   modal.type === 'create'
-                    ? 'A photo of the part. Uploads to media.ggfix.in right after the box is saved.'
+                    ? 'A photo of the part. Uploads to cdn.neargfix.com right after the box is saved.'
                     : 'A photo of the part. Choosing a new file replaces the current one on save.'
                 }
               />
