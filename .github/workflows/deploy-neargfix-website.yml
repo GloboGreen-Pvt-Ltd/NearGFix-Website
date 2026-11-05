@@ -45,6 +45,9 @@ jobs:
       SITE_URL: https://neargfix.com
       BUCKET: ${{ vars.S3_BUCKET_PRODUCTION }}
       DISTRIBUTION: ${{ vars.CLOUDFRONT_DISTRIBUTION_PRODUCTION }}
+      # admin./shop. distributions serve the same bucket; optional.
+      DISTRIBUTION_ADMIN: ${{ vars.CLOUDFRONT_DISTRIBUTION_PRODUCTION_ADMIN }}
+      DISTRIBUTION_PARTNER: ${{ vars.CLOUDFRONT_DISTRIBUTION_PRODUCTION_PARTNER || vars.CLOUDFRONT_DISTRIBUTION_PRODUCTION_PARNTER }}
     steps:
       - uses: actions/checkout@v4
 
@@ -148,6 +151,12 @@ jobs:
             done
           done < <(find out -name index.html)
           echo "published $count directory-key aliases"
+
+      - name: Invalidate CloudFront (admin, shop)
+        run: |
+          for d in $DISTRIBUTION_ADMIN $DISTRIBUTION_PARTNER; do
+            aws cloudfront create-invalidation --distribution-id "$d" --paths "/*" --query Invalidation.Id --output text               || echo "::warning::Could not invalidate $d"
+          done
 
       - name: Invalidate CloudFront
         run: |
