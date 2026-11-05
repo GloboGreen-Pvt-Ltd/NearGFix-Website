@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { ACCEPTED_IMAGE_TYPES } from '@/lib/modelMedia';
+import { ACCEPTED_IMAGE_TYPES, safeImageSrc } from '@/lib/modelMedia';
 import { notifyError } from '@/lib/toast';
 
 /**
@@ -38,7 +38,7 @@ export default function S3ImageUpload({ value, onFileChange, label, caption }) {
   const localPreview = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
   useEffect(() => () => { if (localPreview) URL.revokeObjectURL(localPreview); }, [localPreview]);
 
-  const preview = localPreview || value || null;
+  const preview = safeImageSrc(localPreview || value);
   const isInline = typeof value === 'string' && value.startsWith('data:');
 
   const pick = (event) => {

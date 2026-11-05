@@ -9,7 +9,7 @@ import { mapPool } from '@/lib/concurrency';
 import DataTable from '@/components/DataTable';
 import S3ImageUpload from '@/components/S3ImageUpload';
 import ModelsImportModal from '@/components/ModelsImportModal';
-import { imageReplacementNotice, replaceModelImage } from '@/lib/modelMedia';
+import { imageReplacementNotice, replaceModelImage, safeImageSrc } from '@/lib/modelMedia';
 import { imageForColor, toColorImagesPayload } from '@/lib/colorImages';
 import { exportModelsWorkbook, exportTemplateWorkbook } from '@/lib/modelsExcel';
 import { notifyError, notifySuccess } from '@/lib/toast';
@@ -140,7 +140,7 @@ function ColorPhotoRow({ name, hex, url, file, onPick, onClear }) {
   const inputRef = useRef(null);
   const preview = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
   useEffect(() => () => { if (preview) URL.revokeObjectURL(preview); }, [preview]);
-  const shown = preview || url || null;
+  const shown = safeImageSrc(preview || url);
   return (
     <li className="flex items-center gap-3 rounded-lg border border-admin-border bg-admin-dark px-3 py-2">
       <span className="h-4 w-4 shrink-0 rounded-full border border-admin-border" style={{ backgroundColor: hex }} />

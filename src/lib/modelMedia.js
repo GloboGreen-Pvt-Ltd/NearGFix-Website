@@ -241,3 +241,16 @@ export async function uploadCategoryMenuImage(categoryMenuId, file) {
   );
   return unwrap(res);
 }
+
+/** Returns `src` only when it is a safe image URL (blob:, http(s): or data:image/), else null. */
+export function safeImageSrc(src) {
+  if (!src) return null;
+  const s = String(src).trim();
+  if (/^data:image\/(png|jpe?g|gif|webp|avif)[;,]/i.test(s)) return s;
+  try {
+    const { protocol } = new URL(s, 'https://neargfix.com');
+    return ['blob:', 'https:', 'http:'].includes(protocol) ? s : null;
+  } catch {
+    return null;
+  }
+}

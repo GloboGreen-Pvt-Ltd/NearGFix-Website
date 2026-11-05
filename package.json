@@ -12,22 +12,29 @@
   "dependencies": {
     "color-name": "^2.1.0",
     "color-name-list": "^14.45.0",
+    "dompurify": "^3.4.17",
     "fflate": "^0.8.3",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.8",
     "lucide-react": "^1.23.0",
-    "next": "^14.2.0",
+    "next": "^15.5.29",
     "qrcode": "^1.5.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "react-hot-toast": "^2.6.1",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.18",
     "eslint": "^8.57.0",
-    "eslint-config-next": "^14.2.0",
-    "postcss": "^8.4.35",
+    "eslint-config-next": "^15.5.29",
+    "postcss": "^8.5.32",
     "tailwindcss": "^3.4.1"
+  },
+  "overrides": {
+    "postcss": "$postcss",
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^11.0.1"
+    }
   }
 }
