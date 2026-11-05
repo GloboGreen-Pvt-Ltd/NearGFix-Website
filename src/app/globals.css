@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light-themed app only — see the viewport export in layout.js for why this
+   matters: without it, a device in dark mode can auto-theme native form
+   controls (select, checkbox) and shift pastel colors on its own. */
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-admin-dark text-slate-800 antialiased;
+}
+
+/* Marketing + legal pages: justify body paragraphs (headings keep their own
+   alignment). Text that is centred on purpose — or sits inside a centred
+   block — is left alone, and the last line of a paragraph stays ragged. */
+@layer base {
+  main p:not(.text-center):not(:where(.text-center, [class*="text-center"]) p) {
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+  }
+}

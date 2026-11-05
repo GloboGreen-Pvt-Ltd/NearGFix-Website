@@ -1,0 +1,47 @@
+{
+  "_comment": [
+    "Extra permissions the deploy user needs to APPLY the directory-index rewrite.",
+    "",
+    "Attach to IAM user 'github-actions' in the frontend account 176202287053, then",
+    "re-run the 'Apply CloudFront rewrite' workflow. Without this it can sync S3 and",
+    "invalidate, but not read or update a distribution, so the workflow stops at its",
+    "pre-flight check with 'Cannot read distribution ...'.",
+    "",
+    "CloudFront Functions are account-global and have no per-distribution ARN, so the",
+    "function statement cannot be scoped to a resource; it is narrowed by action",
+    "instead. The distribution statement IS scoped - add each distribution ARN you",
+    "intend to fix rather than widening it to *.",
+    "",
+    "Delete this policy once the rewrite is applied; it is only needed for that",
+    "one-shot change, not for day-to-day deploys."
+  ],
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ManageRewriteFunction",
+      "Effect": "Allow",
+      "Action": [
+        "cloudfront:CreateFunction",
+        "cloudfront:UpdateFunction",
+        "cloudfront:DescribeFunction",
+        "cloudfront:GetFunction",
+        "cloudfront:PublishFunction",
+        "cloudfront:ListFunctions"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "UpdateFrontendDistributions",
+      "Effect": "Allow",
+      "Action": [
+        "cloudfront:GetDistribution",
+        "cloudfront:GetDistributionConfig",
+        "cloudfront:UpdateDistribution",
+        "cloudfront:CreateInvalidation"
+      ],
+      "Resource": [
+        "arn:aws:cloudfront::176202287053:distribution/E1E6CMW5CEO8Z5"
+      ]
+    }
+  ]
+}
