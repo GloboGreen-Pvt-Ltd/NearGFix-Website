@@ -36,7 +36,7 @@ import HeaderCart from './HeaderCart';
 import CategoryNavMenu from './CategoryNavMenu';
 
 // "Sell with Us" opens the seller homepage (src/app/sell-with-us); shop owners sign in from there.
-const SELL_WITH_US_HREF = '/sell-with-us/';
+const SELL_WITH_US_HREF = 'https://shop.neargfix.com/';
 
 /**
  * Icon shown before each nav label in the mobile panel (the desktop menu row

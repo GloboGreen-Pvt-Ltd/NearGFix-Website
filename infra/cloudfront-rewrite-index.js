@@ -35,13 +35,16 @@
 // Query strings are carried over. The www rule is generic ("www." prefix), so the
 // same function is safe on preview/dev distributions that have no www alias.
 
-// SUBDOMAIN HOMES (301): the portals live in the same export as the customer site.
-//   https://admin.neargfix.com/  -> https://admin.neargfix.com/management/
-//   https://shop.neargfix.com/   -> https://shop.neargfix.com/shop-home/
-// Only "/" is redirected; every other path is served as-is, so links work on any host.
-var HOST_HOMES = {
-  'admin.neargfix.com': '/management/',
-  'shop.neargfix.com': '/shop-home/',
+// SUBDOMAIN PORTALS (same export, served by hostname)
+//   admin.neargfix.com/<p>        -> serves /management/<p>  (/ = admin home)
+//   admin.neargfix.com/management/<p> -> 301 /<p>            (clean public URL)
+//   shop.neargfix.com/            -> serves /sell-with-us/
+//   shop.neargfix.com/sell-with-us/<q> -> 301 /<q>
+// Files (/_next/*, *.txt RSC payloads, images) are never rewritten, so assets and
+// client-side navigation keep their real paths. Other shop paths (/shop-home/*) pass through.
+var HOST_PREFIX = {
+  'admin.neargfix.com': '/management',
+  'shop.neargfix.com': '/sell-with-us',
 };
 
 var PERMANENT_REDIRECTS = {
@@ -76,8 +79,18 @@ function handler(event) {
   var canonicalHost = host.indexOf('www.') === 0 ? host.slice(4) : host;
   var canonicalUri = !isFile && !uri.endsWith('/') ? uri + '/' : uri;
 
-  if (uri === '/' && HOST_HOMES[canonicalHost]) {
-    return redirect('https://' + canonicalHost + HOST_HOMES[canonicalHost] + queryString(request.querystring));
+  var prefix = HOST_PREFIX[canonicalHost];
+  if (prefix && !isFile) {
+    if (canonicalUri === prefix + '/' || canonicalUri.indexOf(prefix + '/') === 0) {
+      return redirect('https://' + canonicalHost + canonicalUri.slice(prefix.length) + queryString(request.querystring));
+    }
+    if (canonicalUri !== uri) {
+      return redirect('https://' + canonicalHost + canonicalUri + queryString(request.querystring));
+    }
+    if (prefix === '/management' || uri === '/') {
+      request.uri = prefix + uri + 'index.html';
+      return request;
+    }
   }
   if (PERMANENT_REDIRECTS[canonicalUri]) {
     return redirect('https://' + canonicalHost + PERMANENT_REDIRECTS[canonicalUri]);
