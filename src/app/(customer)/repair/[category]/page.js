@@ -26,7 +26,8 @@ export async function generateStaticParams() {
   return catalog.map((c) => ({ category: c.slug }));
 }
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata(props) {
+  const params = await props.params;
   const category = await getRepairCategory(params.category);
   if (!category) return {};
   const { content } = category;
@@ -37,7 +38,8 @@ export async function generateMetadata({ params }) {
   });
 }
 
-export default async function RepairCategoryPage({ params }) {
+export default async function RepairCategoryPage(props) {
+  const params = await props.params;
   const [catalog, category] = await Promise.all([getRepairCatalog(), getRepairCategory(params.category)]);
   const { content } = category;
   const path = `/repair/${category.slug}`;

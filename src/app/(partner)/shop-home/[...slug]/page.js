@@ -33,7 +33,8 @@ export function generateStaticParams() {
  * src/app/shop-home/services/bookings/page.js), Next.js routes to it
  * directly and this catch-all is never consulted for that path again.
  */
-export default function PartnerNavStubPage({ params }) {
+export default async function PartnerNavStubPage(props) {
+  const params = await props.params;
   const item = findNavItemBySlug(params.slug);
   if (!item) notFound();
 

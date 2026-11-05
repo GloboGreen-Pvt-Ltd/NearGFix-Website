@@ -84,6 +84,14 @@ function brandInitial(name) {
 // raw image_base64.  The mobile app resolves both shapes; use the same
 // compatibility layer on the website rather than falling back to an icon when
 // a perfectly good image was returned by the API.
+function isCloudinaryUrl(url) {
+  try {
+    return new URL(url).hostname === 'res.cloudinary.com';
+  } catch {
+    return false;
+  }
+}
+
 function resolveMasterImage(item) {
   const rawUrl = item?.imageUrl;
   if (rawUrl) {
@@ -91,7 +99,7 @@ function resolveMasterImage(item) {
     // Older Cloudinary uploads can be AVIF/HEIC. Request JPEG bytes in that
     // case so the card remains reliable across browsers and devices.
     if (
-      url.includes('res.cloudinary.com')
+      isCloudinaryUrl(url)
       && /\.(avif|heic|heif)(\?.*)?$/i.test(url)
       && !/\/upload\/[^/]*f_(jpg|png|webp|auto)/i.test(url)
     ) {

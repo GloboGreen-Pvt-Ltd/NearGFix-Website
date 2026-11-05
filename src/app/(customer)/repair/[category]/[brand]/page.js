@@ -60,7 +60,7 @@ function brandDescription(category, brand) {
 }
 
 export async function generateMetadata({ params }) {
-  const { category, brand } = await load(params);
+  const { category, brand } = await load(await params);
   if (!brand) return {};
   return pageMetadata({
     title: `${brand.name} ${category.content.label} Repair Near You`,
@@ -70,7 +70,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function RepairBrandPage({ params }) {
-  const [catalog, { category, brand }] = await Promise.all([getRepairCatalog(), load(params)]);
+  const [catalog, { category, brand }] = await Promise.all([getRepairCatalog(), load(await params)]);
   const { content } = category;
   const label = content.label;
   const categoryPath = `/repair/${category.slug}`;
