@@ -34,6 +34,8 @@ const DIRECT_FIELDS = [
 export function resolveMediaUrl(value) {
   const url = typeof value === 'string' ? value.trim() : '';
   if (!url) return null;
+  // Legacy hosts (same bucket keys) now serve from the CDN.
+  if (/^https?:\/\/media\.(ggfix\.in|neargfix\.com)\//i.test(url)) return url.replace(/^https?:\/\/[^/]+/, MEDIA_ORIGIN);
   if (/^(https?:|data:|blob:)/i.test(url)) return url;
   if (url.startsWith('//')) return `https:${url}`;
   return `${MEDIA_ORIGIN}/${url.replace(/^\/+/, '')}`;
