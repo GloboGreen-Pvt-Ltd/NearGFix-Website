@@ -12,7 +12,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from '@/lib/portalNavigation';
 import { ArrowLeft, ChevronDown, IdCard, Lock, Loader2, Mail, MapPin, Pencil, Phone, Smartphone, User } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

@@ -177,7 +177,7 @@ const COLUMN_HELP = {
   modelNumber: ['Optional', 'Manufacturer code(s). Separate several with / , or ;   e.g. V2043 / V2043BA'],
   colors: ['Optional', 'Comma-separated colour names, e.g. Midnight Black, Champagne Gold. Swatches are auto-detected on import.'],
   ramStorage: ['Optional', 'Comma-separated. Either "RAM + Storage" (6 GB + 128 GB) or storage only (128 GB) \u2014 do not mix both styles on one model.'],
-  imageUrl: ['Optional', 'A media.ggfix.in URL. Image files cannot be uploaded from Excel \u2014 use the model edit form for that.'],
+  imageUrl: ['Optional', 'A cdn.neargfix.com URL. Image files cannot be uploaded from Excel \u2014 use the model edit form for that.'],
   sellActive: ['Optional', 'Yes / No. Controls whether the model appears in the customer Sell flow. Blank means Yes.'],
 };
 

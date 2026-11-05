@@ -42,7 +42,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { ArrowRight, CheckCircle2, ClipboardList, Download, FileText, IndianRupee, Loader2, MessageSquare, Package, RefreshCw, Smartphone, Truck, Wrench } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

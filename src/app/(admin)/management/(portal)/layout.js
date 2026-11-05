@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname } from '@/lib/portalNavigation';
 import { Bell, Menu } from 'lucide-react';
 import { getToken, setToken, setRole } from '@/lib/auth';
 import Sidebar from '@/components/Sidebar';

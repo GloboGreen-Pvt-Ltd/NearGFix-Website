@@ -15,7 +15,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/lib/portalNavigation';
 import { AlertTriangle, Plus, Store } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

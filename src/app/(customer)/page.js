@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { preload } from 'react-dom';
 import {
   ArrowRight,

@@ -12,7 +12,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/lib/portalNavigation';
 import { Smartphone } from 'lucide-react';
 
 import EmptyState from '@/components/shop-dashboard/EmptyState';

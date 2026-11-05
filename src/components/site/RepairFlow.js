@@ -28,8 +28,8 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import Link from '@/components/PortalLink';
+import { useRouter, useSearchParams } from '@/lib/portalNavigation';
 import {
   BatteryCharging,
   Calendar,
@@ -1173,7 +1173,7 @@ function ServiceStep({ deviceCategoryId, modelName, deviceHref, device }) {
 /* -------------------------------------------------------------------------- */
 /* Shown to a LOGGED-IN customer after picking services. Mirrors the app's
  * Review screen: device details, the chosen services, and front/back device
- * photos (uploaded for real to media.ggfix.in). Booking still finishes in the app,
+ * photos (uploaded for real to cdn.neargfix.com). Booking still finishes in the app,
  * so the end action is an app handoff — the photo URLs are not attached to a web
  * booking (there is no web booking backend). */
 

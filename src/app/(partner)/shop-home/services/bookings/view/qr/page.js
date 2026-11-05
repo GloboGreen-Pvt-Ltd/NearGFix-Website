@@ -35,7 +35,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from '@/lib/portalNavigation';
 import QRCode from 'qrcode';
 import { AlertTriangle, Check, ChevronLeft, Copy, Printer, QrCode, Wrench } from 'lucide-react';
 

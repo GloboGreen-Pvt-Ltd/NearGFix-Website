@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useRouter } from '@/lib/portalNavigation';
+import Link from '@/components/PortalLink';
 import { authApi } from '@/lib/api';
 import { notifyError } from '@/lib/toast';
 

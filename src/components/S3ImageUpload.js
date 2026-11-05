@@ -65,8 +65,8 @@ export default function S3ImageUpload({ value, onFileChange, label, caption }) {
     if (value && !window.confirm(
       'This record already has an image.\n\n'
       + (isInline
-        ? 'Saving will store the new image on media.ggfix.in and drop the current inline copy from the record.'
-        : 'Saving will store the new image on media.ggfix.in and permanently delete the current one.')
+        ? 'Saving will store the new image on cdn.neargfix.com and drop the current inline copy from the record.'
+        : 'Saving will store the new image on cdn.neargfix.com and permanently delete the current one.')
       + '\n\nContinue?')) {
       setFile(null);
       onFileChange(null);
@@ -117,18 +117,18 @@ export default function S3ImageUpload({ value, onFileChange, label, caption }) {
       {file && value ? (
         <p className="mt-2 rounded-md bg-amber-50 px-2 py-1.5 text-[11px] font-medium text-amber-800">
           {isInline
-            ? 'On save this image is stored on media.ggfix.in and the current inline copy is dropped from the record.'
-            : 'On save the current image is permanently deleted from media.ggfix.in and this one is stored in its place.'}
+            ? 'On save this image is stored on cdn.neargfix.com and the current inline copy is dropped from the record.'
+            : 'On save the current image is permanently deleted from cdn.neargfix.com and this one is stored in its place.'}
         </p>
       ) : null}
 
       <p className="mt-2 text-[11px] text-slate-500">
         {file
-          ? 'Will upload to media.ggfix.in when you save.'
+          ? 'Will upload to cdn.neargfix.com when you save.'
           : isInline
-            ? 'stored as: inline (data URI) — re-upload to move it to media.ggfix.in'
+            ? 'stored as: inline (data URI) — re-upload to move it to cdn.neargfix.com'
             : value
-              ? 'stored on media.ggfix.in'
+              ? 'stored on cdn.neargfix.com'
               : 'JPEG, PNG or WebP, up to 5 MB.'}
       </p>
     </div>

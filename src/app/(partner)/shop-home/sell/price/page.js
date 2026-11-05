@@ -14,7 +14,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/lib/portalNavigation';
 import { Check, IndianRupee, Tag, Wrench } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

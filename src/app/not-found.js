@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 
 import SiteFooter from '@/components/site/SiteFooter';
 import SiteHeader from '@/components/site/SiteHeader';

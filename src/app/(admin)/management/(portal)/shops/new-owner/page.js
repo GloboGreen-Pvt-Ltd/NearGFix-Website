@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useRouter } from '@/lib/portalNavigation';
+import Link from '@/components/PortalLink';
 import { authApi, uploadMedia as uploadFile } from '@/lib/api';
 import SafeImage from '@/components/SafeImage';
 import { notifyError } from '@/lib/toast';

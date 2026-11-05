@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { ChevronRight } from 'lucide-react';
 
 import HeroCarousel from '@/components/site/HeroCarousel';

@@ -21,8 +21,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import Link from '@/components/PortalLink';
+import { useRouter } from '@/lib/portalNavigation';
 import { msIcon } from '@/components/site/MaterialIcon';
 
 import { normalizeMobile, sendMobileOtp, verifyMobileOtp } from '@/lib/shopMobileAuth';

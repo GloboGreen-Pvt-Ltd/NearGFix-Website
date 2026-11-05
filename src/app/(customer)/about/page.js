@@ -5,7 +5,7 @@
  * PLATFORM_FACTS, BRAND) so numbers never drift from the rest of the site.
  */
 
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import {
   ArrowRight,
   ArrowUpRight,

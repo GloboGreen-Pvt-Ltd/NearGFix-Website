@@ -902,7 +902,7 @@ export default function MasterModelsPage() {
       render: (r) => (r.imageUrl
         ? <img src={r.imageUrl} alt="" className="h-8 w-8 rounded object-cover" />
         : r.inlineImage
-          ? <span title="Stored inline as a data URI — re-upload to move it to media.ggfix.in"
+          ? <span title="Stored inline as a data URI — re-upload to move it to cdn.neargfix.com"
                   className="text-[11px] font-semibold text-amber-600">inline</span>
           : '—'),
     },

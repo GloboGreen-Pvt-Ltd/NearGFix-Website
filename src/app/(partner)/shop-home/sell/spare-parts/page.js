@@ -10,7 +10,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/lib/portalNavigation';
 import { ArrowRight, Camera, CircleX, CloudUpload, Cpu, LayoutGrid, Loader2, Plus, Smartphone, SwitchCamera, X } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

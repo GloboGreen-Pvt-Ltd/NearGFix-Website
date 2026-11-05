@@ -22,8 +22,8 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Link from '@/components/PortalLink';
+import { usePathname } from '@/lib/portalNavigation';
 import { ChevronDown, CircleHelp, Settings as SettingsIcon, X } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

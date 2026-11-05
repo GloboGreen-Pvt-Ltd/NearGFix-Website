@@ -20,7 +20,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import {
   ArrowRight,
   AudioWaveform,

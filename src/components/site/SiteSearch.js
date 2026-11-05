@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import Link from '@/components/PortalLink';
+import { useRouter } from '@/lib/portalNavigation';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { CircleHelp, Search, Smartphone, X } from 'lucide-react';
 

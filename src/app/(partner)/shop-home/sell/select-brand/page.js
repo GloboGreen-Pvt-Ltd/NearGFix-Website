@@ -18,7 +18,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from '@/lib/portalNavigation';
 import { Tag } from 'lucide-react';
 
 import EmptyState from '@/components/shop-dashboard/EmptyState';

@@ -13,7 +13,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/lib/portalNavigation';
 import { ArrowRight, Cpu, HardDrive, Palette } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

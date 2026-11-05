@@ -444,7 +444,7 @@ export default function MasterRepairServicesPage() {
                       value={iconUrl}
                       onChange={(e) => setIconUrl(e.target.value)}
                       className="w-full rounded-lg bg-admin-dark border border-admin-border px-3 py-2 text-slate-900"
-                      placeholder="https://media.ggfix.in/repair-services/icon.png"
+                      placeholder="https://cdn.neargfix.com/repair-services/icon.png"
                     />
                     <p className="mt-1 text-xs text-admin-muted">Optional icon used in the customer repair-service picker.</p>
                   </div>

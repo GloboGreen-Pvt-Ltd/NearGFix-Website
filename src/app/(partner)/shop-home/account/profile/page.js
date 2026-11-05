@@ -22,7 +22,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { Lock, Mail, Pencil, Phone, ShieldCheck, Store, User } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

@@ -15,8 +15,8 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import Link from '@/components/PortalLink';
+import { useRouter } from '@/lib/portalNavigation';
 import { AlertTriangle, ArrowUpCircle, Clock, CreditCard, Crown, FileText, RefreshCw, RotateCw, Store } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

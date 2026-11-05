@@ -129,7 +129,7 @@ export async function createRepairBooking(payload) {
 /* -------------------------------------------------------------------------- */
 /* In-progress photo store                                                     */
 /* -------------------------------------------------------------------------- */
-/* The device photos are uploaded (to media.ggfix.in) back on the report step,
+/* The device photos are uploaded (to cdn.neargfix.com) back on the report step,
  * but the booking is submitted several steps later. The URL is the wrong place
  * for long hosted URLs, so they ride in sessionStorage keyed by the model — it
  * survives step navigation and clears when the tab closes. */

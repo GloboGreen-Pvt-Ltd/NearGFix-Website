@@ -19,7 +19,7 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from '@/lib/portalNavigation';
 import { ArrowLeft, BarChart3, Bookmark, Car, CheckCheck, ChevronLeft, ChevronRight, Clock, MapPin, Phone, RefreshCw } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

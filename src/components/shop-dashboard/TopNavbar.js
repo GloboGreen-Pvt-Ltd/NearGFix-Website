@@ -11,7 +11,7 @@
  */
 
 import { useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { CircleHelp, Menu, MessageSquare, Search } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

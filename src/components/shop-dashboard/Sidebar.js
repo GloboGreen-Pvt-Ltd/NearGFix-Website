@@ -17,8 +17,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Link from '@/components/PortalLink';
+import { usePathname } from '@/lib/portalNavigation';
 import { ChevronDown, CircleHelp, X } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

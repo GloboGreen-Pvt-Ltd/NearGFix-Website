@@ -27,8 +27,8 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import { useRouter, useSearchParams } from '@/lib/portalNavigation';
+import Link from '@/components/PortalLink';
 import {
   AlertTriangle,
   ArrowLeft,

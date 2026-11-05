@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from '@/lib/portalNavigation';
 import { ExternalLink, Pencil, Plus, Search, Settings2, Trash2, X } from 'lucide-react';
 
 import { masterApi } from '@/lib/api';
@@ -1258,7 +1258,7 @@ export default function CompatibilityClient() {
                 label="Reference image"
                 caption={
                   modal.type === 'create'
-                    ? 'A photo of the part. Uploads to media.ggfix.in right after the box is saved.'
+                    ? 'A photo of the part. Uploads to cdn.neargfix.com right after the box is saved.'
                     : 'A photo of the part. Choosing a new file replaces the current one on save.'
                 }
               />

@@ -11,8 +11,8 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import Link from '@/components/PortalLink';
+import { useSearchParams } from '@/lib/portalNavigation';
 import { AlertTriangle, ArrowLeft, Printer } from 'lucide-react';
 
 import ReceiptView from '@/components/subscription/ReceiptView';

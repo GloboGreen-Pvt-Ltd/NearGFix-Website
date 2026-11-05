@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { BadgeCheck, Smartphone, Sparkles, Wrench, X } from 'lucide-react';
 
 import { login, normalizeMobile, sendOtp } from '@/lib/customerAuth';

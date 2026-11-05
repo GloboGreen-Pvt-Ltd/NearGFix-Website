@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { ArrowUpRight, TrendingUp } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

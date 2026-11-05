@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import Link from '@/components/PortalLink';
+import { useSearchParams } from '@/lib/portalNavigation';
 import { ChevronRight } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

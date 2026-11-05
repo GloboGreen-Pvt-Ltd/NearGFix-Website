@@ -19,13 +19,13 @@ the bucket. The bucket policy (OAC) only allows the neargfix.com distribution.
      neargfix.com distribution.
 2. Publish the updated `infra/cloudfront-rewrite-index.js` and attach it as the
    Viewer Request function on that distribution (`infra/apply-cloudfront-rewrite.sh`).
-   `/` then redirects to `/management/` (admin) and `/shop-home/` (shop).
+   admin `/` serves the admin portal (`/management/*` 301s to the clean path); shop `/` serves Sell with Us (`/sell-with-us/` 301s to `/`).
 
 To keep a separate distribution instead: give it the same OAC origin, attach
 the same function, and add its ARN to the bucket policy's `AWS:SourceArn`.
 
 ## Verify
 
-    curl -sI https://admin.neargfix.com/   # 301 -> /management/
-    curl -sI https://shop.neargfix.com/    # 301 -> /shop-home/
+    curl -sI https://admin.neargfix.com/   # 200 (admin home)
+    curl -sI https://shop.neargfix.com/    # 200 (Sell with Us)
     curl -sI https://shop.neargfix.com/shop-home/   # 200
