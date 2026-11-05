@@ -40,7 +40,9 @@
         "cloudfront:CreateInvalidation"
       ],
       "Resource": [
-        "arn:aws:cloudfront::176202287053:distribution/E1E6CMW5CEO8Z5"
+        "arn:aws:cloudfront::176202287053:distribution/E2C4Q1NNTRYYFA",
+        "arn:aws:cloudfront::176202287053:distribution/E10WEH9YEF5FES",
+        "arn:aws:cloudfront::176202287053:distribution/E8Z7TSF9YLLBU"
       ]
     }
   ]
