@@ -47,7 +47,7 @@ jobs:
       DISTRIBUTION: ${{ vars.CLOUDFRONT_DISTRIBUTION_PRODUCTION }}
       # admin./shop. distributions serve the same bucket; optional.
       DISTRIBUTION_ADMIN: ${{ vars.CLOUDFRONT_DISTRIBUTION_PRODUCTION_ADMIN }}
-      DISTRIBUTION_PARTNER: ${{ vars.CLOUDFRONT_DISTRIBUTION_PRODUCTION_PARTNER || vars.CLOUDFRONT_DISTRIBUTION_PRODUCTION_PARNTER }}
+      DISTRIBUTION_PARTNER: ${{ vars.CLOUDFRONT_DISTRIBUTION_PRODUCTION_PARTNER || vars.CLOUDFRONT_DISTRIBUTION_PRODUCTION__PARTNER || vars.CLOUDFRONT_DISTRIBUTION_PRODUCTION_PARNTER }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
@@ -96,7 +96,7 @@ jobs:
           NEXT_PUBLIC_NOTIFICATION_BASE: ${{ vars.NEXT_PUBLIC_NOTIFICATION_BASE }}
           NEXT_PUBLIC_SUBSCRIPTION_BASE: ${{ vars.NEXT_PUBLIC_SUBSCRIPTION_BASE }}
           NEXT_PUBLIC_ORDER_BASE: ${{ vars.NEXT_PUBLIC_ORDER_BASE }}
-          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ vars.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || vars.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
           # Canonical domain (src/lib/seo.js) — neargfix.com unless overridden.
           NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://neargfix.com' }}
           NEXT_PUBLIC_ALLOW_INDEXING: ${{ vars.NEXT_PUBLIC_ALLOW_INDEXING }}
@@ -152,6 +152,15 @@ jobs:
           done < <(find out -name index.html)
           echo "published $count directory-key aliases"
 
+      # admin./shop. have their own distributions; without the hostname rewrite
+      # (infra/cloudfront-rewrite-index.js) they serve the customer home page.
+      # Idempotent; needs the CloudFront permissions in
+      # infra/github-actions-cloudfront-policy.json, otherwise only warns.
+      - name: Attach portal rewrite function
+        run: |
+          ids=$(echo "$DISTRIBUTION $DISTRIBUTION_ADMIN $DISTRIBUTION_PARTNER" | xargs)
+          bash infra/apply-cloudfront-rewrite.sh $ids --apply             || echo "::warning::Could not attach rewrite to $ids — attach infra/cloudfront-rewrite-index.js (viewer request) in the CloudFront console."
+
       - name: Invalidate CloudFront (admin, shop)
         run: |
           for d in $DISTRIBUTION_ADMIN $DISTRIBUTION_PARTNER; do
@@ -177,6 +186,11 @@ jobs:
             done
             echo "$path → $code"
             [ "$code" = "200" ] || { echo "::error::$SITE_URL$path returned $code"; exit 1; }
+          done
+          for host in admin.neargfix.com shop.neargfix.com; do
+            title=$(curl -s "https://$host/" | grep -o '<title>[^<]*' | head -1)
+            echo "$host → $title"
+            case "$title" in *"Mobile Repair, Buy"*) echo "::warning::$host still serves the customer home page" ;; esac
           done
 
       - name: Summary
