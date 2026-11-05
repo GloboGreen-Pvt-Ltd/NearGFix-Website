@@ -1,0 +1,133 @@
+# =========================
+# Dependencies
+# =========================
+node_modules/
+.pnp
+.pnp.js
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# Environment Variables
+# (DO NOT COMMIT SECRETS)
+# =========================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+# Catch-all, because the list above is an allow-by-omission: .env.deployment
+# matched none of these patterns and staged itself during a dev-folder sync.
+.env*
+# ...except the committed template, which carries key NAMES and no values.
+!.env.local.example
+
+# =========================
+# Next.js
+# =========================
+.next/
+out/
+.vercel/
+.next-cache/
+
+# =========================
+# Expo / React Native
+# =========================
+.expo/
+.expo-shared/
+dist/
+web-build/
+
+# Metro Bundler
+.metro-health-check*
+
+# React Native cache
+.cache/
+.parcel-cache/
+
+# =========================
+# Native folders
+# Ignore ONLY if using Expo managed workflow
+# Remove these if you use:
+# npx expo prebuild
+# and customize android/ios
+# =========================
+android/
+ios/
+
+# =========================
+# TypeScript
+# =========================
+*.tsbuildinfo
+next-env.d.ts
+
+# =========================
+# Testing / Coverage
+# =========================
+coverage/
+.nyc_output/
+
+# =========================
+# IDE / Editor files
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Cursor AI
+.cursor/
+.cursorignore
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Temporary files
+# =========================
+tmp/
+temp/
+*.tmp
+*.temp
+
+# =========================
+# Database files
+# =========================
+*.db
+*.sqlite
+*.sqlite3
+
+# =========================
+# Expo Application Services
+# =========================
+.eas/
+eas-build/
+
+# =========================
+# Keep these tracked
+# (DO NOT add these above)
+# =========================
+# package.json
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+# tsconfig.json
+# app.json
+# app.config.js
+# next.config.js
+# babel.config.js
+# metro.config.js
+# eas.json

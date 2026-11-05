@@ -1,0 +1,185 @@
+name: Deploy NearGFix Website
+
+# New branch → PR → merge to main → build → S3 → CloudFront → https://neargfix.com
+#
+# Config lives in the `production` environment (vars: AWS_REGION,
+# S3_BUCKET_PRODUCTION, CLOUDFRONT_DISTRIBUTION_PRODUCTION, NEXT_PUBLIC_*;
+# secrets: AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY). Set the
+# AWS_ROLE_TO_ASSUME *variable* to switch to OIDC (preferred) — the keys are
+# then unused. API URLs come from the existing NEXT_PUBLIC_* variables; this
+# workflow does not change them.
+
+on:
+  push:
+    branches: [main]
+    # Only website changes deploy; docs/infra-only commits don't.
+    paths:
+      - "src/**"
+      - "public/**"
+      - "package.json"
+      - "package-lock.json"
+      - "next.config.js"
+      - "tailwind.config.js"
+      - "postcss.config.js"
+      - "jsconfig.json"
+      - ".github/workflows/deploy-neargfix-website.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # OIDC path only
+
+# One production deploy at a time; a newer merge waits instead of cutting a
+# half-finished sync short.
+concurrency:
+  group: neargfix-website-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://neargfix.com
+    env:
+      SITE_URL: https://neargfix.com
+      BUCKET: ${{ vars.S3_BUCKET_PRODUCTION }}
+      DISTRIBUTION: ${{ vars.CLOUDFRONT_DISTRIBUTION_PRODUCTION }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      # Stop before building if anything is missing — never guess a bucket.
+      - name: Verify configuration
+        env:
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          NEXT_PUBLIC_MASTER_DATA_BASE: ${{ vars.NEXT_PUBLIC_MASTER_DATA_BASE }}
+          NEXT_PUBLIC_AUTH_BASE: ${{ vars.NEXT_PUBLIC_AUTH_BASE }}
+          HAS_ROLE: ${{ vars.AWS_ROLE_TO_ASSUME != '' }}
+          HAS_KEYS: ${{ secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != '' }}
+        run: |
+          missing=""
+          for v in BUCKET DISTRIBUTION AWS_REGION NEXT_PUBLIC_MASTER_DATA_BASE NEXT_PUBLIC_AUTH_BASE; do
+            [ -z "${!v}" ] && missing="$missing $v"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Missing production configuration:$missing"
+            exit 1
+          fi
+          if [ "$HAS_ROLE" != "true" ] && [ "$HAS_KEYS" != "true" ]; then
+            echo "::error::No AWS credentials: set the AWS_ROLE_TO_ASSUME variable (OIDC) or the AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY secrets."
+            exit 1
+          fi
+          echo "Config OK — bucket '$BUCKET', distribution '$DISTRIBUTION', region $AWS_REGION."
+
+      - run: npm ci
+
+      - name: Build static export
+        env:
+          NEXT_PUBLIC_MASTER_DATA_BASE: ${{ vars.NEXT_PUBLIC_MASTER_DATA_BASE }}
+          NEXT_PUBLIC_API_BASE: ${{ vars.NEXT_PUBLIC_API_BASE }}
+          NEXT_PUBLIC_AUTH_BASE: ${{ vars.NEXT_PUBLIC_AUTH_BASE }}
+          NEXT_PUBLIC_TICKET_BASE: ${{ vars.NEXT_PUBLIC_TICKET_BASE }}
+          NEXT_PUBLIC_USER_BASE: ${{ vars.NEXT_PUBLIC_USER_BASE }}
+          NEXT_PUBLIC_SHOP_BASE: ${{ vars.NEXT_PUBLIC_SHOP_BASE }}
+          NEXT_PUBLIC_TECHNICIAN_BASE: ${{ vars.NEXT_PUBLIC_TECHNICIAN_BASE }}
+          NEXT_PUBLIC_INVENTORY_BASE: ${{ vars.NEXT_PUBLIC_INVENTORY_BASE }}
+          NEXT_PUBLIC_MARKETPLACE_BASE: ${{ vars.NEXT_PUBLIC_MARKETPLACE_BASE }}
+          NEXT_PUBLIC_PICKUP_BASE: ${{ vars.NEXT_PUBLIC_PICKUP_BASE }}
+          NEXT_PUBLIC_NOTIFICATION_BASE: ${{ vars.NEXT_PUBLIC_NOTIFICATION_BASE }}
+          NEXT_PUBLIC_SUBSCRIPTION_BASE: ${{ vars.NEXT_PUBLIC_SUBSCRIPTION_BASE }}
+          NEXT_PUBLIC_ORDER_BASE: ${{ vars.NEXT_PUBLIC_ORDER_BASE }}
+          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ vars.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+          # Canonical domain (src/lib/seo.js) — neargfix.com unless overridden.
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://neargfix.com' }}
+          NEXT_PUBLIC_ALLOW_INDEXING: ${{ vars.NEXT_PUBLIC_ALLOW_INDEXING }}
+          NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ vars.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
+          NEXT_PUBLIC_GTM_ID: ${{ vars.NEXT_PUBLIC_GTM_ID }}
+          NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: ${{ vars.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }}
+        run: npm run build
+
+      # The `secrets` context isn't allowed in a step `if:`, so the switch reads the variable.
+      - name: Configure AWS credentials (OIDC)
+        if: vars.AWS_ROLE_TO_ASSUME != ''
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Configure AWS credentials (access keys)
+        if: vars.AWS_ROLE_TO_ASSUME == ''
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      # No --delete: only keys produced by this build are written, nothing else
+      # in the bucket is touched. Fingerprinted assets cache for a year; HTML,
+      # JSON, robots.txt and sitemap.xml are always revalidated.
+      - name: Upload to S3
+        run: |
+          aws s3 sync out/ "s3://$BUCKET" --only-show-errors \
+            --exclude "*.html" --exclude "*.json" --exclude "*.xml" --exclude "*.txt" \
+            --cache-control "public,max-age=31536000,immutable"
+          aws s3 sync out/ "s3://$BUCKET" --only-show-errors \
+            --exclude "*" --include "*.html" --include "*.json" --include "*.xml" --include "*.txt" \
+            --cache-control "public,max-age=0,must-revalidate"
+
+      # CloudFront on an OAC'd REST origin maps /path/ to the S3 key "path/",
+      # which the export never writes (it writes path/index.html). Publish both
+      # /path/ and /path keys so every route resolves without a rewrite function.
+      - name: Publish directory-key aliases
+        run: |
+          set -euo pipefail
+          count=0
+          while IFS= read -r page; do
+            dir="${page#out/}"
+            dir="${dir%index.html}"
+            [ -n "$dir" ] || continue
+            for key in "$dir" "${dir%/}"; do
+              aws s3api put-object --bucket "$BUCKET" --key "$key" --body "$page" \
+                --content-type "text/html" --cache-control "public,max-age=0,must-revalidate" >/dev/null
+              count=$((count + 1))
+            done
+          done < <(find out -name index.html)
+          echo "published $count directory-key aliases"
+
+      - name: Invalidate CloudFront
+        run: |
+          id=$(aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "/*" --query Invalidation.Id --output text)
+          echo "invalidation $id created"
+          # Waiting needs cloudfront:GetInvalidation; without it, carry on — the
+          # verify step below retries until the site answers.
+          aws cloudfront wait invalidation-completed --distribution-id "$DISTRIBUTION" --id "$id" 2>/dev/null             || echo "::warning::Could not wait for invalidation $id (needs cloudfront:GetInvalidation); continuing."
+
+      - name: Verify https://neargfix.com
+        run: |
+          for path in / /shop-home/ /terms/; do
+            code=000
+            for i in 1 2 3 4 5 6; do
+              code=$(curl -s -o /dev/null -w '%{http_code}' -L "$SITE_URL$path")
+              [ "$code" = "200" ] && break
+              sleep 10
+            done
+            echo "$path → $code"
+            [ "$code" = "200" ] || { echo "::error::$SITE_URL$path returned $code"; exit 1; }
+          done
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### NearGFix website deploy"
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Site | $SITE_URL |"
+            echo "| Commit | \`${{ github.sha }}\` |"
+            echo "| Bucket | \`$BUCKET\` |"
+            echo "| Distribution | \`$DISTRIBUTION\` |"
+            echo "| Result | ${{ job.status }} |"
+          } >> "$GITHUB_STEP_SUMMARY"
