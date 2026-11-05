@@ -11,7 +11,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from '@/lib/portalNavigation';
 import { ArrowLeft, ChevronDown, Circle, CircleCheck, Clock, Loader2, MessageSquarePlus, Search, Wrench, X } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 
 /**
  * The Terms / Privacy consent checkbox used by every login and sign-up form.

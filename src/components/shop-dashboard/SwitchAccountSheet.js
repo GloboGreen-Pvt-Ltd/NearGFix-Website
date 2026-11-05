@@ -24,7 +24,7 @@
 
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { Check, ChevronRight, Loader2, Plus, Store } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

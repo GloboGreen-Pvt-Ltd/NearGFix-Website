@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import { useSearchParams } from '@/lib/portalNavigation';
+import Link from '@/components/PortalLink';
 import { authApi, subscriptionApi } from '@/lib/api';
 import BusinessLocationsManager from '@/components/BusinessLocationsManager';
 import SafeImage from '@/components/SafeImage';

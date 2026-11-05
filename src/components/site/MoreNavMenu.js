@@ -15,7 +15,7 @@
  */
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { ChevronDown } from 'lucide-react';
 
 import { cx, desktopNavItemClass } from './ui';

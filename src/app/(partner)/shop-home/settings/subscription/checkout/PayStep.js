@@ -15,7 +15,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { AlertTriangle, CheckCircle2, Clock, FileText, Home, Loader2, RefreshCw, ShieldCheck, Smartphone, XCircle } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

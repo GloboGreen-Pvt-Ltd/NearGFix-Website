@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import { useRouter, useSearchParams } from '@/lib/portalNavigation';
+import Link from '@/components/PortalLink';
 import { authApi, shopApi } from '@/lib/api';
 import { notifyError } from '@/lib/toast';
 

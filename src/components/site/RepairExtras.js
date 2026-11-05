@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from '@/lib/portalNavigation';
 
 /**
  * RepairExtras — shows its children ONLY on the bare /repair category step, and

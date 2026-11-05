@@ -13,8 +13,8 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import Link from '@/components/PortalLink';
+import { useRouter, useSearchParams } from '@/lib/portalNavigation';
 import {
   ArrowLeft, Bike, CalendarClock, ChartColumn, CircleCheck, Clock, MapPin,
   RefreshCw, Search, Truck, WifiOff, X,

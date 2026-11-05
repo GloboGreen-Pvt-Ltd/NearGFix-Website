@@ -12,7 +12,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { Bell, CalendarPlus, Loader2, MessageSquare, Truck } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

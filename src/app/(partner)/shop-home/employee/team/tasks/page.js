@@ -19,7 +19,7 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from '@/lib/portalNavigation';
 import { AlertCircle, ArrowLeft, BarChart3, CalendarDays, CheckCircle2, ChevronLeft, ChevronRight, Clock, Inbox, RefreshCw } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

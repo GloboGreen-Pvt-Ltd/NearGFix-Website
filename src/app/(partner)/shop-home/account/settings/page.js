@@ -38,7 +38,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import QRCode from 'qrcode';
 import {
   AlertTriangle,

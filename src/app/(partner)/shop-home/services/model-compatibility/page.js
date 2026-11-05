@@ -23,7 +23,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/lib/portalNavigation';
 import { AlertTriangle, Barcode, Boxes, ChevronLeft, ChevronRight, Info, Loader2, Puzzle, RefreshCw, Search, Smartphone, X } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

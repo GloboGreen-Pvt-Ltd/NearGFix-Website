@@ -1,3 +1,4 @@
+import { toInternal, toPublic } from '@/lib/portalUrl';
 // IMPORTANT: Next.js only inlines NEXT_PUBLIC_* env vars into the client bundle when
 // they are referenced as STATIC literals (process.env.NEXT_PUBLIC_FOO). A dynamic
 // lookup such as process.env[`NEXT_PUBLIC_${key}`] is NOT inlined, so in the browser
@@ -128,11 +129,11 @@ async function request(base, path, options = {}) {
         // EXACT match. A startsWith() here would be true everywhere in the
         // portal and the 401 bounce would never fire. trailingSlash:true means
         // the served path has a trailing slash, hence the strip.
-        const onLogin = window.location.pathname.replace(/\/+$/, '') === '/management';
+        const onLogin = toInternal(window.location.pathname).replace(/\/+$/, '') === '/management';
         if (!onLogin) {
-          const returnTo = encodeURIComponent(window.location.pathname + window.location.search);
+          const returnTo = encodeURIComponent(toInternal(window.location.pathname) + window.location.search);
           // Defer so the caller's error handler can still run + render the toast.
-          setTimeout(() => { window.location.assign(`/management/?returnTo=${returnTo}`); }, 50);
+          setTimeout(() => { window.location.assign(toPublic(`/management/?returnTo=${returnTo}`)); }, 50);
         }
       }
       const where = `${options.method || 'GET'} ${path}`;

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import TablePagination from '@/components/TablePagination';
 import { pageBounds } from '@/lib/pagination';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { authApi } from '@/lib/api';
 import { isAdmin as isAdminRole } from '@/lib/auth';
 import SafeImage from '@/components/SafeImage';

@@ -16,7 +16,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from '@/lib/portalNavigation';
 import { ArrowLeft, CalendarDays, Check, CheckCircle2, ChevronLeft, ChevronRight, Hourglass, Inbox, Loader2, Plus, X, XCircle } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

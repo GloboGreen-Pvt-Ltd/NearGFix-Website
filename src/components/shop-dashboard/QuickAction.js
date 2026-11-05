@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 
 import { cx } from '@/components/site/ui';
 import Icon3D from './Icon3D';

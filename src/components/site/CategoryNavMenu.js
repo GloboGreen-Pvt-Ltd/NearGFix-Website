@@ -21,7 +21,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { ChevronDown, Headphones, Laptop, Smartphone, Tablet, Watch } from 'lucide-react';
 
 import { cx, desktopNavItemClass } from './ui';

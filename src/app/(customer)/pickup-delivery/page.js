@@ -7,7 +7,7 @@
  * and slot, approves the estimate, and follows the ticket statuses to delivery.
  */
 
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import {
   BadgeCheck,
   BatteryCharging,

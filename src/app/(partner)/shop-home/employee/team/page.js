@@ -33,7 +33,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { ChevronRight, Info, Phone, PlusCircle, ShieldCheck, Users } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

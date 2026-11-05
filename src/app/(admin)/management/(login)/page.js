@@ -2,7 +2,7 @@
 
 import { Suspense, useCallback, useRef, useState } from 'react';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from '@/lib/portalNavigation';
 import { Eye, EyeOff, Lock, Loader2, Mail, ShieldCheck } from 'lucide-react';
 import { authApi } from '@/lib/api';
 import { setToken, setRole } from '@/lib/auth';

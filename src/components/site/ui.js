@@ -9,7 +9,7 @@
  * defeats tree-shaking and breaks the static export.
  */
 
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import {
   ArrowRight,
   BadgeCheck,

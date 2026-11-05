@@ -13,7 +13,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from '@/lib/portalNavigation';
 import { AlertTriangle, ArrowLeft, BadgeCheck, CalendarClock, Check, Copy, Lock, Minus, ReceiptIndianRupee, Smartphone, X } from 'lucide-react';
 
 import Icon3D from '@/components/shop-dashboard/Icon3D';

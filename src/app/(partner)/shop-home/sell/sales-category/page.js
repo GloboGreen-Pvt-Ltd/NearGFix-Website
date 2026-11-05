@@ -8,7 +8,7 @@
  * Spare Parts → the spare-parts builder.
  */
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/lib/portalNavigation';
 import {
   Award,
   ChevronRight,

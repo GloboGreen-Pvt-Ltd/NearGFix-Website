@@ -1,9 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname } from '@/lib/portalNavigation';
 import {
   ArrowRight,
   CircleHelp,

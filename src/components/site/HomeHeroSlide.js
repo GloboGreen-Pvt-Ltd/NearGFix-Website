@@ -15,7 +15,7 @@
  * /#buy (Buy Devices).
  */
 
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import {
   ArrowRight,
   BadgeIndianRupee,

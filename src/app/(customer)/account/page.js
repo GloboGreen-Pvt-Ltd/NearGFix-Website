@@ -7,7 +7,7 @@
  */
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/lib/portalNavigation';
 import { Loader2 } from 'lucide-react';
 
 export default function AccountPage() {

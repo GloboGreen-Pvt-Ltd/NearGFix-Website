@@ -12,7 +12,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from '@/lib/portalNavigation';
 import {
   CalendarClock,
   Check,

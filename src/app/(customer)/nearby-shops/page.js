@@ -11,7 +11,7 @@
  * request time, so no SSR fetching, no route handlers and no server actions.
  */
 
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { Check, Clock, Lock, Map as MapIcon, Navigation, Phone, Smartphone, Truck } from 'lucide-react';
 
 import { Button, Section, SectionHeading, cx } from '@/components/site/ui';

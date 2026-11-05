@@ -18,7 +18,7 @@
  *     endpoint yet, so it doesn't silently pretend to search.
  */
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/lib/portalNavigation';
 import { ArrowLeft, Search, UserPlus } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

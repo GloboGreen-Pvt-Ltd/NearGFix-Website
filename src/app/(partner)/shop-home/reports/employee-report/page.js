@@ -20,7 +20,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { Download, Info, Loader2, RefreshCw, ShieldCheck, UserCheck, Users } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

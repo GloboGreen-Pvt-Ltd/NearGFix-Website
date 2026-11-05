@@ -21,8 +21,8 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import Link from '@/components/PortalLink';
+import { useRouter } from '@/lib/portalNavigation';
 import { CheckCircle2, Loader2, Phone, ShieldCheck, Store } from 'lucide-react';
 
 import { BRAND } from '@/lib/siteContent';

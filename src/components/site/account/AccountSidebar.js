@@ -14,10 +14,10 @@
  * both without a second markup path.
  */
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Link from '@/components/PortalLink';
+import { usePathname } from '@/lib/portalNavigation';
 import { Suspense, useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from '@/lib/portalNavigation';
 import {
   FileText,
   HelpCircle,

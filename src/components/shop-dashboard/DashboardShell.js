@@ -29,7 +29,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from '@/lib/portalNavigation';
 import { Loader2 } from 'lucide-react';
 
 import { canOpenRoute } from '@/lib/shopAccess';

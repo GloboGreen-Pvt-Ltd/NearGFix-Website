@@ -9,7 +9,7 @@
  * screening to its dead-phone questions and lists it as "Dead / Unknown".
  */
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/lib/portalNavigation';
 import { ChevronRight, ClipboardList, FileText, Skull } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

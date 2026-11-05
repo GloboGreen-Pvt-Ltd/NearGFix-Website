@@ -12,8 +12,8 @@
  */
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import Link from '@/components/PortalLink';
+import { useRouter } from '@/lib/portalNavigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { ArrowUp, ArrowUpRight, Building2, CalendarCheck, CalendarClock, FileText, Info, ShieldCheck } from 'lucide-react';
 
 import SeoBreadcrumb from '@/components/site/SeoBreadcrumb';

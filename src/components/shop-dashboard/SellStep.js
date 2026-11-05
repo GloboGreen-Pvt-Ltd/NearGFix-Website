@@ -14,8 +14,8 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import Link from '@/components/PortalLink';
+import { useRouter } from '@/lib/portalNavigation';
 import { ArrowLeft, Check, Loader2, Search, Smartphone, Tag, X } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

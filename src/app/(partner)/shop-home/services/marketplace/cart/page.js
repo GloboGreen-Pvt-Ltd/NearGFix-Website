@@ -12,7 +12,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { Minus, Plus, ShoppingCart, Trash2, Wrench } from 'lucide-react';
 
 import ErrorBanner from '@/components/shop-dashboard/ErrorBanner';

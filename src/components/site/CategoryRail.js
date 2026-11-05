@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { Headphones, Laptop, Smartphone, Tablet, Watch, Wrench } from 'lucide-react';
 
 import { masterApi } from '@/lib/api';

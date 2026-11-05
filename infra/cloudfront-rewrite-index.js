@@ -35,17 +35,37 @@
 // Query strings are carried over. The www rule is generic ("www." prefix), so the
 // same function is safe on preview/dev distributions that have no www alias.
 
-// SUBDOMAIN PORTALS (same export, served by hostname)
-//   admin.neargfix.com/<p>        -> serves /management/<p>  (/ = admin home)
-//   admin.neargfix.com/management/<p> -> 301 /<p>            (clean public URL)
-//   shop.neargfix.com/            -> serves /sell-with-us/
-//   shop.neargfix.com/sell-with-us/<q> -> 301 /<q>
-// Files (/_next/*, *.txt RSC payloads, images) are never rewritten, so assets and
-// client-side navigation keep their real paths. Other shop paths (/shop-home/*) pass through.
-var HOST_PREFIX = {
-  'admin.neargfix.com': '/management',
-  'shop.neargfix.com': '/sell-with-us',
-};
+// SUBDOMAIN PORTALS (same export, served by hostname; mirrors src/lib/portalUrl.js)
+//   admin.neargfix.com/<p>       serves /management/<p>
+//   shop.neargfix.com/           serves /sell-with-us/
+//   shop.neargfix.com/dashboard/ serves /shop-home/
+//   shop.neargfix.com/<p>        serves /shop-home/<p>
+// Internal paths 301 to their public URL on the right host (any host), so
+// /management/ and /shop-home/ never stay in the address bar. RSC payloads
+// (*.txt) are rewritten the same way; other files (/_next/*, images) pass through.
+var ADMIN_HOST = 'admin.neargfix.com';
+var SHOP_HOST = 'shop.neargfix.com';
+
+function under(path, prefix) {
+  return path === prefix + '/' || path.indexOf(prefix + '/') === 0;
+}
+
+// Internal directory path -> [host, public path], or null when not a portal path.
+function publicUrl(path) {
+  if (under(path, '/management')) return [ADMIN_HOST, path.slice(11)];
+  if (under(path, '/sell-with-us')) return [SHOP_HOST, path.slice(13)];
+  if (path === '/shop-home/') return [SHOP_HOST, '/dashboard/'];
+  if (under(path, '/shop-home')) return [SHOP_HOST, path.slice(10)];
+  return null;
+}
+
+// Public directory path on a portal host -> internal directory path.
+function internalPath(host, path) {
+  if (host === ADMIN_HOST) return '/management' + path;
+  if (path === '/') return '/sell-with-us/';
+  if (under(path, '/dashboard')) return '/shop-home' + path.slice(10);
+  return '/shop-home' + path;
+}
 
 var PERMANENT_REDIRECTS = {
   '/shopmanagement/': '/sell-with-us/?login=1',
@@ -79,16 +99,21 @@ function handler(event) {
   var canonicalHost = host.indexOf('www.') === 0 ? host.slice(4) : host;
   var canonicalUri = !isFile && !uri.endsWith('/') ? uri + '/' : uri;
 
-  var prefix = HOST_PREFIX[canonicalHost];
-  if (prefix && !isFile) {
-    if (canonicalUri === prefix + '/' || canonicalUri.indexOf(prefix + '/') === 0) {
-      return redirect('https://' + canonicalHost + canonicalUri.slice(prefix.length) + queryString(request.querystring));
+  var portal = canonicalHost === ADMIN_HOST || canonicalHost === SHOP_HOST;
+  if (!isFile) {
+    var target = publicUrl(canonicalUri);
+    if (target && (target[0] !== canonicalHost || target[1] !== canonicalUri)) {
+      return redirect('https://' + target[0] + target[1] + queryString(request.querystring));
     }
-    if (canonicalUri !== uri) {
-      return redirect('https://' + canonicalHost + canonicalUri + queryString(request.querystring));
+  }
+  if (portal && canonicalUri === uri && uri.indexOf('/_next/') !== 0) {
+    if (!isFile) {
+      request.uri = internalPath(canonicalHost, uri) + 'index.html';
+      return request;
     }
-    if (prefix === '/management' || uri === '/') {
-      request.uri = prefix + uri + 'index.html';
+    if (uri.slice(-4) === '.txt') {
+      var slash = uri.lastIndexOf('/') + 1;
+      request.uri = internalPath(canonicalHost, uri.slice(0, slash)) + uri.slice(slash);
       return request;
     }
   }

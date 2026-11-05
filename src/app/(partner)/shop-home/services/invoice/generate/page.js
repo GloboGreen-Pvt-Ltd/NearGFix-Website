@@ -15,7 +15,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from '@/lib/portalNavigation';
 import { AlertTriangle, ArrowLeft, BookText, CheckCircle2, FileText, IndianRupee, Loader2, Package, Percent, ReceiptText, Wallet } from 'lucide-react';
 
 import { cx } from '@/components/site/ui';

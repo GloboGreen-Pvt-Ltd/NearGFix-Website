@@ -8,7 +8,7 @@
  */
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/lib/portalNavigation';
 
 export default function ShopManagementRedirect() {
   const router = useRouter();

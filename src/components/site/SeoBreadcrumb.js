@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/PortalLink';
 import { ChevronRight } from 'lucide-react';
 
 import JsonLd from '@/components/seo/JsonLd';

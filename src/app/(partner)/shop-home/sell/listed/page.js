@@ -6,7 +6,7 @@
  * UUID's first block), the price, and Home / Sell More. Both clear the draft.
  */
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/lib/portalNavigation';
 import { Check } from 'lucide-react';
 
 import { SellButton, SellLoading, SellMissingDraft, SellShell, SellThumb } from '@/components/shop-dashboard/SellStep';
