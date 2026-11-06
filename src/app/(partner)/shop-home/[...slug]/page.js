@@ -16,7 +16,7 @@ import { ALL_STUB_SLUGS, findNavItemBySlug } from '@/lib/partnerNav';
  * /shop-home/* page while localhost looked fine).
  */
 export function generateStaticParams() {
-  const appDir = path.join(process.cwd(), 'src', 'app', 'shop-home');
+  const appDir = path.join(process.cwd(), 'src', 'app', '(partner)', 'shop-home');
   return ALL_STUB_SLUGS
     .filter((slug) => !fs.existsSync(path.join(appDir, ...slug.split('/'), 'page.js')))
     .map((slug) => ({ slug: slug.split('/') }));
