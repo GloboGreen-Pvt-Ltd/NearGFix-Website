@@ -18,10 +18,17 @@ const nextConfig = {
   assetPrefix: basePath || undefined,
 };
 
-// Dev only (static export has no rewrites): localhost shows /shop-home/ as /dashboard/.
+// Dev only (static export has no rewrites): localhost shows /shop-home/ as
+// /dashboard/ and the reports overview as /business-overview/.
 if (process.env.NODE_ENV !== 'production') {
-  nextConfig.redirects = async () => [{ source: '/shop-home/', destination: '/dashboard/', permanent: false }];
-  nextConfig.rewrites = async () => [{ source: '/dashboard/:path*', destination: '/shop-home/:path*' }];
+  nextConfig.redirects = async () => [
+    { source: '/shop-home/', destination: '/dashboard/', permanent: false },
+    { source: '/shop-home/reports/overview/', destination: '/business-overview/', permanent: false },
+  ];
+  nextConfig.rewrites = async () => [
+    { source: '/dashboard/:path*', destination: '/shop-home/:path*' },
+    { source: '/business-overview/:path*', destination: '/shop-home/reports/overview/:path*' },
+  ];
 }
 
 module.exports = nextConfig;

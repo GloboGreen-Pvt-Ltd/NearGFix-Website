@@ -11,7 +11,7 @@
  * App code keeps using internal paths; Link/router/usePathname wrappers
  * (src/components/PortalLink.js, src/lib/portalNavigation.js) translate them.
  * Any other hostname (localhost, previews) maps 1:1, except /shop-home/ shows
- * as /dashboard/ (next.config.js rewrites it back in dev).
+ * as /dashboard/ and reports overview as /business-overview/ (next.config.js rewrites it back in dev).
  */
 export const MAIN_HOST = 'neargfix.com';
 export const ADMIN_HOST = 'admin.neargfix.com';
@@ -50,6 +50,7 @@ export function toPublic(href) {
   const host = currentHost();
   if (typeof href !== 'string' || !href.startsWith('/') || href.startsWith('//')) return href;
   if (host !== MAIN_HOST && host !== ADMIN_HOST && host !== SHOP_HOST) {
+    if (under(href, OVERVIEW)) return '/business-overview' + href.slice(OVERVIEW.length);
     return isShopRoot(href) ? '/dashboard/' + href.replace(/^\/shop-home\/?/, '') : href;
   }
   const target = hostFor(href);
@@ -68,6 +69,7 @@ export function toInternal(pathname) {
     if (under(pathname, '/Business-Overview')) return OVERVIEW + pathname.slice('/Business-Overview'.length);
     return under(pathname, '/shop-home') ? pathname : '/shop-home' + pathname;
   }
+  if (host !== MAIN_HOST && under(pathname, '/business-overview')) return OVERVIEW + pathname.slice('/business-overview'.length);
   if (host !== MAIN_HOST && under(pathname, '/dashboard')) return '/shop-home' + pathname.slice('/dashboard'.length);
   return pathname;
 }
