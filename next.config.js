@@ -18,4 +18,10 @@ const nextConfig = {
   assetPrefix: basePath || undefined,
 };
 
+// Dev only (static export has no rewrites): localhost shows /shop-home/ as /dashboard/.
+if (process.env.NODE_ENV !== 'production') {
+  nextConfig.redirects = async () => [{ source: '/shop-home/', destination: '/dashboard/', permanent: false }];
+  nextConfig.rewrites = async () => [{ source: '/dashboard/:path*', destination: '/shop-home/:path*' }];
+}
+
 module.exports = nextConfig;
