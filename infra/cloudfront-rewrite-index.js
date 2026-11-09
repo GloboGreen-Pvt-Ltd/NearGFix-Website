@@ -39,6 +39,7 @@
 //   admin.neargfix.com/<p>       serves /management/<p>
 //   shop.neargfix.com/           serves /sell-with-us/
 //   shop.neargfix.com/dashboard/ serves /shop-home/
+//   shop.neargfix.com/Business-Overview/ serves /shop-home/reports/overview/
 //   shop.neargfix.com/<p>        serves /shop-home/<p>
 // Internal paths 301 to their public URL on the right host (any host), so
 // /management/ and /shop-home/ never stay in the address bar. RSC payloads
@@ -55,6 +56,7 @@ function publicUrl(path) {
   if (under(path, '/management')) return [ADMIN_HOST, path.slice(11)];
   if (under(path, '/sell-with-us')) return [SHOP_HOST, path.slice(13)];
   if (path === '/shop-home/') return [SHOP_HOST, '/dashboard/'];
+  if (under(path, '/shop-home/reports/overview')) return [SHOP_HOST, '/Business-Overview' + path.slice(27)];
   if (under(path, '/shop-home')) return [SHOP_HOST, path.slice(10)];
   return null;
 }
@@ -64,6 +66,7 @@ function internalPath(host, path) {
   if (host === ADMIN_HOST) return '/management' + path;
   if (path === '/') return '/sell-with-us/';
   if (under(path, '/dashboard')) return '/shop-home' + path.slice(10);
+  if (under(path, '/Business-Overview')) return '/shop-home/reports/overview' + path.slice(18);
   return '/shop-home' + path;
 }
 
