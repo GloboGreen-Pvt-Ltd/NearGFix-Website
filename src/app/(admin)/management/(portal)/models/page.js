@@ -8,6 +8,7 @@ import { masterApi, uploadMedia } from '@/lib/api';
 import { mapPool } from '@/lib/concurrency';
 import DataTable from '@/components/DataTable';
 import S3ImageUpload from '@/components/S3ImageUpload';
+import ImageHoverPreview from '@/components/ImageHoverPreview';
 import ModelsImportModal from '@/components/ModelsImportModal';
 import { imageReplacementNotice, replaceModelImage, safeImageSrc } from '@/lib/modelMedia';
 import { imageForColor, toColorImagesPayload } from '@/lib/colorImages';
@@ -900,7 +901,7 @@ export default function MasterModelsPage() {
       // endpoint strips for weight. Flag it rather than showing '—', so it reads as
       // "needs re-uploading to S3" instead of "has no image".
       render: (r) => (r.imageUrl
-        ? <img src={r.imageUrl} alt="" className="h-8 w-8 rounded object-cover" />
+        ? <ImageHoverPreview src={r.imageUrl} name={r.name} className="h-8 w-8 rounded object-cover" />
         : r.inlineImage
           ? <span title="Stored inline as a data URI — re-upload to move it to cdn.neargfix.com"
                   className="text-[11px] font-semibold text-amber-600">inline</span>
