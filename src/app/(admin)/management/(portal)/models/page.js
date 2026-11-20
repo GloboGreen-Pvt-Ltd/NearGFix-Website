@@ -370,8 +370,10 @@ export default function MasterModelsPage() {
    * Rows still holding an inline image come back as inlineImage:true with a null
    * imageUrl; the table shows a placeholder for them rather than a broken thumbnail.
    */
-  const loadModels = async () => {
-    setLoading(true);
+  // silent: refresh rows in place without swapping the table for "Loading…",
+  // so filters, pagination and scroll position survive a save/delete.
+  const loadModels = async ({ silent = false } = {}) => {
+    if (!silent) setLoading(true);
     setError('');
     try {
       const params = filterSeries
@@ -383,9 +385,9 @@ export default function MasterModelsPage() {
       setList(Array.isArray(rows) ? rows : []);
     } catch (e) {
       setError(e.body?.message || e.message || 'Failed to load');
-      setList([]);
+      if (!silent) setList([]);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
   useEffect(() => { loadModels(); }, [filterBrand, filterSeries, brands]);
@@ -630,7 +632,7 @@ export default function MasterModelsPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name.trim() || !formBrandId) return;
+    if (!name.trim() || !formBrandId || submitting) return;
     setSubmitting(true);
     try {
       // Fold any code still sitting in the input (user typed but didn't press Enter).
@@ -691,8 +693,14 @@ export default function MasterModelsPage() {
         if (notice) notifySuccess(notice);
       }
       await persistPalette();
+      const isEdit = modal.type !== 'create';
+      // Patch the edited row immediately, then refresh silently for server-derived fields.
+      if (isEdit && saved && typeof saved === 'object' && saved.id) {
+        setList((prev) => prev.map((m) => (m.id === saved.id ? { ...m, ...saved } : m)));
+      }
       closeModal();
-      loadModels();
+      notifySuccess(isEdit ? 'Model updated successfully' : 'Model created successfully');
+      loadModels({ silent: true });
     } catch (e) {
       notifyError(e.body?.message || e.message || 'Request failed');
     } finally {
@@ -717,7 +725,7 @@ export default function MasterModelsPage() {
     if (!confirm('Delete this model?')) return;
     try {
       await masterApi.delete(`/master/models/${row.id}`);
-      loadModels();
+      loadModels({ silent: true });
     } catch (e) {
       notifyError(e.body?.message || e.message || 'Delete failed');
     }
