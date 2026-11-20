@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from '@/lib/portalNavigation';
-import Link from '@/components/PortalLink';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { authApi, uploadMedia as uploadFile } from '@/lib/api';
 import BusinessLocationsManager from '@/components/BusinessLocationsManager';
 import SafeImage from '@/components/SafeImage';
@@ -124,9 +124,11 @@ export default function EditShopOwnerPage() {
         // non-null KYC value also resets that KYC status to PENDING_REVIEW on
         // the backend, so an unchanged value must stay omitted, not resent.
         ...(owner.avatarUrl ? { avatarUrl: owner.avatarUrl } : {}),
-        ...(owner.aadharFrontUrl ? { aadharFrontUrl: owner.aadharFrontUrl } : {}),
-        ...(owner.aadharBackUrl ? { aadharBackUrl: owner.aadharBackUrl } : {}),
-        ...(owner.panUrl ? { panUrl: owner.panUrl } : {}),
+        // Compared with the saved KYC: the form is prefilled with these URLs, so
+        // sending them unchanged would reset an approved KYC to Under Review.
+        ...(owner.aadharFrontUrl && owner.aadharFrontUrl !== kycDocument?.aadharFrontUrl ? { aadharFrontUrl: owner.aadharFrontUrl } : {}),
+        ...(owner.aadharBackUrl && owner.aadharBackUrl !== kycDocument?.aadharBackUrl ? { aadharBackUrl: owner.aadharBackUrl } : {}),
+        ...(owner.panUrl && owner.panUrl !== kycDocument?.panUrl ? { panUrl: owner.panUrl } : {}),
         // password & otpCode only sent if explicitly set, to avoid wiping them.
         ...(owner.password.trim() ? { password: owner.password } : {}),
         ...(owner.otpCode.trim() ? { otpCode: owner.otpCode.trim() } : {}),
