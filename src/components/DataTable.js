@@ -1,9 +1,15 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Search, Eye, Pencil, Power, Trash2 } from 'lucide-react';
 import TablePagination from './TablePagination';
 import { pageBounds } from '@/lib/pagination';
+
+// Page / search / rows-per-page per screen. Pages show a loader instead of the
+// table while they reload after a save, which unmounts the table; this lets the
+// remounted table come back on the same page instead of page 1.
+const savedView = new Map();
 
 /** Green/red status pill matching the reference table. */
 export function StatusPill({ active, activeLabel = 'Active', inactiveLabel = 'Inactive' }) {
@@ -50,9 +56,12 @@ export default function DataTable({
   showSerial = true,
   searchable = true,
 }) {
-  const [pageSize, setPageSize] = useState(10);
-  const [page, setPage] = useState(0);
-  const [query, setQuery] = useState('');
+  const viewKey = usePathname() || '';
+  const init = savedView.get(viewKey) || {};
+  const [pageSize, setPageSize] = useState(init.pageSize ?? 10);
+  const [page, setPage] = useState(init.page ?? 0);
+  const [query, setQuery] = useState(init.query ?? '');
+  useEffect(() => { savedView.set(viewKey, { page, pageSize, query }); }, [viewKey, page, pageSize, query]);
 
   const filtered = useMemo(() => {
     const list = rows || [];
@@ -73,9 +82,15 @@ export default function DataTable({
 
   const total = filtered.length;
 
-  // Reset to first page when the dataset size or page size changes
-  // (e.g. a search filter was applied or rows-per-page switched).
-  useEffect(() => { setPage(0); }, [total, pageSize]);
+  // Back to the first page only when the search text or rows-per-page changes.
+  // A save / reload / delete keeps the current page (pageBounds clamps it if
+  // the page no longer exists, e.g. after deleting the last row on it).
+  const prevView = useRef({ query, pageSize });
+  useEffect(() => {
+    const prev = prevView.current;
+    prevView.current = { query, pageSize };
+    if (prev.query !== query || prev.pageSize !== pageSize) setPage(0);
+  }, [query, pageSize]);
 
   const hasActions = onView || onEdit || onToggle || onDelete;
   const { safePage, start } = pageBounds(total, page, pageSize);
